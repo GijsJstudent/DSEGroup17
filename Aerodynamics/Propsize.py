@@ -19,6 +19,12 @@ def liftrpm(rho,S,Cla,Cl0,alpha,rpm,R):
         Ltot[i],Lerror[i], = integrate.quad(lambda x: 0.5*rho*S*(Cla*alpha+Cl0)*(rpm[i]*2*np.pi/60*x)**2,0,R)
     return Ltot
 
+def rpm(rho,S,Cla,Cl0,alpha,R,T):
+    rpm = np.sqrt(T/(1/6*rho*S*(Cla*alpha+Cl0)*(2*np.pi/60)**2*R**3))
+    return rpm
+
+n = 12 
+T = 54/n
 rho = 1.225
 b = 0.03
 Cla = 0.0971444
@@ -27,9 +33,10 @@ alpha1 = np.arange(0,10)
 alpha2 = 3
 rpm1 = 25000
 rpm2 = np.arange(10000,50000)
-R = 0.15
+R = 0.12
 S = b*R
 
+print(rpm(rho,S,Cla,Cl0,alpha2,R,T))
 
 L1 = liftalpha(rho,S,Cla,Cl0,alpha1,rpm1,R)
 plt.plot(alpha1,L1)
