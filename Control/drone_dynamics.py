@@ -6,6 +6,7 @@ Created on Sun May 30 21:06:41 2021
 """
 import numpy as np
 import matplotlib.pyplot as plt 
+from PID import PID
 # defining drone parameters 
 
 # unit vectors in x,y,z directions (might be useful later)
@@ -34,8 +35,11 @@ def derivative(state,inputs):
 # state and inputs are lists with length 12 and 4, next lines unpack them
     x,y,z,v_x,v_y,v_z = state[0:6]
     roll, pitch, yaw, w_x, w_y, w_z = state[6:12]
-    w_prop1, w_prop2, w_prop3, w_prop4 = inputs
     
+    #prevent unrealistic control inputs, by limiting the rpm of morors to max_rpm  
+    
+    w_prop1, w_prop2, w_prop3, w_prop4 = inputs
+    #put some values in vector form
     w = np.array([w_x,w_y,w_z])
     v = np.array([v_x,v_y,v_z])
     # define rotation matrices 
@@ -90,34 +94,51 @@ def derivative(state,inputs):
         by*c_t*x_prop*(-w_prop1**2 - w_prop2**2 + w_prop3**2 + w_prop4**2) + 
         bx*c_t*y_prop*(w_prop1**2 - w_prop2**2 - w_prop3**2 + w_prop4**2))
     
+    #derivative of angulaf velocity
     w_dot = np.linalg.inv(I) @ (np.cross((I @ w),w) + tau + G  )
     
+    #derivative of orientation angles
     euler_angles_dot =  W1 @ w
     
+    #stitch all state derivatives in one vector 
     output = np.hstack((p_dot,v_dot,euler_angles_dot,w_dot))
-    
     
     return  output
 
 
 
 
-time_array = np.linspace(0,10,1000)
+
+
+
+"""test section"""
+altitude_PID = PID(1,0,0)
+time_array = np.linspace(0,20,100)
 dt = time_array[1] - time_array[0]
 output_array = []
+pid_output_array = []
 test_state = np.zeros(12)
-test_inputs = np.array([1,1.001,1.001,1]) * 355
+test_inputs = np.array([0,0,0,0]) 
 
-print(derivative(test_state, test_inputs))
+e_i = 0
+e = 0
+e_d = 0
+
+set_altitude = 100 # desired altitude
 
 
 for t in time_array:
-    d = derivative(test_state,test_inputs)
-    output_array.append(test_state[6])
+    #e = set_altitude - test_state[2]
+    #e_i = e*dt # integral error
+    d = derivative(test_state,np.ones(4)*355)
+    output_array.append(test_state[2])
     test_state = test_state + d*dt
-
+    #e_d = ((set_altitude - test_state[2]) - e)/dt
+    #test_inputs = np.ones(4) * altitude_PID.output(e,e_i,e_d)
+    #pid_output_array.append(altitude_PID.output(e,e_i,e_d))
+    
 plt.plot(time_array, output_array)    
-print(np.amin(output_array))
+print(pid_output_array)
 
     
     
