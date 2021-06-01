@@ -13,27 +13,27 @@ bx= np.array([1,0,0])
 by= np.array([0,1,0])
 bz= np.array([0,0,1])
 
-I = [[1,0,0], # drone moment of inertia 
-     [0,1,0],
-     [0,0,1]]
+I = [[2.5*10**-3, 0,          0       ], # drone moment of inertia 
+     [0,          2.5*10**-3, 0       ],
+     [0,          0,          5*10**-3]]
 # constants identification 
-I_prop = 1 # propeller moment of inertia 
-w_prop_max = 1000/60 # maximum angular velocity of propellers
-M = 1 # [kg] mass of the drone 
-x_prop = 0.2 #[m] x distance from c.g. to propeller
-y_prop = 0.2 #[m] y distance from c.g. to propeller
+I_prop = 2* 10**-5# propeller moment of inertia 
+w_prop_max = 1000 # maximum angular velocity of propellers
+M = 0.4 # [kg] mass of the drone 
+x_prop = 0.178 #[m] x distance from c.g. to propeller
+y_prop = 0.178 #[m] y distance from c.g. to propeller
 g = 9.81 # gravitational constant 
-c_m = 1 # torque coefficient of propeller T = c_m * w^2
-c_t = 1 # thrust coefficient of propeller F = c_m * w^2
-S = 0.001 # reference area of the drone 
-C_d = 0.001 #drag coefficient
+c_m = 2.5*(10**-7) # torque coefficient of propeller T = c_m * w^2
+c_t = 8*(10**-6) # thrust coefficient of propeller F = c_m * w^2
+S = 0.03 # reference area of the drone 
+C_d = 0.5 #drag coefficient
 rho = 1.225 # density of air 
 # function that calculates derivative from the state 
 
 def derivative(state,inputs):
 # state and inputs are lists with length 12 and 4, next lines unpack them
     x,y,z,v_x,v_y,v_z = state[0:6]
-    yaw, pitch, roll, w_x, w_y, w_z = state[6:12]
+    roll, pitch, yaw, w_x, w_y, w_z = state[6:12]
     w_prop1, w_prop2, w_prop3, w_prop4 = inputs
     
     w = np.array([w_x,w_y,w_z])
@@ -63,16 +63,20 @@ def derivative(state,inputs):
     R_E_b = R_E_1 @ (R_1_2 @ R_2_b) # transformation from b frame to E frame
     
     
-    W = np.linalg.inv(np.array([[1,  0,            -np.sin(pitch)             ],
+    W1 = np.linalg.inv(np.array([[1,  0           , -np.sin(pitch)             ],
                                 [0,  np.cos(roll),  np.cos(pitch)*np.sin(roll)],
                                 [0, -np.sin(roll),  np.cos(pitch)*np.cos(roll)]]))
+    
+    W2 = np.array([[1,  np.tan(pitch)*np.sin(roll),  np.tan(pitch)*np.cos(roll)],
+                   [0,  np.cos(roll)              , -np.sin(roll)              ],
+                   [0,  np.sin(roll)/np.cos(pitch),  np.cos(roll)/np.cos(pitch)]])
     
     F_g = np.array([0,0,-M*g]) #force of gravity in E frame
     
     F_thrust = R_E_b @ np.array([0,0,c_t*np.sum(np.square(inputs))]) # thrust force in E frame
     
     F_a = (-1*v) * np.linalg.norm(v) * 0.5 * rho * C_d # aerodynamic force
-    
+    #F_a = 0
     v_dot = (1/M) * (F_g + F_a + F_thrust) # derivative of velocity in E frame in vector form
     
     p_dot = v # derivative of position in E frame in vector form
@@ -86,22 +90,35 @@ def derivative(state,inputs):
         by*c_t*x_prop*(-w_prop1**2 - w_prop2**2 + w_prop3**2 + w_prop4**2) + 
         bx*c_t*y_prop*(w_prop1**2 - w_prop2**2 - w_prop3**2 + w_prop4**2))
     
-    w_dot = np.linalg.inv(I) @ (np.cross((I @ w),w) + tau + G)
+    w_dot = np.linalg.inv(I) @ (np.cross((I @ w),w) + tau + G  )
     
-    euler_angles_dot = W @ w
+    euler_angles_dot =  W1 @ w
+    
+    output = np.hstack((p_dot,v_dot,euler_angles_dot,w_dot))
     
     
-    
-    return  euler_angles_dot
+    return  output
 
-test_state = np.random.rand(12)
+
+
+
+time_array = np.linspace(0,10,1000)
+dt = time_array[1] - time_array[0]
+output_array = []
 test_state = np.zeros(12)
-test_inputs = np.zeros(4)
-print(derivative(test_state,test_inputs))
-    
-    
-    
-    
+test_inputs = np.array([1,1.001,1.001,1]) * 355
+
+print(derivative(test_state, test_inputs))
+
+
+for t in time_array:
+    d = derivative(test_state,test_inputs)
+    output_array.append(test_state[6])
+    test_state = test_state + d*dt
+
+plt.plot(time_array, output_array)    
+print(np.amin(output_array))
+
     
     
     
