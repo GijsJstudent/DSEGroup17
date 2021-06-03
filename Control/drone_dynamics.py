@@ -6,7 +6,7 @@ Created on Sun May 30 21:06:41 2021
 """
 import numpy as np
 import matplotlib.pyplot as plt 
-from PID import PID
+from PID import PID ,Data
 # defining drone parameters 
 
 # unit vectors in x,y,z directions (might be useful later)
@@ -27,18 +27,22 @@ g = 9.81 # gravitational constant
 c_m = 2.5*(10**-7) # torque coefficient of propeller T = c_m * w^2
 c_t = 8*(10**-6) # thrust coefficient of propeller F = c_m * w^2
 S = 0.03 # reference area of the drone 
-C_d = 0.5 #drag coefficient
+C_d = 0.3 #drag coefficient
 rho = 1.225 # density of air 
-# function that calculates derivative from the state 
+F_max = c_t*w_prop_max**2
+T_W_ratio = F_max/(M*g)
 
+
+# function that calculates derivative of the state from state and external forces
 def derivative(state,inputs):
 # state and inputs are lists with length 12 and 4, next lines unpack them
     x,y,z,v_x,v_y,v_z = state[0:6]
     roll, pitch, yaw, w_x, w_y, w_z = state[6:12]
     
-    #prevent unrealistic control inputs, by limiting the rpm of morors to max_rpm  
-    
-    w_prop1, w_prop2, w_prop3, w_prop4 = inputs
+    #inputs are numbers from 0 - 1 which are thrust setting  
+    scaled_inputs = (inputs* (F_max/c_t))**0.5 # convert thrust setting to rpm 
+    w_prop1, w_prop2, w_prop3, w_prop4 = scaled_inputs 
+    #print(w_prop1)
     #put some values in vector form
     w = np.array([w_x,w_y,w_z])
     v = np.array([v_x,v_y,v_z])
@@ -58,7 +62,7 @@ def derivative(state,inputs):
                       [0,  np.cos(roll), np.sin(roll)],
                       [0, -np.sin(roll), np.cos(roll)]])
     
-    R_b_E = R_b_2 @ (R_2_1 @ R_1_E) #transformation from E frame to b frame
+    #R_b_E = R_b_2 @ (R_2_1 @ R_1_E) #transformation from E frame to b frame
     
     R_E_1 = np.linalg.inv(R_1_E)
     R_1_2 = np.linalg.inv(R_2_1)
@@ -71,16 +75,16 @@ def derivative(state,inputs):
                                 [0,  np.cos(roll),  np.cos(pitch)*np.sin(roll)],
                                 [0, -np.sin(roll),  np.cos(pitch)*np.cos(roll)]]))
     
-    W2 = np.array([[1,  np.tan(pitch)*np.sin(roll),  np.tan(pitch)*np.cos(roll)],
-                   [0,  np.cos(roll)              , -np.sin(roll)              ],
-                   [0,  np.sin(roll)/np.cos(pitch),  np.cos(roll)/np.cos(pitch)]])
+    #W2 = np.array([[1,  np.tan(pitch)*np.sin(roll),  np.tan(pitch)*np.cos(roll)],
+    #               [0,  np.cos(roll)              , -np.sin(roll)              ],
+    #               [0,  np.sin(roll)/np.cos(pitch),  np.cos(roll)/np.cos(pitch)]])
     
     F_g = np.array([0,0,-M*g]) #force of gravity in E frame
     
-    F_thrust = R_E_b @ np.array([0,0,c_t*np.sum(np.square(inputs))]) # thrust force in E frame
+    F_thrust = R_E_b @ np.array([0,0,c_t*np.sum(np.square(scaled_inputs))]) # thrust force in E frame
     
     F_a = (-1*v) * np.linalg.norm(v) * 0.5 * rho * C_d # aerodynamic force
-    #F_a = 0
+    #F_a = np.zeros(3)
     v_dot = (1/M) * (F_g + F_a + F_thrust) # derivative of velocity in E frame in vector form
     
     p_dot = v # derivative of position in E frame in vector form
@@ -107,38 +111,63 @@ def derivative(state,inputs):
 
 
 
-
-
-
-
 """test section"""
-altitude_PID = PID(1,0,0)
-time_array = np.linspace(0,20,100)
+print("T/W: ",T_W_ratio, "F_max: ",F_max)
+
+altitude_PID = PID(0.8,0.1,0.2,0/T_W_ratio,0.8)
+yaw_PID = PID(0,0,0,0,0.05)
+
+time_array = np.linspace(0,200,10000)
 dt = time_array[1] - time_array[0]
-output_array = []
-pid_output_array = []
-test_state = np.zeros(12)
-test_inputs = np.array([0,0,0,0]) 
+state = np.array([0,0,200,0,0,0,0,0,0,0,0,0])
+inputs = np.array([0,0,0,0]) 
+e_i_h = 0
+e_h = 0
+e_d_h = 0
+e_i_yaw = 0
+e_yaw = 0
+e_d_yaw = 0
+Altitude_profile = (np.sin(time_array/30)+1.2)*100
+Altitude_profile = np.ones(len(time_array)) * 200
+yaw_setting = 
+flight_data = Data() # initialize flight data collector
 
-e_i = 0
-e = 0
-e_d = 0
-
-set_altitude = 100 # desired altitude
-
-
-for t in time_array:
-    #e = set_altitude - test_state[2]
-    #e_i = e*dt # integral error
-    d = derivative(test_state,np.ones(4)*355)
-    output_array.append(test_state[2])
-    test_state = test_state + d*dt
-    #e_d = ((set_altitude - test_state[2]) - e)/dt
-    #test_inputs = np.ones(4) * altitude_PID.output(e,e_i,e_d)
-    #pid_output_array.append(altitude_PID.output(e,e_i,e_d))
+""" main loop"""
+for t, i in zip(time_array,range(len(time_array))):
+    altitude = Altitude_profile[i]
     
-plt.plot(time_array, output_array)    
-print(pid_output_array)
+    e_h = altitude - state[2]
+    d = derivative(state,inputs)
+    state = state + d*dt
+    e_i_h = e*dt # integral error
+    e_d_h = ((altitude - state[2]) - e)/dt
+    
+    Altitude_PID_signal = altitude_PID.output(e_,e_i_h,e_d_h)
+    inputs = np.ones(4) * Altitude_PID_signal
+    
+    flight_data.append(state,inputs,t)
+    
+    
+"""Plot the results"""
+fig, (ax1, ax2,ax3,ax4) = plt.subplots(4,figsize = (10,7))
+
+ax1.plot(time_array, Altitude_profile,label = "reference") 
+ax1.plot(time_array, flight_data.provide('z')[0],label = "flight") 
+ax1.legend() 
+
+
+ax2.plot(time_array, flight_data.provide('roll')[0],label = "roll") 
+ax2.legend() 
+
+ax3.plot(time_array, flight_data.provide('pitch')[0],label = "pitch") 
+ax3.legend() 
+
+ax4.plot(time_array, flight_data.provide('yaw')[0],label = "yaw") 
+ax4.legend() 
+
+plt.xlabel("time")
+plt.show()   
+
 
     
     
