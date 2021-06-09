@@ -28,10 +28,16 @@ def Gen_RandLine(length, dims=2):
 
 
 def update_lines(num, dataLines, lines):
-    for line, data in zip(lines, dataLines):
-        # NOTE: there is no .set_data() for 3 dim data...
-        line.set_data(data[0:2, :num])
-        line.set_3d_properties(data[2, :num])
+
+    if num > 150:
+        for line in lines:
+            line.set_data([[0.5, 0.5+num/1000],[0.5, 0.5]])
+            line.set_3d_properties([0,0])
+    else:
+        for line, data in zip(lines, dataLines):
+            # NOTE: there is no .set_data() for 3 dim data...
+            line.set_data(data[0:2, :num])
+            line.set_3d_properties(data[2, :num])
     return lines
 
 # Attaching 3D axis to the figure

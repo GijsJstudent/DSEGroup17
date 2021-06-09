@@ -206,10 +206,18 @@ sfactor = 10 # Speed up factor
 
 
 def update_graph(frame, sfactor, lines):
+    i = (frame-1)*sfactor
     lines[0].set_data(tra_x[0:frame * sfactor:sfactor], tra_y[0:frame * sfactor:sfactor])
     lines[0].set_3d_properties(tra_z[0:frame * sfactor:sfactor])
     lines[1].set_data(X_profile[0:frame*sfactor:sfactor], Y_profile[0:frame*sfactor:sfactor])
     lines[1].set_3d_properties(Z_profile[0:frame*sfactor:sfactor])
+    lines = lines[0:2]
+    # del lines[2]
+    # lines[2].set_data([[tra_x[i]-0.5, tra_x[i]+0.5],[tra_y[i]-0.5, tra_y[i]+0.5]])
+    # lines[2].set_3d_properties([tra_z[i], tra_z[i]])
+    x, y, z = calc_motor_pos(i)
+    lines.append(ax.plot([tra_x[i]-x, tra_x[i]+x],[tra_y[i]-y, tra_y[i]+y],[tra_z[i]+z, tra_z[i]+z], 'c')[0])
+    lines.append(ax.plot([tra_x[i]+x, tra_x[i]-x],[tra_y[i]-y, tra_y[i]+y],[tra_z[i]+z, tra_z[i]+z], 'c')[0])
     return lines
 
 fig = plt.figure()
@@ -234,18 +242,21 @@ roll = flight_data.provide(6)[0]
 pitch = flight_data.provide(7)[0]
 yaw = flight_data.provide(8)[0]
 
-def calc_motor_pos():
-    pass
+def calc_motor_pos(i):
+    x = 0.5
+    y = 0.5
+    z = 0
+    return x,y,z
 
 # Generate lines
 line1 = ax.plot(tra_x[0], tra_y[0], tra_z[0], 'r')[0]
 line2 = ax.plot(X_profile[0], Y_profile[0], Z_profile[0], 'b')[0]
-line3 = ax.plot([tra_x[0]-0.5, tra_x[0]+0.5],[tra_y[0]-0.5, tra_y[0]+0.5],[tra_z[0], tra_z[0]], 'c')
-line4 = ax.plot([tra_x[0]+0.5, tra_x[0]-0.5],[tra_y[0]-0.5, tra_y[0]+0.5],[tra_z[0], tra_z[0]], 'c')
-lines = [line1, line2, line3, line4]
+# line3 = ax.plot([tra_x[0]-0.5, tra_x[0]+0.5],[tra_y[0]-0.5, tra_y[0]+0.5],[tra_z[0], tra_z[0]], 'c')[0]
+# line4 = ax.plot([tra_x[0]+0.5, tra_x[0]-0.5],[tra_y[0]-0.5, tra_y[0]+0.5],[tra_z[0], tra_z[0]], 'c')[0]
+lines = [line1, line2]
 
 line_ani = animation.FuncAnimation(fig, update_graph, int(len(time_array)/sfactor), fargs=(sfactor, lines),
-                                   interval=100, blit=False)
+                                   interval=100, blit=True)
 
 plt.show()
 
