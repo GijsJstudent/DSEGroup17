@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from PID import PID ,Data, Controller
+import matplotlib.animation as animation
 import pickle
 # defining drone parameters 
 
@@ -143,8 +144,12 @@ it_xy = 0 #proportional gain for x and y controllers
 # initialize gains of the controller roll,pitch,yaw,x,y,z
 test_controller = Controller([p_rp,it_rp,d_rp,p_rp,it_rp,d_rp,0.08,0,0.018,p_xy,it_xy,d_xy,p_xy,it_xy,d_xy,0.8,0.1,0.8])
 
-time_array = np.linspace(0,20,20000)
-dt = time_array[1] - time_array[0]
+simtime = 20
+dt = 1/100
+
+time_array = np.linspace(0,20,int(simtime/dt))
+# dt = time_array[1] - time_array[0]
+print(f"SIMULATION TIME: {round(len(time_array)*dt,2)}\nTIMESTEP: {dt}")
 
 state = np.array([0,0,0,0,0,0,0,0,0,0,0,0])
 d= np.zeros(12)
@@ -196,9 +201,35 @@ for t, reference in zip(time_array[1:],Command_matrix[1:]):
     
 flight_data.save("flight_data")
 
+# 3D plotting Animation
+def test(no):
+    no
+
+fig = plt.figure()
+ax = Axes3D(fig)
+
+ax.set_xlim3d([-10, 10])
+ax.set_xlabel('X')
+
+ax.set_ylim3d([-10, 10])
+ax.set_ylabel('Y')
+
+ax.set_zlim3d([0.0, 10])
+ax.set_zlabel('Z')
+
+ax.set_title('3D Test')
+
+line_ani = animation.FuncAnimation(fig, test, len(time_array), fargs=(1),
+                                   interval=100, blit=False)
+
+plt.show()
+
+
+# 3D plotting trajectory
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
+Axes3D.plot(ax, flight_data.provide(0)[0], flight_data.provide(1)[0], flight_data.provide(2)[0])
 Axes3D.plot(ax, X_profile, Y_profile, Z_profile)
 plt.show()
 
