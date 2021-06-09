@@ -144,7 +144,7 @@ it_xy = 0 #proportional gain for x and y controllers
 # initialize gains of the controller roll,pitch,yaw,x,y,z
 test_controller = Controller([p_rp,it_rp,d_rp,p_rp,it_rp,d_rp,0.08,0,0.018,p_xy,it_xy,d_xy,p_xy,it_xy,d_xy,0.8,0.1,0.8])
 
-simtime = 20
+simtime = 5
 dt = 1/100
 
 time_array = np.linspace(0,20,int(simtime/dt))
@@ -201,9 +201,14 @@ for t, reference in zip(time_array[1:],Command_matrix[1:]):
     
 flight_data.save("flight_data")
 
-# 3D plotting Animation
-def test(no):
-    no
+# --------------- 3D plotting Animation -------------------
+
+
+
+def update_graph(frame, lines):
+    lines[0].set_data(X_profile[0:frame], Y_profile[0:frame])
+    lines[0].set_3d_properties(Z_profile[0:frame])
+    return lines
 
 fig = plt.figure()
 ax = Axes3D(fig)
@@ -219,7 +224,10 @@ ax.set_zlabel('Z')
 
 ax.set_title('3D Test')
 
-line_ani = animation.FuncAnimation(fig, test, len(time_array), fargs=(1),
+line1 = ax.plot(X_profile[0], Y_profile[0], Z_profile[0])
+lines = [line1]
+
+line_ani = animation.FuncAnimation(fig, update_graph, len(time_array), fargs=(lines),
                                    interval=100, blit=False)
 
 plt.show()
