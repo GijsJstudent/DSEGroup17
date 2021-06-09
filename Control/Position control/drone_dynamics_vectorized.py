@@ -163,9 +163,9 @@ Y_profile = np.ones(len(time_array)) * 100
 Z_profile = np.ones(len(time_array)) * 4
 
 
-X_profile = np.sin(time_array/2) * 10
-Y_profile = np.cos(time_array/2) * 10
-Z_profile = np.linspace(2, 10, len(Y_profile))
+X_profile = np.sin(time_array/10) * 5
+Y_profile = np.cos(time_array/10) * 5
+Z_profile = np.linspace(2, 5, len(Y_profile))
 
 
 Yaw_profile = np.ones(len(time_array)) * 0
