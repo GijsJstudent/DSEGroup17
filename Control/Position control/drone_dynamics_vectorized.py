@@ -163,7 +163,7 @@ Y_profile = np.ones(len(time_array)) * 100
 Z_profile = np.ones(len(time_array)) * 4
 
 
-X_profile = np.sin(time_array/10) * 5
+X_profile = np.sin(time_array/10) * 0
 Y_profile = np.cos(time_array/10) * 5
 Z_profile = np.linspace(2, 5, len(Y_profile))
 
@@ -216,8 +216,8 @@ def update_graph(frame, sfactor, lines):
     # lines[2].set_data([[tra_x[i]-0.5, tra_x[i]+0.5],[tra_y[i]-0.5, tra_y[i]+0.5]])
     # lines[2].set_3d_properties([tra_z[i], tra_z[i]])
     x, y, z = calc_motor_pos(i)
-    lines.append(ax.plot([tra_x[i]-x, tra_x[i]+x],[tra_y[i]-y, tra_y[i]+y],[tra_z[i]+z, tra_z[i]+z], 'c')[0])
-    lines.append(ax.plot([tra_x[i]+x, tra_x[i]-x],[tra_y[i]-y, tra_y[i]+y],[tra_z[i]+z, tra_z[i]+z], 'c')[0])
+    lines.append(ax.plot([tra_x[i]-x, tra_x[i]+x],[tra_y[i]-y, tra_y[i]+y],[tra_z[i]-z, tra_z[i]+z], 'c')[0])
+    lines.append(ax.plot([tra_x[i]+x, tra_x[i]-x],[tra_y[i]-y, tra_y[i]+y],[tra_z[i]-z, tra_z[i]+z], 'c')[0])
     return lines
 
 fig = plt.figure()
@@ -241,11 +241,36 @@ tra_z = flight_data.provide(2)[0]
 roll = flight_data.provide(6)[0]
 pitch = flight_data.provide(7)[0]
 yaw = flight_data.provide(8)[0]
+arm = np.array([0.5, 0.5, 0]).T
 
 def calc_motor_pos(i):
-    x = 0.5
-    y = 0.5
-    z = 0
+    # define rotation matrices
+
+    # R_1_E, R_2_1, R_b_2 are euler angle rotations around z,y,x axis
+    R_1_E = np.array([[np.cos(yaw[i]), np.sin(yaw[i]), 0],
+                      [-np.sin(yaw[i]), np.cos(yaw[i]), 0],
+                      [0, 0, 1]])
+
+    R_2_1 = np.array([[np.cos(pitch[i]), 0, -np.sin(pitch[i])],
+                      [0, 1, 0],
+                      [np.sin(pitch[i]), 0, np.cos(pitch[i])]])
+
+    R_b_2 = np.array([[1, 0, 0],
+                      [0, np.cos(roll[i]), np.sin(roll[i])],
+                      [0, -np.sin(roll[i]), np.cos(roll[i])]])
+
+    # R_b_E = R_b_2 @ (R_2_1 @ R_1_E) #transformation from E frame to b frame
+
+    R_E_1 = np.linalg.inv(R_1_E)
+    R_1_2 = np.linalg.inv(R_2_1)
+    R_2_b = np.linalg.inv(R_b_2)
+
+    R_E_b = R_E_1 @ (R_1_2 @ R_2_b)  # transformation from b frame to E frame
+    pos = R_E_b @ arm
+    x = pos[0]
+    y = pos[1]
+    z = pos[2]
+    print(pos)
     return x,y,z
 
 # Generate lines
