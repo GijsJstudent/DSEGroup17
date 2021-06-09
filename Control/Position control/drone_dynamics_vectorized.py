@@ -7,7 +7,8 @@ Created on Sun May 30 21:06:41 2021
 
 """
 import numpy as np
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 from PID import PID ,Data, Controller
 import pickle
 # defining drone parameters 
@@ -159,7 +160,7 @@ Z_profile = np.ones(len(time_array)) * 4
 
 X_profile = np.sin(time_array/2) * 10
 Y_profile = np.cos(time_array/2) * 10
-Z_profile = np.ones(len(time_array)) * 4
+Z_profile = np.linspace(2, 10, len(Y_profile))
 
 
 Yaw_profile = np.ones(len(time_array)) * 0
@@ -195,7 +196,11 @@ for t, reference in zip(time_array[1:],Command_matrix[1:]):
     
 flight_data.save("flight_data")
 
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
 
+Axes3D.plot(ax, X_profile, Y_profile, Z_profile)
+plt.show()
 
 
 
