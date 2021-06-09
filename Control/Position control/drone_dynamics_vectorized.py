@@ -144,7 +144,7 @@ it_xy = 0 #proportional gain for x and y controllers
 # initialize gains of the controller roll,pitch,yaw,x,y,z
 test_controller = Controller([p_rp,it_rp,d_rp,p_rp,it_rp,d_rp,0.08,0,0.018,p_xy,it_xy,d_xy,p_xy,it_xy,d_xy,0.8,0.1,0.8])
 
-simtime = 5
+simtime = 10
 dt = 1/100
 
 time_array = np.linspace(0,20,int(simtime/dt))
@@ -163,12 +163,12 @@ Y_profile = np.ones(len(time_array)) * 100
 Z_profile = np.ones(len(time_array)) * 4
 
 
-X_profile = np.sin(time_array/10) * 0
-Y_profile = np.cos(time_array/10) * 5
+X_profile = np.sin(time_array/10) * 8
+Y_profile = np.cos(time_array/10) * 8
 Z_profile = np.linspace(2, 5, len(Y_profile))
 
 
-Yaw_profile = np.ones(len(time_array)) * 0
+Yaw_profile = np.sin(time_array/2) * 0
 
 Command_matrix = np.vstack((X_profile,Y_profile,Z_profile,Yaw_profile))
 Command_matrix = np.transpose(Command_matrix)
@@ -215,9 +215,9 @@ def update_graph(frame, sfactor, lines):
     # del lines[2]
     # lines[2].set_data([[tra_x[i]-0.5, tra_x[i]+0.5],[tra_y[i]-0.5, tra_y[i]+0.5]])
     # lines[2].set_3d_properties([tra_z[i], tra_z[i]])
-    x, y, z = calc_motor_pos(i)
-    lines.append(ax.plot([tra_x[i]-x, tra_x[i]+x],[tra_y[i]-y, tra_y[i]+y],[tra_z[i]-z, tra_z[i]+z], 'c')[0])
-    lines.append(ax.plot([tra_x[i]+x, tra_x[i]-x],[tra_y[i]-y, tra_y[i]+y],[tra_z[i]-z, tra_z[i]+z], 'c')[0])
+    pos = calc_motor_pos(i)
+    lines.append(ax.plot([tra_x[i]+pos[0,0], tra_x[i]+pos[2,0]],[tra_y[i]+pos[0,1], tra_y[i]+pos[2,1]],[tra_z[i]+pos[0,2], tra_z[i]+pos[2,2]], 'c')[0])
+    lines.append(ax.plot([tra_x[i]+pos[1,0], tra_x[i]+pos[3,0]],[tra_y[i]+pos[1,1], tra_y[i]+pos[3,1]],[tra_z[i]+pos[1,2], tra_z[i]+pos[3,2]], 'c')[0])
     return lines
 
 fig = plt.figure()
@@ -241,7 +241,10 @@ tra_z = flight_data.provide(2)[0]
 roll = flight_data.provide(6)[0]
 pitch = flight_data.provide(7)[0]
 yaw = flight_data.provide(8)[0]
-arm = np.array([0.5, 0.5, 0]).T
+arm1 = np.array([0.5, 0.5, 0]).T
+arm2 = np.array([-0.5, 0.5, 0]).T
+arm3 = np.array([-0.5, -0.5, 0]).T
+arm4 = np.array([0.5, -0.5, 0]).T
 
 def calc_motor_pos(i):
     # define rotation matrices
@@ -266,12 +269,11 @@ def calc_motor_pos(i):
     R_2_b = np.linalg.inv(R_b_2)
 
     R_E_b = R_E_1 @ (R_1_2 @ R_2_b)  # transformation from b frame to E frame
-    pos = R_E_b @ arm
-    x = pos[0]
-    y = pos[1]
-    z = pos[2]
-    print(pos)
-    return x,y,z
+    pos1 = R_E_b @ arm1
+    pos2 = R_E_b @ arm2
+    pos3 = R_E_b @ arm3
+    pos4 = R_E_b @ arm4
+    return np.array([pos1,pos2,pos3,pos4])
 
 # Generate lines
 line1 = ax.plot(tra_x[0], tra_y[0], tra_z[0], 'r')[0]
