@@ -172,7 +172,7 @@ Yaw_profile = np.ones(len(time_array)) * 0
 
 Command_matrix = np.vstack((X_profile,Y_profile,Z_profile,Yaw_profile))
 Command_matrix = np.transpose(Command_matrix)
-print(Command_matrix[0])
+# print(Command_matrix[0])
 
 
 flight_data = Data() # initialize solution array
@@ -202,12 +202,14 @@ for t, reference in zip(time_array[1:],Command_matrix[1:]):
 flight_data.save("flight_data")
 
 # --------------- 3D plotting Animation -------------------
+sfactor = 10 # Speed up factor
 
 
-
-def update_graph(frame, lines):
-    lines[0].set_data(X_profile[0:frame], Y_profile[0:frame])
-    lines[0].set_3d_properties(Z_profile[0:frame])
+def update_graph(frame, sfactor, lines):
+    lines[0].set_data(tra_x[0:frame * sfactor:sfactor], tra_y[0:frame * sfactor:sfactor])
+    lines[0].set_3d_properties(tra_z[0:frame * sfactor:sfactor])
+    lines[1].set_data(X_profile[0:frame*sfactor:sfactor], Y_profile[0:frame*sfactor:sfactor])
+    lines[1].set_3d_properties(Z_profile[0:frame*sfactor:sfactor])
     return lines
 
 fig = plt.figure()
@@ -224,10 +226,25 @@ ax.set_zlabel('Z')
 
 ax.set_title('3D Test')
 
-line1 = ax.plot(X_profile[0], Y_profile[0], Z_profile[0])
-lines = [line1]
+# Trajectory unpacked
+tra_x = flight_data.provide(0)[0]
+tra_y = flight_data.provide(1)[0]
+tra_z = flight_data.provide(2)[0]
+roll = flight_data.provide(6)[0]
+pitch = flight_data.provide(7)[0]
+yaw = flight_data.provide(8)[0]
 
-line_ani = animation.FuncAnimation(fig, update_graph, len(time_array), fargs=(lines),
+def calc_motor_pos():
+    pass
+
+# Generate lines
+line1 = ax.plot(tra_x[0], tra_y[0], tra_z[0], 'r')[0]
+line2 = ax.plot(X_profile[0], Y_profile[0], Z_profile[0], 'b')[0]
+line3 = ax.plot([tra_x[0]-0.5, tra_x[0]+0.5],[tra_y[0]-0.5, tra_y[0]+0.5],[tra_z[0], tra_z[0]], 'c')
+line4 = ax.plot([tra_x[0]+0.5, tra_x[0]-0.5],[tra_y[0]-0.5, tra_y[0]+0.5],[tra_z[0], tra_z[0]], 'c')
+lines = [line1, line2, line3, line4]
+
+line_ani = animation.FuncAnimation(fig, update_graph, int(len(time_array)/sfactor), fargs=(sfactor, lines),
                                    interval=100, blit=False)
 
 plt.show()
