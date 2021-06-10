@@ -40,7 +40,7 @@ def simulate_drone(pid_gains, time_array ,Command_matrix):
     rho = 1.225 # density of air 
     F_max = c_t*w_prop_max**2
     T_W_ratio = F_max/(M*g)
-    
+    print(f"T/W ratio: {T_W_ratio}")
     
     # function that calculates derivative of the state from state and external forces
     def derivative(state,inputs):
@@ -189,20 +189,22 @@ d_xy = 0.2 #proportional gain for x and y controllers
 it_xy = 0 #proportional gain for x and y controllers
         
     
-pid_gains = [p_rp,it_rp,d_rp,p_rp,it_rp,d_rp,0.08,0,0.018,p_xy,it_xy,d_xy,p_xy,it_xy,d_xy,0.8,0.1,0.8]    
-time_array = np.linspace(0,20,20000)     
+pid_gains = [p_rp,it_rp,d_rp,p_rp,it_rp,d_rp,0.08,0,0.018,p_xy,it_xy,d_xy,p_xy,it_xy,d_xy,0.8,0.1,0.8]
+simtime = 10
+dt = 1/1000
+time_array = np.linspace(0,simtime,int(simtime/dt))
 
 X_profile = np.ones(len(time_array)) * 100
 Y_profile = np.ones(len(time_array)) * 100
 Z_profile = np.ones(len(time_array)) * 4
     
     
-#X_profile = np.sin(time_array/2) * 8
-#Y_profile = np.cos(time_array/2) * 8
+X_profile = np.sin(time_array/2) * 2
+Y_profile = np.cos(time_array/2) * 2
 Z_profile = np.linspace(2, 5, len(Y_profile))
     
     
-Yaw_profile = np.sin(time_array/5) * 1
+Yaw_profile = np.sin(time_array/8) * 1
    
 Command_matrix = np.vstack((X_profile,Y_profile,Z_profile,Yaw_profile))
 Command_matrix = np.transpose(Command_matrix)
