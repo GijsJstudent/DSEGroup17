@@ -47,14 +47,36 @@ class Controller:
         dt = t - self.time[-1]
         self.time.append(t)        
         
+        roll = state_measurement[3]
+        pitch = state_measurement[4]
         yaw = state_measurement[5]
+        
         pos_error = reference[0:2] - state_measurement[0:2] #position error in earth frame
         
+        
+        
+        
         #transformation from earth to body frame. 
-        W = np.array([[ np.cos(yaw), np.sin(yaw)], 
-                      [-np.sin(yaw), np.cos(yaw)],])
+        R_1_E = np.array([[ np.cos(yaw), np.sin(yaw), 0],
+                          [-np.sin(yaw), np.cos(yaw), 0],
+                          [           0,           0, 1]])
+        
+        R_2_1 = np.array([[np.cos(pitch), 0, -np.sin(pitch)],
+                          [            0, 1,              0],
+                          [np.sin(pitch), 0,  np.cos(pitch)]])
+        
+        
+        R_b_2 = np.array([[1,             0,            0],
+                          [0,  np.cos(roll), np.sin(roll)],
+                          [0, -np.sin(roll), np.cos(roll)]])
+        
+        R_b_E = R_b_2 @ (R_2_1 @ R_1_E) #transformation from E frame to b frame
+        
+        
+        #W = np.array([[ np.cos(yaw), np.sin(yaw)], 
+         #             [-np.sin(yaw), np.cos(yaw)],])
         #position error in body reference frame
-        #pos_error = W @ pos_error 
+        pos_error = (R_b_E @ np.hstack((pos_error,np.array([0]))))[:-1]
         
         e_x_p = pos_error[0]
         e_y_p = pos_error[1]
