@@ -28,7 +28,7 @@ def simulate_drone(pid_gains, time_array ,Command_matrix):
          [0,          0,          5*10**-3]]
     # constants identification 
     I_prop = 2* 10**-5# propeller moment of inertia 
-    w_prop_max = 1000 # maximum angular velocity of propellers
+    # w_prop_max = 1000 # maximum angular velocity of propellers
     M = 0.4 # [kg] mass of the drone 
     x_prop = 0.178 #[m] x distance from c.g. to propeller
     y_prop = 0.178 #[m] y distance from c.g. to propeller
@@ -38,9 +38,13 @@ def simulate_drone(pid_gains, time_array ,Command_matrix):
     S = 0.03 # reference area of the drone 
     C_d = 0.3 #drag coefficient
     rho = 1.225 # density of air 
-    F_max = c_t*w_prop_max**2
-    T_W_ratio = F_max/(M*g)
-    print(f"T/W ratio: {T_W_ratio}")
+    # F_max = c_t*w_prop_max**2
+    # T_W_ratio = F_max/(M*g)
+    T_W_ratio = 3
+    motors = 4 # Number of motors
+    F_max = T_W_ratio*g*M/motors
+    w_prop_max = (F_max)**0.5 / c_t
+    print(f"T/W ratio: {T_W_ratio} [-]\nMax total thrust: {F_max*4} [N]")
     
     # function that calculates derivative of the state from state and external forces
     def derivative(state,inputs):
@@ -136,7 +140,7 @@ def simulate_drone(pid_gains, time_array ,Command_matrix):
     
     
     
-    dt = time_array[1] - time_array[0]
+    # dt = time_array[1] - time_array[0]
     print(f"SIMULATION TIME: {round(len(time_array)*dt,2)}\nTIMESTEP: {dt}")
     
     state = np.array([0,0,0,0,0,0,0,0,0,0,0,0])
@@ -216,8 +220,8 @@ flight_data.save('flight_data')
 
 fig, axs = plt.subplots(4, 3,figsize = (14,7),sharex=True)
 time_array = flight_data.provide(1)[1]
-print("time array len",len(time_array))
-print("asasas",len(flight_data.provide(1)[0]))
+# print("time array len",len(time_array))
+# print("asasas",len(flight_data.provide(1)[0]))
 for ax,i in zip(axs.flat,range(12)):
     ax.plot(time_array,flight_data.provide(i)[0])
     
