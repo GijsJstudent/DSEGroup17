@@ -111,6 +111,7 @@ class Data:
     def provide(self,state_name): # provide a state variablle 
         state_names = ["x","y","z","v_x","v_y","v_z","roll","pitch","yaw","w_x","w_y","w_z"]
         control_input_names = ["t1","t1","t1","t1"]
+        profile_names = ["X_profile" , "Y_profile" , "Z_profile" , "Yaw_profile"]
         if state_name in state_names:
             i = state_names.index(state_name)
             A = np.array(self.states)
@@ -120,6 +121,9 @@ class Data:
         elif state_name in control_input_names:
             i = control_input_names.index(state_name)
             A = np.array(self.control_inputs)
+        elif state_name in profile_names:
+            i = profile_names.index(state_name)
+            A = np.array(self.references)
         else :
             raise Exception("BETTER LUCK NEXT TIME!")
             

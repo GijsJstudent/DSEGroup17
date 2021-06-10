@@ -144,10 +144,10 @@ it_xy = 0 #proportional gain for x and y controllers
 # initialize gains of the controller roll,pitch,yaw,x,y,z
 test_controller = Controller([p_rp,it_rp,d_rp,p_rp,it_rp,d_rp,0.08,0,0.018,p_xy,it_xy,d_xy,p_xy,it_xy,d_xy,0.8,0.1,0.8])
 
-simtime = 10
-dt = 1/100
+simtime = 100
+dt = 1/1000
 
-time_array = np.linspace(0,20,int(simtime/dt))
+time_array = np.linspace(0,100,int(simtime/dt))
 # dt = time_array[1] - time_array[0]
 print(f"SIMULATION TIME: {round(len(time_array)*dt,2)}\nTIMESTEP: {dt}")
 
@@ -273,21 +273,23 @@ def calc_motor_pos(i):
     pos2 = R_E_b @ arm2
     pos3 = R_E_b @ arm3
     pos4 = R_E_b @ arm4
+
     return np.array([pos1,pos2,pos3,pos4])
 
 # Generate lines
-line1 = ax.plot(tra_x[0], tra_y[0], tra_z[0], 'r')[0]
-line2 = ax.plot(X_profile[0], Y_profile[0], Z_profile[0], 'b')[0]
+print("wqw",tra_x[0])
+line1 = ax.plot(tra_x[0:1], tra_y[0:1], tra_z[0:1], 'r')[0]
+line2 = ax.plot(X_profile[0:1], Y_profile[0:1], Z_profile[0:1], 'b')[0]
 # line3 = ax.plot([tra_x[0]-0.5, tra_x[0]+0.5],[tra_y[0]-0.5, tra_y[0]+0.5],[tra_z[0], tra_z[0]], 'c')[0]
 # line4 = ax.plot([tra_x[0]+0.5, tra_x[0]-0.5],[tra_y[0]-0.5, tra_y[0]+0.5],[tra_z[0], tra_z[0]], 'c')[0]
 lines = [line1, line2]
 
 line_ani = animation.FuncAnimation(fig, update_graph, int(len(time_array)/sfactor), fargs=(sfactor, lines),
-                                   interval=100, blit=True)
+                                   interval=10, blit=True)
 
 plt.show()
 
-
+"""
 # 3D plotting trajectory
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
@@ -322,4 +324,4 @@ for ax,i in zip(axs.flat,range(12)):
     
 plt.show()
 
-
+"""
