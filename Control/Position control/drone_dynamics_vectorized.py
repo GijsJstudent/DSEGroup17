@@ -190,28 +190,30 @@ it_xy = 0 #proportional gain for x and y controllers
         
     
 pid_gains = [p_rp,it_rp,d_rp,p_rp,it_rp,d_rp,0.08,0,0.018,p_xy,it_xy,d_xy,p_xy,it_xy,d_xy,0.8,0.1,0.8]
-simtime = 10
+simtime = 5
 dt = 1/1000
 time_array = np.linspace(0,simtime,int(simtime/dt))
 
-X_profile = np.ones(len(time_array)) * 100
-Y_profile = np.ones(len(time_array)) * 100
-Z_profile = np.ones(len(time_array)) * 4
+X_profile = np.ones(len(time_array)) * 1
+Y_profile = np.ones(len(time_array)) * 1
+Z_profile = np.ones(len(time_array)) * 1
     
     
-X_profile = np.sin(time_array/2) * 2
-Y_profile = np.cos(time_array/2) * 2
-Z_profile = np.linspace(2, 5, len(Y_profile))
+# X_profile = np.sin(time_array/2) * 5
+# Y_profile = np.cos(time_array/2) * 5
+Z_profile = np.linspace(5, 10, len(Y_profile))
     
     
-Yaw_profile = np.sin(time_array/8) * 1
+Yaw_profile = np.sin(time_array/8) * 0
    
 Command_matrix = np.vstack((X_profile,Y_profile,Z_profile,Yaw_profile))
 Command_matrix = np.transpose(Command_matrix)
 # print(Command_matrix[0])    
    
 flight_data = simulate_drone(pid_gains, time_array ,Command_matrix)
-    
+
+flight_data.save('flight_data')
+
 fig, axs = plt.subplots(4, 3,figsize = (14,7),sharex=True)
 time_array = flight_data.provide(1)[1]
 print("time array len",len(time_array))

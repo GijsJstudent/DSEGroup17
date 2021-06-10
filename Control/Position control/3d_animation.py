@@ -27,7 +27,7 @@ time_array = flight_data.time
 
 # --------------- 3D plotting Animation -------------------
 sfactor = 10 # Speed up factor
-show_lines = 1
+
 arm1 = np.array([0.5, 0.5, 0]).T
 arm2 = np.array([-0.5, 0.5, 0]).T
 arm3 = np.array([-0.5, -0.5, 0]).T
@@ -116,7 +116,7 @@ lines = [line1, line2, line3, line4, line5]
 
 line_ani = animation.FuncAnimation(fig, update_graph, int(len(time_array)/sfactor), fargs=(sfactor, lines),
                                    interval=10, blit=False)
-# line_ani.save('test1.gif', writer='imagemagick', fps=30)
+line_ani.save('test1.gif', writer='imagemagick', fps=10)
 plt.show()
 
 
