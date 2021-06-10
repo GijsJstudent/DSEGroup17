@@ -28,6 +28,11 @@ time_array = flight_data.time
 # --------------- 3D plotting Animation -------------------
 sfactor = 10 # Speed up factor
 show_lines = 1
+arm1 = np.array([0.5, 0.5, 0]).T
+arm2 = np.array([-0.5, 0.5, 0]).T
+arm3 = np.array([-0.5, -0.5, 0]).T
+arm4 = np.array([0.5, -0.5, 0]).T
+head = np.array([0, 1, 0]).T
 
 def update_graph(frame, sfactor, lines):
     i = (frame-1)*sfactor
@@ -41,6 +46,9 @@ def update_graph(frame, sfactor, lines):
     lines[2].set_3d_properties(np.array([tra_z[i]+pos[0,2], tra_z[i]+pos[2,2]]))
     lines[3].set_data(np.array([tra_x[i]+pos[1,0], tra_x[i]+pos[3,0]]),np.array([tra_y[i]+pos[1,1], tra_y[i]+pos[3,1]]))
     lines[3].set_3d_properties(np.array([tra_z[i]+pos[1,2], tra_z[i]+pos[3,2]]))
+    lines[4].set_data(np.array([tra_x[i], tra_x[i] + pos[4, 0]]),
+                      np.array([tra_y[i], tra_y[i] + pos[4, 1]]))
+    lines[4].set_3d_properties(np.array([tra_z[i], tra_z[i] + pos[4, 2]]))
     return lines
 
 fig = plt.figure()
@@ -64,10 +72,7 @@ tra_z = flight_data.provide(2)[0]
 roll = flight_data.provide(6)[0]
 pitch = flight_data.provide(7)[0]
 yaw = flight_data.provide(8)[0]
-arm1 = np.array([0.5, 0.5, 0]).T
-arm2 = np.array([-0.5, 0.5, 0]).T
-arm3 = np.array([-0.5, -0.5, 0]).T
-arm4 = np.array([0.5, -0.5, 0]).T
+
 
 def calc_motor_pos(i):
     # define rotation matrices
@@ -96,15 +101,17 @@ def calc_motor_pos(i):
     pos2 = R_E_b @ arm2
     pos3 = R_E_b @ arm3
     pos4 = R_E_b @ arm4
+    headline = R_E_b @ head
 
-    return np.array([pos1,pos2,pos3,pos4])
+    return np.array([pos1,pos2,pos3,pos4,headline])
 
 # Generate lines
 line1 = ax.plot(tra_x[0:1], tra_y[0:1], tra_z[0:1], 'r')[0]
 line2 = ax.plot(X_profile[0:1], Y_profile[0:1], Z_profile[0:1], 'b')[0]
 line3 = ax.plot([tra_x[0]-0.5, tra_x[0]+0.5],[tra_y[0]-0.5, tra_y[0]+0.5],[tra_z[0], tra_z[0]], 'c')[0]
 line4 = ax.plot([tra_x[0]+0.5, tra_x[0]-0.5],[tra_y[0]-0.5, tra_y[0]+0.5],[tra_z[0], tra_z[0]], 'c')[0]
-lines = [line1, line2, line3, line4]
+line5 = ax.plot([tra_x[0], tra_x[0]],[tra_y[0], tra_y[0]+0.5],[tra_z[0], tra_z[0]], 'g')[0]
+lines = [line1, line2, line3, line4, line5]
 
 
 line_ani = animation.FuncAnimation(fig, update_graph, int(len(time_array)/sfactor), fargs=(sfactor, lines),
