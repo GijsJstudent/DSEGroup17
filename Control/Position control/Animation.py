@@ -67,7 +67,7 @@ ax.set_title('3D Test')
 
 line_ani = animation.FuncAnimation(fig, update_lines, 300, fargs=(data, lines),
                                    interval=10, blit=True)
-
+line_ani.save('test2.gif', writer='imagemagick', fps=30)
 plt.show()
 
 

@@ -7,23 +7,27 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from PID import PID ,Data, Controller
 import matplotlib.animation as animation
+# from matplotlib.animation import FuncAnimation, PillowWriter
+# import networkx as nx
 import pickle
 
 flight_data = Data()
 flight_data.load("flight_data")
 
-X_profile = flight_data.provide("X_profile")
+X_profile = flight_data.provide("X_profile")[0]
 
-Y_profile = flight_data.provide("Y_profile")
+Y_profile = flight_data.provide("Y_profile")[0]
 
-Z_profile = flight_data.provide("Z_profile")
+Z_profile = flight_data.provide("Z_profile")[0]
+
+Yaw_profile = flight_data.provide("Yaw_profile")[0]
 
 time_array = flight_data.time
 
 
 # --------------- 3D plotting Animation -------------------
 sfactor = 10 # Speed up factor
-
+show_lines = 1
 
 def update_graph(frame, sfactor, lines):
     i = (frame-1)*sfactor
@@ -31,13 +35,12 @@ def update_graph(frame, sfactor, lines):
     lines[0].set_3d_properties(tra_z[0:frame * sfactor:sfactor])
     lines[1].set_data(X_profile[0:frame*sfactor:sfactor], Y_profile[0:frame*sfactor:sfactor])
     lines[1].set_3d_properties(Z_profile[0:frame*sfactor:sfactor])
-    lines = lines[0:2]
-    # del lines[2]
-    # lines[2].set_data([[tra_x[i]-0.5, tra_x[i]+0.5],[tra_y[i]-0.5, tra_y[i]+0.5]])
-    # lines[2].set_3d_properties([tra_z[i], tra_z[i]])
-    pos = calc_motor_pos(i)
-    lines.append(ax.plot([tra_x[i]+pos[0,0], tra_x[i]+pos[2,0]],[tra_y[i]+pos[0,1], tra_y[i]+pos[2,1]],[tra_z[i]+pos[0,2], tra_z[i]+pos[2,2]], 'c')[0])
-    lines.append(ax.plot([tra_x[i]+pos[1,0], tra_x[i]+pos[3,0]],[tra_y[i]+pos[1,1], tra_y[i]+pos[3,1]],[tra_z[i]+pos[1,2], tra_z[i]+pos[3,2]], 'c')[0])
+
+    pos = calc_motor_pos(i) # Calculate positions of the arms
+    lines[2].set_data(np.array([tra_x[i]+pos[0,0], tra_x[i]+pos[2,0]]),np.array([tra_y[i]+pos[0,1], tra_y[i]+pos[2,1]]))
+    lines[2].set_3d_properties(np.array([tra_z[i]+pos[0,2], tra_z[i]+pos[2,2]]))
+    lines[3].set_data(np.array([tra_x[i]+pos[1,0], tra_x[i]+pos[3,0]]),np.array([tra_y[i]+pos[1,1], tra_y[i]+pos[3,1]]))
+    lines[3].set_3d_properties(np.array([tra_z[i]+pos[1,2], tra_z[i]+pos[3,2]]))
     return lines
 
 fig = plt.figure()
@@ -97,14 +100,46 @@ def calc_motor_pos(i):
     return np.array([pos1,pos2,pos3,pos4])
 
 # Generate lines
-print("wqw",tra_x[0])
 line1 = ax.plot(tra_x[0:1], tra_y[0:1], tra_z[0:1], 'r')[0]
 line2 = ax.plot(X_profile[0:1], Y_profile[0:1], Z_profile[0:1], 'b')[0]
-# line3 = ax.plot([tra_x[0]-0.5, tra_x[0]+0.5],[tra_y[0]-0.5, tra_y[0]+0.5],[tra_z[0], tra_z[0]], 'c')[0]
-# line4 = ax.plot([tra_x[0]+0.5, tra_x[0]-0.5],[tra_y[0]-0.5, tra_y[0]+0.5],[tra_z[0], tra_z[0]], 'c')[0]
-lines = [line1, line2]
+line3 = ax.plot([tra_x[0]-0.5, tra_x[0]+0.5],[tra_y[0]-0.5, tra_y[0]+0.5],[tra_z[0], tra_z[0]], 'c')[0]
+line4 = ax.plot([tra_x[0]+0.5, tra_x[0]-0.5],[tra_y[0]-0.5, tra_y[0]+0.5],[tra_z[0], tra_z[0]], 'c')[0]
+lines = [line1, line2, line3, line4]
+
 
 line_ani = animation.FuncAnimation(fig, update_graph, int(len(time_array)/sfactor), fargs=(sfactor, lines),
-                                   interval=10, blit=True)
+                                   interval=10, blit=False)
+# line_ani.save('test1.gif', writer='imagemagick', fps=30)
+plt.show()
+
+
+# 3D plotting trajectory
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+Axes3D.plot(ax, flight_data.provide(0)[0], flight_data.provide(1)[0], flight_data.provide(2)[0])
+Axes3D.plot(ax, X_profile, Y_profile, Z_profile)
+plt.show()
+
+fig, axs = plt.subplots(4, 3, figsize=(14, 7), sharex=True)
+time_array = flight_data.provide(1)[1]
+print("time array len", len(time_array))
+print("asasas", len(flight_data.provide(1)[0]))
+for ax, i in zip(axs.flat, range(12)):
+    ax.plot(time_array, flight_data.provide(i)[0])
+
+    if i == 0:
+        ax.plot(time_array, X_profile)
+
+    if i == 1:
+        ax.plot(time_array, Y_profile)
+
+    if i == 2:
+        ax.plot(time_array, Z_profile)
+
+    if i == 8:
+        ax.plot(time_array, Yaw_profile)
+
+    ax.set(ylabel=flight_data.provide(i)[2])
 
 plt.show()
