@@ -25,6 +25,7 @@ Yaw_profile = flight_data.provide("Yaw_profile")[0]
 time_array = flight_data.time
 
 
+
 # --------------- 3D plotting Animation -------------------
 sfactor = 10 # Speed up factor
 show_lines = 1
@@ -54,13 +55,13 @@ def update_graph(frame, sfactor, lines):
 fig = plt.figure()
 ax = Axes3D(fig)
 
-ax.set_xlim3d([-10, 10])
+ax.set_xlim3d([-5, 5])
 ax.set_xlabel('X')
 
-ax.set_ylim3d([-10, 10])
+ax.set_ylim3d([-5, 5])
 ax.set_ylabel('Y')
 
-ax.set_zlim3d([0.0, 10])
+ax.set_zlim3d([0.0, 20])
 ax.set_zlabel('Z')
 
 ax.set_title('3D Test')

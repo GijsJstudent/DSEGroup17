@@ -137,7 +137,7 @@ def simulate_drone(pid_gains, time_array ,Command_matrix):
     
     
     dt = time_array[1] - time_array[0]
-    print(f"SIMULATION TIME: {round(len(time_array)*dt,2)}\nTIMESTEP: {dt}")
+    #print(f"SIMULATION TIME: {round(len(time_array)*dt,2)}\nTIMESTEP: {dt}")
     
     state = np.array([0,0,0,0,0,0,0,0,0,0,0,0])
     d= np.zeros(12)
@@ -190,26 +190,36 @@ it_xy = 0 #proportional gain for x and y controllers
         
     
 pid_gains = [p_rp,it_rp,d_rp,p_rp,it_rp,d_rp,0.08,0,0.018,p_xy,it_xy,d_xy,p_xy,it_xy,d_xy,0.8,0.1,0.8]    
-time_array = np.linspace(0,20,20000)     
+"""
+pid_gains = [ 9.39362754e-01 ,-1.25274567e-03 , 1.03179595e-01 , 6.05617003e-01,
+ -2.47850329e-06,  1.21172893e-01, 8.35487397e-02 ,-8.51006653e-04,
+  1.76026504e-02 , 8.19871955e-02, -5.20418186e-04,  2.39828488e-01,
+  1.34284217e-01 ,-6.24434720e-04 , 2.40449375e-01 , 7.90964222e-01,
+  1.00254316e-01 , 7.49856318e-01]
+"""
+time_array = np.linspace(0,100,10000)     
 
-X_profile = np.ones(len(time_array)) * 100
-Y_profile = np.ones(len(time_array)) * 100
-Z_profile = np.ones(len(time_array)) * 4
-    
-    
-#X_profile = np.sin(time_array/2) * 8
-#Y_profile = np.cos(time_array/2) * 8
-Z_profile = np.linspace(2, 5, len(Y_profile))
-    
-    
-Yaw_profile = np.sin(time_array/5) * 1
-   
+ 
+  
+X_profile = np.sin(time_array/3) * 3
+Y_profile = np.cos(time_array/3) * 3
+Z_profile = np.linspace(0,20, len(time_array))
+#R = (-1/25)* Z_profile**2 + 4 * Z_profile
+#R = np.linspace(0,50, len(time_array))
+#Theta = np.cos(time_array/2)
+#X_profile = R*np.cos(Theta)
+#Y_profile = R*np.sin(Theta)
+
+Yaw_profile = np.ones(len(time_array)) * 0
+
+
+
 Command_matrix = np.vstack((X_profile,Y_profile,Z_profile,Yaw_profile))
 Command_matrix = np.transpose(Command_matrix)
 # print(Command_matrix[0])    
    
 flight_data = simulate_drone(pid_gains, time_array ,Command_matrix)
-    
+flight_data.save("flight_data")    
 fig, axs = plt.subplots(4, 3,figsize = (14,7),sharex=True)
 time_array = flight_data.provide(1)[1]
 print("time array len",len(time_array))

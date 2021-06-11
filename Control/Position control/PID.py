@@ -73,11 +73,11 @@ class Controller:
         R_b_E = R_b_2 @ (R_2_1 @ R_1_E) #transformation from E frame to b frame
         
         
-        #W = np.array([[ np.cos(yaw), np.sin(yaw)], 
-         #             [-np.sin(yaw), np.cos(yaw)],])
+        W = np.array([[ np.cos(yaw), np.sin(yaw)], 
+                      [-np.sin(yaw), np.cos(yaw)],])
         #position error in body reference frame
-        pos_error = (R_b_E @ np.hstack((pos_error,np.array([0]))))[:-1]
-        
+        #pos_error = (R_b_E @ np.hstack((pos_error,np.array([0]))))[:-1]
+        #pos_error = W @ pos_error
         e_x_p = pos_error[0]
         e_y_p = pos_error[1]
         
