@@ -50,7 +50,7 @@ class Controller:
         roll = state_measurement[3]
         pitch = state_measurement[4]
         yaw = state_measurement[5]
-        
+        ref_yaw = reference[3] # reference yaw angle
         pos_error = reference[0:2] - state_measurement[0:2] #position error in earth frame
         
         
@@ -73,11 +73,16 @@ class Controller:
         R_b_E = R_b_2 @ (R_2_1 @ R_1_E) #transformation from E frame to b frame
         
         
-        W = np.array([[ np.cos(yaw), np.sin(yaw)], 
-                      [-np.sin(yaw), np.cos(yaw)],])
+        W = np.array([[ np.cos(ref_yaw), np.sin(ref_yaw)], 
+                      [-np.sin(ref_yaw), np.cos(ref_yaw)],])
         #position error in body reference frame
+
         #pos_error = (R_b_E @ np.hstack((pos_error,np.array([0]))))[:-1]
-        #pos_error = W @ pos_error
+        pos_error = W @ pos_error
+
+        #pos_error = (R_b_E @ np.hstack((pos_error,np.array([0]))))[:-1]
+        
+
         e_x_p = pos_error[0]
         e_y_p = pos_error[1]
         
@@ -123,16 +128,18 @@ class Data:
         self.derivatives = []
         self.control_inputs = []
         self.references = []
+        self.wind_speed = []
         
-    def update(self,state,derivative,control_input,reference,t): # append 
+    def update(self,state,derivative,control_input,reference,wind_speed,t): # append 
         self.states.append(state)
         self.control_inputs.append(control_input)
         self.time.append(t)
         self.derivatives.append(derivative)
         self.references.append(reference)
+        self.wind_speed.append(wind_speed)
     def provide(self,state_name): # provide a state variablle 
         state_names = ["x","y","z","v_x","v_y","v_z","roll","pitch","yaw","w_x","w_y","w_z"]
-        control_input_names = ["t1","t1","t1","t1"]
+        control_input_names = ["t1","t2","t3","t4"]
         profile_names = ["X_profile" , "Y_profile" , "Z_profile" , "Yaw_profile"]
         if state_name in state_names:
             i = state_names.index(state_name)

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 minimization
+
+before running the minimization function, comment out all plots in drone_dynamics_vectorized
 """
 
 import numpy as np
