@@ -15,11 +15,9 @@ infile.close()
 
 
 
-dict_of_chapters = {2:"project progress",
-                    3:"System functional analysis",
-                    4:"Market analysis",
-                    5:"Subsystem design approach"}
-
+dict_of_chapters = {}
+for i in range(2,20):
+    dict_of_chapters[str(i)] = []
 
 
 for page, page_num in zip(report,range(2,len(report)+2)):
@@ -32,8 +30,11 @@ for page, page_num in zip(report,range(2,len(report)+2)):
                 requirement_dict[word][1].append(page_num)
             if not (chap in requirement_dict[word][2]):
                 requirement_dict[word][2].append(chap)
-#for req in requirement_dict:         
-#    print(req, "\t", requirement_dict[req][0], "\t", requirement_dict[req][1])
+            if not (word in dict_of_chapters[chap]):
+                dict_of_chapters[chap].append(word)
+            
+for req in requirement_dict:         
+    print(req, "\t", requirement_dict[req][0], "\t", requirement_dict[req][1])
 
 
 f = open("requirement_log.txt", "w")
@@ -47,6 +48,11 @@ for req in requirement_dict:
     
 f.write("\n\n\n\n")
 
+f.write("chapter   \t list of requirements \n")
+for chap in dict_of_chapters:
+    f.write(chap+'   \t'+str(dict_of_chapters[chap])+"\n")
+
+f.write("\n\n\n\n")
 f.write("Tag   \t\t Description \n")
 for req in requirement_dict:
     f.write(req+'   \t')

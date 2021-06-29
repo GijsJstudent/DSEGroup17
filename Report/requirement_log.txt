@@ -1,81 +1,104 @@
 75 requirements in total 
 
 Tag   	# in the report 	pages where mentioned   	chapters where mentioned 
-AD-AP-1   	9	[10, 16, 20, 26, 38, 41, 58, 70, 87]	['5', '6', '7', '8', '9', '12']
-AD-AP-2   	5	[16, 19, 26, 58, 70]	['6', '9']
-AD-ATC-5   	3	[16, 20, 26]	['6']
-AD-NR-4   	3	[16, 19, 26]	['6']
-AD-SYS-5.1   	3	[16, 21, 26]	['6']
-AD-SYS-6   	10	[16, 21, 26, 28, 40, 56, 58, 61, 70, 87]	['6', '7', '8', '9', '12']
-AD-SYS-8   	3	[16, 18, 26]	['6']
-AD-SYS-9   	3	[16, 18, 26]	['6']
-CCE-AP-2   	1	[93]	['14']
-CCE-AP-2.1   	4	[40, 41, 46, 56]	['8']
-CCE-AP-3   	2	[72, 84]	['10']
-CCE-AP-4   	3	[40, 46, 87]	['8', '12']
-CCE-SYS-3.1   	3	[72, 84]	['10']
-CCE-SYS-3.2   	4	[72, 84]	['10']
-CCE-SYS-7   	3	[40, 43, 56]	['8']
-CCE-SYS-8   	3	[40, 53, 87]	['8', '12']
-CCE-SYS-9   	3	[40, 41, 56]	['8']
-COST-AP-1   	4	[10, 58, 70, 98]	['5', '9', '15']
-COST-AP-2   	2	[10, 98]	['5', '15']
-OP-AP-1   	2	[87, 93]	['12', '14']
-OP-AP-2   	6	[10, 28, 72, 75, 84, 85]	['5', '7', '10', '11']
-OP-AP-2.1   	3	[72, 84]	['10']
-OP-AP-2.2   	6	[58, 70, 72, 80, 84, 85]	['9', '10', '11']
-OP-AP-2.3   	3	[72, 84]	['10']
-OP-AP-3   	6	[10, 40, 58, 70, 87, 90]	['5', '8', '9', '12']
-OP-AP-4   	6	[40, 42, 43, 56, 93]	['8', '14']
-OP-AP-5   	1	[93]	['14']
-OP-AP-6   	11	[10, 16, 21, 26, 58, 70, 72, 84, 85, 93, 94]	['5', '6', '9', '10', '11', '14']
-OP-AP-7   	3	[40, 93, 94]	['8', '14']
-OP-AP-8   	4	[10, 40, 43, 93]	['5', '8', '14']
-OP-GB-9   	1	[85]	['11']
-OP-SYS-10   	3	[40, 43, 56]	['8']
-POP-AP-2   	6	[16, 20, 26, 58, 59, 70]	['6', '9']
+AD-AP-1   	10	[14, 20, 24, 30, 46, 63, 100, 102, 120, 121]	['5', '6', '8', '9', '12', '16']
+AD-AP-2   	8	[20, 23, 30, 63, 94, 98, 120]	['6', '9', '11', '16']
+AD-ATC-5   	4	[20, 24, 30, 120]	['6', '16']
+AD-NR-4   	4	[20, 23, 30, 120]	['6', '16']
+AD-SYS-5.1   	4	[20, 25, 30, 120]	['6', '16']
+AD-SYS-6   	13	[20, 25, 30, 32, 43, 45, 63, 67, 100, 102, 120, 121]	['6', '7', '8', '9', '12', '16']
+AD-SYS-8   	4	[20, 22, 30, 120]	['6', '16']
+AD-SYS-9   	4	[20, 22, 30, 120]	['6', '16']
+CCE-AP-2   	6	[32, 38, 43, 111, 120, 121]	['7', '14', '16']
+CCE-AP-2.1   	5	[45, 46, 51, 61, 120]	['8', '16']
+CCE-AP-3   	7	[32, 37, 43, 79, 92, 120]	['7', '10', '16']
+CCE-AP-4   	4	[45, 51, 61, 120]	['8', '16']
+CCE-SYS-3.1   	6	[79, 80, 81, 92, 120]	['10', '16']
+CCE-SYS-3.2   	8	[32, 43, 79, 80, 93, 120]	['7', '10', '16']
+CCE-SYS-7   	4	[45, 48, 61, 120]	['8', '16']
+CCE-SYS-8   	4	[45, 58, 61, 120]	['8', '16']
+CCE-SYS-9   	4	[45, 46, 61, 120]	['8', '16']
+COST-AP-1   	6	[11, 14, 63, 69, 119, 122]	['4', '5', '9', '15', '16']
+COST-AP-2   	4	[11, 14, 119, 122]	['4', '5', '15', '16']
+OP-AP-1   	4	[100, 111, 114, 121]	['12', '14', '16']
+OP-AP-2   	10	[14, 32, 43, 79, 83, 93, 94, 97, 120]	['5', '7', '10', '11', '16']
+OP-AP-2.1   	4	[79, 93, 120]	['10', '16']
+OP-AP-2.2   	9	[63, 79, 89, 93, 94, 97, 98, 120]	['9', '10', '11', '16']
+OP-AP-2.3   	4	[79, 93, 120]	['10', '16']
+OP-AP-3   	7	[14, 45, 63, 100, 106, 120, 121]	['5', '8', '9', '12', '16']
+OP-AP-4   	8	[45, 47, 48, 61, 111, 120, 121]	['8', '14', '16']
+OP-AP-5   	2	[111, 121]	['14', '16']
+OP-AP-6   	12	[14, 20, 25, 30, 63, 79, 93, 94, 111, 112, 120, 121]	['5', '6', '9', '10', '11', '14', '16']
+OP-AP-7   	4	[45, 111, 112, 121]	['8', '14', '16']
+OP-AP-8   	5	[14, 45, 48, 111, 121]	['5', '8', '14', '16']
+OP-GB-9   	3	[100, 105, 121]	['12', '16']
+OP-SYS-10   	4	[45, 48, 61, 120]	['8', '16']
+POP-AP-2   	7	[20, 24, 30, 63, 64, 120]	['6', '9', '16']
 POP-AP-3   	0	[]	[]
-POP-AP-3.1   	1	[28]	['7']
-POP-AP-3.2   	2	[10, 28]	['5', '7']
-POP-AP-3.8   	2	[10, 28]	['5', '7']
-POP-SYS-2.2   	4	[10, 16, 21, 26]	['5', '6']
-POP-SYS-3.7   	4	[28, 34, 72, 84]	['7', '10']
-POP-SYS-4   	5	[16, 21, 26, 40, 87]	['6', '8', '12']
-SP-AP1.4.3   	0	[]	[]
-SP-AP-1   	3	[58, 67, 70]	['9']
-SP-AP-1.1   	4	[58, 67, 68, 70]	['9']
-SP-AP-1.2   	2	[58, 70]	['9']
-SP-AP-1.3   	2	[58, 70]	['9']
-SP-AP-1.4.1   	4	[10, 58, 67, 70]	['5', '9']
-SP-AP-1.4.2   	3	[10, 28, 68]	['5', '7', '9']
-SP-EO-2   	5	[28, 58, 63, 70, 85]	['7', '9', '11']
-SP-ST-1.2.1   	4	[58, 67, 70, 96]	['9', '14']
+POP-AP-3.1   	3	[32, 43, 120]	['7', '16']
+POP-AP-3.2   	4	[14, 32, 43, 120]	['5', '7', '16']
+POP-AP-3.8   	4	[14, 32, 43, 120]	['5', '7', '16']
+POP-SYS-2.2   	5	[14, 20, 25, 30, 120]	['5', '6', '16']
+POP-SYS-3.7   	6	[32, 38, 43, 79, 93, 120]	['7', '10', '16']
+POP-SYS-4   	8	[20, 25, 30, 45, 100, 105, 120, 121]	['6', '8', '12', '16']
+SP-AP-1   	4	[63, 73, 77, 120]	['9', '16']
+SP-AP-1.1   	5	[63, 73, 74, 77, 120]	['9', '16']
+SP-AP-1.2   	2	[63, 120]	['9', '16']
+SP-AP-1.3   	3	[63, 77, 120]	['9', '16']
+SP-AP-1.4.1   	4	[14, 63, 73, 120]	['5', '9', '16']
+SP-AP-1.4.2   	5	[14, 32, 43, 74, 120]	['5', '7', '9', '16']
+SP-AP-1.4.3   	1	[79]	['10']
+SP-EO-2   	5	[63, 69, 100, 102, 121]	['9', '12', '16']
+SP-ST-1.2.1   	4	[63, 73, 117, 121]	['9', '14', '16']
+SP-SYS-1.3.1   	5	[14, 32, 34, 43, 74]	['5', '7', '9']
+SP-SYS-1.1.1   	1	[74]	['9']
+SP-SYS-1.2.2   	4	[46, 100, 102, 121]	['8', '12', '16']
+SP-SYS-1.5   	3	[63, 77, 120]	['9', '16']
 SP-SYS-1.6   	0	[]	[]
-SP-SYS-1.1.1   	1	[68]	['9']
-SP-SYS-1.3.1   	3	[10, 28, 68]	['5', '7', '9']
-SP-SYS-1.2.2   	2	[41, 87]	['8', '12']
-SP-SYS-1.5   	2	[58, 70]	['9']
-SP-SYS-4.1   	2	[58, 70]	['9']
-SP-SYS-6   	2	[58, 70]	['9']
-SR-AP-1   	1	[85]	['11']
-SR-AP-2   	1	[85]	['11']
-SR-AP-3   	2	[40, 87]	['8', '12']
-SR-AP-4   	1	[42]	['8']
-SR-AP-4:   	2	[40, 56]	['8']
-SR-AP-5   	2	[40, 87]	['8', '12']
-SR-AP-6   	4	[58, 65, 70, 85]	['9', '11']
-SR-APC-7   	4	[40, 42, 43, 56]	['8']
-SR-ST-4.1   	3	[40, 43, 56]	['8']
-SR-SYS-5.1   	1	[85]	['11']
-SR-SYS-5.2   	4	[40, 42, 56, 96]	['8', '14']
-SR-SYS-8   	1	[85]	['11']
-SUS-AP-1   	1	[28]	['7']
-SUS-AP-2   	2	[87, 91]	['12']
-SUS-EO-3   	13	[10, 16, 22, 26, 28, 40, 47, 56, 58, 70, 87, 91]	['5', '6', '7', '8', '9', '12']
-SUS-EO-4   	3	[58, 70, 85]	['9', '11']
-SUS-EO-6   	1	[28]	['7']
-SUS-EO-7   	1	[85]	['11']
-SUS-NR-6.1   	1	[85]	['11']
+SP-SYS-4.1   	3	[63, 77, 120]	['9', '16']
+SP-SYS-6   	5	[63, 94, 97, 98, 120]	['9', '11', '16']
+SR-AP-1   	3	[100, 105, 121]	['12', '16']
+SR-AP-2   	2	[100, 121]	['12', '16']
+SR-AP-3   	4	[45, 100, 105, 121]	['8', '12', '16']
+SR-AP-4   	1	[47]	['8']
+SR-AP-4:   	3	[45, 61, 120]	['8', '16']
+SR-AP-5   	3	[45, 100, 121]	['8', '12', '16']
+SR-AP-6   	5	[63, 71, 100, 106, 121]	['9', '12', '16']
+SR-APC-7   	5	[45, 47, 48, 61, 120]	['8', '16']
+SR-ST-4.1   	5	[45, 48, 61, 117, 120]	['8', '14', '16']
+SR-SYS-5.1   	2	[100, 121]	['12', '16']
+SR-SYS-5.2   	5	[45, 47, 61, 117, 120]	['8', '14', '16']
+SR-SYS-8   	3	[94, 98, 120]	['11', '16']
+SUS-AP-1   	3	[32, 43, 120]	['7', '16']
+SUS-AP-2   	3	[100, 108, 121]	['12', '16']
+SUS-EO-3   	12	[14, 20, 26, 30, 32, 45, 52, 63, 100, 107, 120, 121]	['5', '6', '7', '8', '9', '12', '16']
+SUS-EO-4   	3	[63, 77, 120]	['9', '16']
+SUS-EO-6   	4	[32, 43, 120]	['7', '16']
+SUS-EO-7   	3	[100, 108, 121]	['12', '16']
+SUS-NR-6.1   	3	[100, 108, 121]	['12', '16']
+
+
+
+
+chapter   	 list of requirements 
+2   	[]
+3   	[]
+4   	['COST-AP-1', 'COST-AP-2']
+5   	['COST-AP-1', 'COST-AP-2', 'SUS-EO-3', 'OP-AP-3', 'OP-AP-2', 'OP-AP-8', 'POP-SYS-2.2', 'SP-SYS-1.3.1', 'SP-AP-1.4.1', 'SP-AP-1.4.2', 'POP-AP-3.2', 'POP-AP-3.8', 'AD-AP-1', 'OP-AP-6']
+6   	['AD-AP-1', 'AD-AP-2', 'AD-NR-4', 'AD-ATC-5', 'AD-SYS-5.1', 'AD-SYS-8', 'AD-SYS-9', 'POP-AP-2', 'POP-SYS-2.2', 'POP-SYS-4', 'AD-SYS-6', 'OP-AP-6', 'SUS-EO-3']
+7   	['POP-AP-3.1', 'POP-AP-3.2', 'POP-AP-3.8', 'POP-SYS-3.7', 'AD-SYS-6', 'SUS-AP-1', 'SUS-EO-6', 'SUS-EO-3', 'SP-SYS-1.3.1', 'SP-AP-1.4.2', 'OP-AP-2', 'CCE-AP-2', 'CCE-AP-3', 'CCE-SYS-3.2']
+8   	['CCE-AP-2.1', 'CCE-SYS-7', 'OP-AP-4', 'OP-SYS-10', 'SR-APC-7', 'SR-SYS-5.2', 'SR-AP-4:', 'CCE-SYS-9', 'SR-ST-4.1', 'SUS-EO-3', 'OP-AP-3', 'AD-SYS-6', 'OP-AP-7', 'OP-AP-8', 'SR-AP-5', 'POP-SYS-4', 'SR-AP-3', 'CCE-SYS-8', 'CCE-AP-4', 'SP-SYS-1.2.2', 'AD-AP-1', 'SR-AP-4']
+9   	['SP-AP-1', 'SP-AP-1.1', 'SP-AP-1.2', 'SP-ST-1.2.1', 'SP-AP-1.3', 'SP-AP-1.4.1', 'SP-SYS-1.5', 'SP-EO-2', 'SP-SYS-4.1', 'SP-SYS-6', 'POP-AP-2', 'AD-AP-1', 'AD-AP-2', 'AD-SYS-6', 'OP-AP-2.2', 'OP-AP-6', 'SUS-EO-3', 'SUS-EO-4', 'OP-AP-3', 'SR-AP-6', 'COST-AP-1', 'SP-SYS-1.1.1', 'SP-SYS-1.3.1', 'SP-AP-1.4.2']
+10   	['CCE-AP-3', 'CCE-SYS-3.1', 'CCE-SYS-3.2', 'OP-AP-6', 'POP-SYS-3.7', 'OP-AP-2', 'OP-AP-2.1', 'OP-AP-2.2', 'OP-AP-2.3', 'SP-AP-1.4.3']
+11   	['OP-AP-6', 'OP-AP-2', 'OP-AP-2.2', 'AD-AP-2', 'SR-SYS-8', 'SP-SYS-6']
+12   	['AD-SYS-6', 'SUS-EO-3', 'OP-AP-3', 'SUS-AP-2', 'OP-AP-1', 'SP-EO-2', 'OP-GB-9', 'SR-AP-1', 'SR-AP-2', 'SR-SYS-5.1', 'SR-AP-6', 'SUS-NR-6.1', 'SUS-EO-7', 'SR-AP-5', 'POP-SYS-4', 'SR-AP-3', 'SP-SYS-1.2.2', 'AD-AP-1']
+13   	[]
+14   	['OP-AP-1', 'OP-AP-4', 'OP-AP-5', 'OP-AP-6', 'OP-AP-7', 'OP-AP-8', 'CCE-AP-2', 'SR-SYS-5.2', 'SP-ST-1.2.1', 'SR-ST-4.1']
+15   	['COST-AP-1', 'COST-AP-2']
+16   	['AD-AP-1', 'POP-AP-3.1', 'CCE-AP-2.1', 'SP-AP-1', 'CCE-AP-3', 'AD-AP-2', 'POP-AP-3.2', 'CCE-SYS-7', 'SP-AP-1.1', 'CCE-SYS-3.1', 'AD-NR-4', 'POP-AP-3.8', 'OP-AP-4', 'CCE-SYS-3.2', 'AD-ATC-5', 'POP-SYS-3.7', 'OP-SYS-10', 'SP-AP-1.2', 'OP-AP-2', 'AD-SYS-5.1', 'SUS-AP-1', 'SR-APC-7', 'SP-AP-1.3', 'OP-AP-2.1', 'AD-SYS-6', 'SUS-EO-6', 'SR-SYS-5.2', 'SP-AP-1.4.1', 'OP-AP-2.2', 'AD-SYS-8', 'SP-AP-1.4.2', 'SR-AP-4:', 'SP-SYS-1.5', 'OP-AP-2.3', 'AD-SYS-9', 'CCE-SYS-9', 'POP-AP-2', 'CCE-AP-2', 'SR-ST-4.1', 'SP-SYS-4.1', 'POP-SYS-2.2', 'SUS-EO-3', 'POP-SYS-4', 'OP-AP-3', 'CCE-SYS-8', 'CCE-AP-4', 'OP-AP-6', 'SUS-EO-4', 'SR-SYS-8', 'SP-SYS-6', 'SUS-AP-2', 'OP-AP-1', 'SP-EO-2', 'OP-GB-9', 'SR-AP-1', 'SR-AP-2', 'SR-SYS-5.1', 'SR-AP-6', 'SUS-NR-6.1', 'SUS-EO-7', 'SR-AP-5', 'SR-AP-3', 'SP-SYS-1.2.2', 'OP-AP-5', 'OP-AP-7', 'OP-AP-8', 'SP-ST-1.2.1', 'COST-AP-1', 'COST-AP-2']
+17   	[]
+18   	[]
+19   	[]
 
 
 
@@ -94,7 +117,7 @@ CCE-AP-2.1   	There shall be an undisturbed communication to the furthest drone 
 CCE-AP-3   	The drones shall be recharged wirelessly through their landing pads
 CCE-AP-4   	The drones shall be able position themselves within 0.5m accuracy
 CCE-SYS-3.1   	The drone shall be able to charge during rain
-CCE-SYS-3.2   	The drone shall be able recharge autonomously on the landing pad between preparation and show.
+CCE-SYS-3.2   	The drone shall be able to recharge autonomously on the landing pad between preparation and show.
 CCE-SYS-7   	The drone telemetry shall be monitored
 CCE-SYS-8   	Choreography shall be executed.
 CCE-SYS-9   	The drones shall be able to be manually controlled.
@@ -121,20 +144,20 @@ POP-AP-3.8   	The drones shall be able to fly for  20 minutes of showtime with a
 POP-SYS-2.2   	The drones shall have a minimum  thrust over weight ratio of 3.
 POP-SYS-3.7   	The energy storage shall be fully  charged within 60min.
 POP-SYS-4   	Partial failure of the propulsion unit shall not prevent the drone  from being able to perform an emergency landing.
-SP-AP1.4.3   	Future innovations shall have specifications up to dimensions of 20cm x 20cm x 20cm
 SP-AP-1   	The drones shall be able to carry changeable payloads
 SP-AP-1.1   	The light source shall be visible in urban darkness over a distance of 4km
 SP-AP-1.2   	The pyrotechnics shall weigh no more than 0.6kg
 SP-AP-1.3   	A megaphone or speaker shall be included in the drones
 SP-AP-1.4.1   	Future innovations shall have specifications up to a weight of 0.6kg
 SP-AP-1.4.2   	Future innovations shall have specifications up to a 20W power consumption
+SP-AP-1.4.3   	Future innovations shall have specifications up to dimensions of 20cm x 20cm x 20cm
 SP-EO-2   	Drones shall not sink in the water
 SP-ST-1.2.1   	The pyrotechnics shall not reach spectators
-SP-SYS-1.6   	Structures shall accomodate electronics
-SP-SYS-1.1.1   	The drone shall have an RGB Illumination
 SP-SYS-1.3.1   	The megaphone or speaker shall have a power consumption of 20W
+SP-SYS-1.1.1   	The drone shall have an RGB Illumination
 SP-SYS-1.2.2   	The pyrotechnics shall not cause the drone's center of gravity to move outside of the stability and controllabillity margins
 SP-SYS-1.5   	Structures shall accommodate power unit
+SP-SYS-1.6   	Structures shall accomodate electronics
 SP-SYS-4.1   	Any structural part of the frame shall not experience plastic deformation under flight conditions
 SP-SYS-6   	The drone body should be tolerable to transportation and in-flight vibrations
 SR-AP-1   	An unintentional collision with the ground shall happen atmost once every 1,000,000 flight hours when flying indoors

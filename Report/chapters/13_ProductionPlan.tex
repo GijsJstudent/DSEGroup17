@@ -1,0 +1,70 @@
+\chapter{Production Plan}
+\label{ch:productionplan}
+
+% 4 pages: NOTICE EDITORS WHEN YOU ARE GOING OVER OR UNDER THIS LIMIT!
+This chapter gives a detailed overview of the production of the drone.\autoref{sec:overviewpp} gives an overview of how the drone is produced and the steps involved. \autoref{sec:riskspp} presents the risks involved in manufacturing that should be mitigated and lastly \autoref{sec:ppdiagram} presents a time ordered outline of the activities required to produce the drone from its parts.
+
+\section{Risks in manufacturing}\label{sec:riskspp}
+Before a manufacturing plan is established risks are identified that should be mitigated in this plan. \autoref{tab:pprisks} presents the risks identified, their likelihood and their consequence. The proposed mitigation response is presented in \autoref{tab:pprisksresponses}.
+
+\begin{table}[H]
+\centering
+\caption{Risks related to manufacturing}
+
+\label{tab:pprisks}
+\begin{scriptsize}
+\begin{tabular}{|p{0.4cm}|p{3cm}|p{0.4cm}|p{4.5cm}|p{0.4cm}|p{4.5cm}|}
+\hline
+\multicolumn{1}{|l|}{\textbf{ID}} & \textbf{Risk}                                               & \multicolumn{1}{l|}{\textbf{LS}} & \textbf{Reason for likelihood}                                                                  & \multicolumn{1}{l|}{\textbf{CS}} & \textbf{Reason for consequence}                                                            \\ \hline
+
+47 & Battery gets stuck & 4 & The compartment was made to tightly fit the battery so it cant move around in flight. No production margins were included in the design. & 3 & Drone stuck in frame means the frame plate must be discarded. No measures should be taken to remove the battery for risk of perforation of the battery. It means the top of the main box must be replaced \\ \hline 
+52 & Arm hole misplacement & 4 & The hole for the landing gear cable is offset from the middle of the arm. As both sides have different length of threading there is the risk the hole is made to the wrong side of the arms center. & 4 & Landing gear is possibly asymmetrically placed but more importantly its too close to the body to not be able to fit future payloads of 20x20x20cm\\ \hline 
+53 & Misalignment crater & 3 & The crater is to be placed exactly above the landing gear but no marks are in place to ensure this& 4 &When the craters are misaligned the drones can not be efficiently stacked upon each other making the operations for the show very difficult \\ \hline
+54 & Parts not correctly recycled & 4 & The material type is not specified on any of the parts & 4 & When the parts are not recycled correctly or even thrown away the 80\% recyclable requirement can not be met.  \\ \hline
+
+\end{tabular}
+\end{scriptsize}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Mitigation responses for identified risks.}
+\label{tab:pprisksresponses}
+\begin{scriptsize}
+\begin{tabular}{|p{0.4cm}|p{3cm}|p{9.2cm}|p{0.4cm}|p{0.4cm}|} 
+\hline
+\multicolumn{1}{|l|}{\textbf{ID}} & \textbf{Risk}                                               & \textbf{Mitigation response}                                                                                                                                                               & \multicolumn{1}{l|}{\textbf{LS}} & \multicolumn{1}{l|}{\textbf{CS}} \\ \hline
+
+47 & Battery gets stuck & Incorporate production margins into the design & 2&3\\\hline
+52 & Arm hole misplacement & Include marks on the arms in the production process  and perform checks on its position before drilling the hole. & 1 & 4 \\ \hline
+53 & Misalignment crater & Include marks on the arms in the production process and perform checks on its position before permanently fixing the craters & 1 & 4 \\ \hline
+54 & Parts not correctly recycled & Add Resin Identification Code on parts during the production process& 1 & 4\\ \hline
+
+\end{tabular}
+\end{scriptsize}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics{}
+    \caption{Resin Identification Code}
+    \label{fig:RIC label}
+\end{figure}
+
+\section{Overview of production steps} \label{sec:overviewpp}
+The first step in the production of the drone is producing the parts. The rods for the arms and landing gear will be produced via polymer extrusion and cut to size in the process. This method is viable as the parts have uniform cross-sectional properties. Injection molding can not be used for these parts as the rods are hollow and are therefore not easily removable from the mold. The motor mounts, craters, landing gear attachments, the parts of the frame body, the casing and the hinges for this casing will be made using injection molding. For all these production processes margins to the dimensions must be incorporated to cope with uncertainties in the manufacturing of the parts. The propellers, motors, battery, ESC and UWB are bought of the shelf. The flight controller, Wi-Fi, GPS and radio PCB are custom made to the drone by an external party and the BMS is to be explored in the post DSE-phase as explained in chapter \autoref{ch:postdseactivities}.
+
+After the molding process the parts need to be machined into their final shape. As explained in \autoref{ch:finaldesign} the arms are threaded on both sides and a hole is drilled where the landing gear is attached to incorporate the charging cable. The thread on the side of the motor mount is 20mm long and on the side where the arm is attached to frame is 5mm. The inside of the motor mount and the arm holes in the frame body are also threaded. The hole to be drilled for the landing gear cable in the arm is 3mm. To mitigate risk 52 and 53 marks are made on the arms for the placement of the hole and crater. On the the top and bottom of the main box 4 holes on each corner are drilled for screws. The top plate is then welded onto the top main box. A hole is drilled through the landing gear attachment for the spring pin to go through. The last 2 steps are to add a waterproof lining for the casing on the top of the main box and to fill up the battery compartment with a compressible material to be found in the Post-DSE phase. To mitigate risk 54 the Resin Identification code (RIC) is marked on all parts.
+
+The next step in the production is to integrate all parts.
+First, the motor mount is screwed onto the arm. Then, the motor is attached to the motor mount and the cables are guided through the arm and into the main body. The arm is then screwed into the main body. The propellers are attached at the end of integration to not damage them in the process and to not have them in the way. The screw fitting is permanently fixed and secured using  "Loctite". 
+
+When the arms are in place the Flight controller, ESC and BMS are fixed into the main box and the cables from the motors are soldered onto them. All electrical components are connected to the flight controller and BMS at this stage. Then, the box can be closed via the screws and the Radio, GPS, Wifi and UWB are secured on the top-plate. Then, The battery can be integrated an the power cable is connected to the BMS. The last step of the integration is securing the casing in place and attaching the hinges to the main box.
+%oring
+
+\section{Production plan diagram}\label{sec:ppdiagram}
+
+%Deliverable description: The Manufacturing, Assembly & Integration Plan (MAI Plan) gives a time ordered outline of the activities required to construct the product from its constituent parts. It may include parallel activities. The core of the MAI Plan is a flow diagram illustrating this outline. Short texts may elaborate on it
+
+
+

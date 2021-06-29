@@ -1,0 +1,811 @@
+\chapter{Communication, Control and Electronics Subsystem}
+\label{ch:cce}
+
+% Content:
+% Stability and Control Characteristics
+% Electrical Block Diagram
+% Communication Flow Diagram
+% H/W, S/W block diagrams (interactions, flows)
+% Data Handling Block Diagram
+% Mass & Cost Analysis
+% Verification & Validation
+
+% 16 pages: NOTICE EDITORS WHEN YOU ARE GOING OVER OR UNDER THIS LIMIT!
+
+
+In this chapter the communication, control and electronics (CCE) subsystem will designed in detail. The midterm report focused on trade-offs on the communication, control and positioning methods that will be used. GPS in combination with RTK was chosen as an outdoor positioning method, while positioning using UWB was selected for indoor situations. Communication will be done over Wi-Fi and radio signals. The show will be uploaded before flight on the drone its memory. In this chapter the communication methods will be further chosen and discussed, hardware will be chosen and a control analysis will be done. This chapter starts by a recap and update of the function and risk overview in \autoref{sec:ccefuncrecap}. This is followed by a list of relevant requirements presented in \autoref{sec:ccelistofrequirements}. The design for communication will be done in \autoref{sec:cce_communication}, design for electronics in \autoref{sec:cce_electronics} and design for control in \autoref{sec:cce_control}. The design is presented in a software diagram shown in \autoref{sec:ccesoftwarediagram}. Risk discovered during the detailed design and their mitigation responses are presented in \autoref{sec:cceriskanalysis}. Verification and validation of the methods and tools used in this chapter are presented in \autoref{sec:cce_verification_validation}. Finally the compliance matrix is shown in \autoref{sec:ccecompliancematrix}.
+
+\section{Functional and Risk Overview of CCE}
+\label{sec:ccefuncrecap}
+The goal of the communication, control and electronics department is to command all subsystems in order to execute the commands received from the ground station. The CCE subsystem is the brain of the drone. It's main functions are:
+\begin{itemize}[noitemsep,nolistsep]
+    \item Control the ESCs
+    \item Control the payload
+    \item Communicate with the ground station
+    \item Provide sensor readings on attitude
+    \item Provide positioning data
+    \item Process the incoming data
+\end{itemize}
+
+
+CCE subsystem design is divided in following parts: 
+\begin{itemize}[noitemsep,nolistsep]
+    \item Communication 
+    \item Electronics
+    \item Control 
+\end{itemize}
+In the communication part the link budget and different signals received by the drone will be analysed. The used protocols will be discussed and the communication methods will be presented.
+In the electronics section hardware will be selected and presented. High-level electronic components such as a micro controller and UWB receiver will be selected. For these things the mass, power consumption and costs are calculated.  
+In the control section the controller architecture of the drone is presented. The controller is then applied to the simplified quad copter model.
+
+% RISK SECTION -------------
+In \autoref{tab:risksCCE} the design risks mentioned in the midterm report\cite{midterm} related to the CCE department are mentioned. The risks can be mitigated as mentioned in the table by taking measures while designing for the CCE department. Risks discovered during the detailed design of the CCE department will be discussed in the next sections and are grouped in \autoref{sec:cceriskanalysis}.
+
+\begin{longtable}[c]{|p{0,65cm}|p{4cm}|p{1,6cm}|p{1,9cm}|p{6cm}|}
+\caption{Risks related to structures and their mitigation responses}
+\label{tab:risksCCE}\\
+\hline
+\textbf{ID} & \textbf{Risk} & \textbf{Likelihood} & \textbf{Consequence} & \textbf{Mitigation response} \\ \hline
+\endfirsthead
+%
+\endhead
+%
+23& Wi-Fi connection lost during the show & Low & Moderate & Implement a redundant communication system to decrease likelihood. Program an emergency landing mode in case connection is lost. \\ \hline
+24 & Drone leaves UWB signal range when flying indoors. & Low & Catastrophic & Implement a safety margins between the maximum range and the flight path. Program a manual flight mode. \\ \hline
+
+
+
+\end{longtable}
+
+
+
+
+
+\section{List of Requirements Control, Communications and Electronics}
+\label{sec:ccelistofrequirements}
+
+The requirements related to the CCE department are presented \autoref{tab:CCErequirements}. Design for CCE will be done in the following sections according to the requirements. In the compliance matrix in \autoref{sec:ccecompliancematrix} the compliance of the requirements will be assessed.
+
+
+% \begin{table}[H]
+% \caption{Requirements related to the communications, control and electronics department.}
+% \label{tab:CCErequirements}
+% \begin{tabular}{|p{2.5cm}|p{2cm}|p{10cm}|}
+% \hline
+% \multicolumn{1}{|l|}{\textbf{Sub-department}} & \textbf{TAG} & \textbf{Requirement}                                                                                                                                                \\ \hline
+% \multirow{14}{*}{Electronics}                 & CCE-AP-2     & The show location shall be at   most 1000m apart from the ground station                                                                                            \\ \cline{2-3} 
+%                                               & CCE-AP-2.1   & There shall be an undisturbed communication to the furthest   drone at 1200 m distance.                                                                             \\ \cline{2-3} 
+%                                               & CCE-AP-3     & The drones shall be recharged wirelessly through their landing   pads                                                                                               \\ \cline{2-3} 
+%                                               & CCE-SYS-3.1  & The drone shall be able to charge during rain.                                                                                                                      \\ \cline{2-3} 
+%                                               & CCE-SYS-3.2  & The drone shall be able recharge   autonomously on the landing pad between preparation and show.                                                                    \\ \cline{2-3} 
+%                                               & CCE-SYS-7    & The drone telemetry shall be   monitored                                                                                                                            \\ \cline{2-3} 
+%                                               & OP-AP-4      & The drones shall be operated from a central location                                                                                                                \\ \cline{2-3} 
+%                                               & OP-SYS-10    & The energy supply’s discharge rate shall be verifiable before every   flight                                                                                        \\ \cline{2-3} 
+%                                               & OP-AP-7      & The minimum amount of drones in one show shall be 300 for   outdoor shows                                                                                           \\ \cline{2-3} 
+%                                               & OP-AP-8      & The minimum amount of drones    in  one  show    shall  be 20 for indoor shows,   where ’indoors’ means venues such as concert halls or stadium                     \\ \cline{2-3} 
+%                                               & AD-SYS-6     & The drone shall be operable in a temperature range between 3 deg and 40   deg                                                                                       \\ \cline{2-3} 
+%                                               & SR-APC-7     & The connection between the ground station and the drone shall   be secure.                                                                                          \\ \cline{2-3} 
+%                                               & SR-SYS-5.2   & The operator shall have an emergency stop button                                                                                                                    \\ \cline{2-3} 
+%                                               & SR-AP-4:     & The connection to the drones   shall not be lost during any show, also in urban environments                                                                        \\ \hline
+% \multirow{5}{*}{Control}                      & SR-AP-5      & In case of emergency, the drones shall be able to land safely   in less than 90 seconds                                                                             \\ \cline{2-3} 
+%                                               & SR-ST-4.1    & Show shall safely end if connection is lost                                                                                                                         \\ \cline{2-3} 
+%                                               & POP-SYS-4    & Partial failure of the propulsion unit shall not prevent the drone from being able to perform an emergency landing. \\ \cline{2-3} 
+%                                               & SR-AP-3      & Malfunctioning of a single drone shall not endanger the entire   show                                                                                               \\ \cline{2-3} 
+%                                               & CCE-SYS-8    & Choreography shall be executed.                                                                                                                                     \\ \hline
+% \multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}Electronics \\ and Control\end{tabular}}     & OP-AP-3      & The drones shall be available in the year 2025                                                                                                                      \\ \cline{2-3} 
+%                                               & CCE-AP-4     & The drones shall be able position themselves within 0.5m   accuracy                                                                                                 \\ \cline{2-3} 
+%                                               & CCE-SYS-9    & The drones shall be able to be   manually controlled.                                                                                                               \\ \hline
+% \end{tabular}
+% \end{table}
+\begin{longtable}{|p{2.5cm}|p{2cm}|p{10cm}|}
+\caption{Requirements related to the communications, control and electronics department.}
+\label{tab:CCErequirements}\\
+\hline
+\textbf{Sub-department} & \textbf{TAG} & \textbf{Requirement} \\ \hline
+\endfirsthead
+%
+\endhead
+%
+\multirow{14}{*}{Electronics} & CCE-AP-2.1 & There shall be an undisturbed   communication to the furthest drone at 1200 m distance. \\ \cline{2-3} 
+ & CCE-SYS-7 & The drone telemetry shall be   monitored \\ \cline{2-3} 
+ & OP-AP-4 & The drones shall be operated from a central location \\ \cline{2-3} 
+ & OP-SYS-10 & The energy supply’s discharge rate shall be verifiable before every   flight \\ \cline{2-3} 
+ & SR-APC-7 & The connection between the ground station and the drone shall   be secure. \\ \cline{2-3} 
+ & SR-SYS-5.2 & The operator shall have an emergency stop button \\ \cline{2-3} 
+ & SR-AP-4: & The connection to the drones   shall not be lost during any show, also in urban environments \\ \cline{2-3} 
+ & CCE-SYS-9 & The drones shall be able to be   manually controlled. \\ \cline{2-3} 
+ & SR-ST-4.1 & Show shall safely end if connection is lost \\ \cline{2-3} 
+ & SUS-EO-3 & At least 80\% of drone mass shall be recyclable. \\ \cline{2-3} 
+ & OP-AP-3 & The drones shall be available in the year 2025 \\ \cline{2-3} 
+ & AD-SYS-6 & The drone shall be operable in a temperature range between 3 deg and 40   deg \\ \cline{2-3} 
+ & OP-AP-7 & The minimum amount of drones in one show shall be 300 for   outdoor shows \\ \cline{2-3} 
+ & OP-AP-8 & The minimum amount of drones    in  one  show    shall  be 20 for indoor shows,   where ’indoors’ means venues such as concert halls or stadium \\ \hline
+\multicolumn{1}{|c|}{\multirow{7}{*}{Control}} & SR-AP-5 & In case of emergency, the drones shall be able to land safely   in less than 90 seconds \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & POP-SYS-4 & \begin{tabular}[c]{@{}l@{}}Partial failure of the propulsion unit shall not prevent the drone \\      from being able to perform an emergency landing.\end{tabular} \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & SR-AP-3 & Malfunctioning of a single drone shall not endanger the entire   show \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & CCE-SYS-8 & Choreography shall be executed. \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & CCE-AP-4 & The drones shall be able position themselves within 0.5m   accuracy \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & SP-SYS-1.2.2 & The pyrotechnics shall not cause the drone's center of gravity to move   outside of the stability and controllabillity margins \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & AD-AP-1 & The drones shall be able to fly in 6BFT wind conditions. \\ \hline
+\end{longtable}
+
+\section{Design for Communications}
+\label{sec:cce_communication}
+In this section a detailed design for the communication protocols and methods will be discussed. In \autoref{subsec:cce_protocols} the positioning system and communication protocols are discussed. The required link budget to establish stable communication is presented in \autoref{subsec:cce_link_budget}. In \autoref{subsec:cce_comdatatrans} the command protocols and data transmission methods are discussed.
+
+\subsection{Protocols}
+\label{subsec:cce_protocols}
+
+The drones use GPS to navigate outdoors. The positioning accuracy is set to 0.5m by CCE-SYS-9 requrement. This positioning accuracy is not achievable by standard GPS receivers, therefore an RTK receiver is required. Such receiver needs a Radio Technical Commission for Maritime Services (RTCM) data in addition to the phase of the satellite signals. RTCM data is sent from the stationary tower which position is precisely known. Standard RTCM messages include information about the position of the ground station, Ionospheric delay, and properties of the measured carrier wave. 
+RTCM data will be sent to the drones via the radio, because it is faster and less energy consuming than one-to-one messages via WiFi. According to \cite{RTCM} RTCM data for 12 satellites requires data rate of 4800 bits/s.
+
+For indoor navigation UWB modules are used. There are 2 ways to determine drone position: Two way ranging(TWR) and time difference of arrival(TDOA). In TWR technique the drone exchanges messages with each ground beacon one-by-one to determine the distance. This method is more precise, but results in higher power consumption and slower update rate. For TDOA on the other hand, the drone only needs to emit a short pulses at precisely known time stamps. Ground beacons then measure the flight time of the signal and triangulate the drone position. This method is less precise, due to drone and beacon clocks drifting apart, but it saves energy and provides high update rate. A minimum of four UWB tags is needed to provide 3D localization. The range of indoor flight is limited to 290 meters\cite{UWBrange} but can be extended when additional tags are added. Expanding the range by adding additional UWB tags will reduce the likelihood of risk 24: the drones flying out of range. The safety margin to prevent drones from reaching the coverage border will be taken into account when programming the choreography.
+
+One of the two communications method between the drones and the ground station is WiFi. By CCE-AP-2.1 the drones can be as far as 1.2 km from the ground station, therefor 2.4 GHz WiFi standard was chosen instead of 5.6 GHz. The lower radio frequencies can propagate further without signal loss.
+
+The second communication system is radio. Most popular radio receiver for UAV applications operate at 2.4 GHz, but this could cause an interference with a WiFi module. There are 2 other legal frequencies in Europe: 433 and 868 MHz. It was decided to use 868 MHz for faster data rate. The modulation type was chosen to be LoRa (Long Range)\cite{lora} because of the excellent range performance.  
+
+
+
+
+
+\subsection{Link budget}
+\label{subsec:cce_link_budget}
+
+The link budget was calculated for WiFi and radio links. According to \cite{link_budget}, the link budget equation is :
+
+\begin{equation}
+    P_{Tx} + G_{Tx} + G_{Rx} - L_{fs} - FM - S_{Rx} > 0
+\end{equation}
+The terms from left to right are: transmitter power, transmitter antenna gain, receiver antenna gain, Free space loss, fade margin and sensitivity of the receiver. All quantities are in dBm or dB. Free space loss is dependent on the distance d in km and frequency f in MHz of the carrier wave. 
+\begin{equation}
+    L_{fs} = 20 log(0.621d) + 20 log(f) + 36.58
+\end{equation}
+Fade margin is the ratio of minimum detectable signal power to the desired signal power. This factor is applied to increase the reliability of the connection. For this analysis it was set to 10 dB,as recommended in \cite{link_budget}. Other parameters in this equation depend on the receiver and transmitter properties. The full link budget will be presented in \autoref{sec:cce_electronics}.
+
+
+A stable connection is dependent on many variables and is difficult to measure. A procedure can be setup to ensure minimal chances a disturbed signal. First of all, the link budget shall be closed with an additional margin. The bigger the margin is the more excess power there will be, which will result in a higher signal to noise ratio. This is beneficial to a more stable connection. This measure can be implemented by selection appropriate hardware. Secondly, a clear line of sight will decrease the risk of signal loss. If signal is transmitted over longer ranges, objects in the line of sight will greatly impact the received signal. The data rate will drop significantly or the connection will fully break up. This is a newly discovered risk and a solution to signal loss of signal is implemented in \autoref{subsec:cce_comdatatrans}. Finally it is recommended to keep objects such as wireless devices, microwaves, refrigerators and monitors away from the line of sight\cite{wifiinterference}. Rainfall will influence wireless signals but the effect in not fully know. Further research may provide more insights in the extra link budget required to provide undisturbed communication. While designing it should be acknowledged that an additional margin of unknown magnitude shall be added to the link budget to prevent signal loss. When all these measures are taken into account and the link budget is closed, an undisturbed connection in urban environments can be established and requirement SR-AP-4 will be met.
+
+
+
+\subsection{Commands and Data Transmission} 
+\label{subsec:cce_comdatatrans}
+All drones will be operated by a single ground stations on the ground as mentioned by requirement OP-AP-4 and OP-AP-5. This will require the drones to be communicating directly to this point on the ground. Design for such a ground station is out of the scope of the project however, the technological readiness for such a ground station has to be verified.
+
+Commands send over radio signals can be send to all drones at the same time. This can be done by sending an identifier followed by the command. Hereby the response will be instant for every drone. This will be necessary for sending high priority commands such as the start, stop and emergency stop. By implementing this communication method requirement SR-SYS-5.2 is met. All drones can read the commands using the identifier send. The identifier can also be used to provide a more secure signal to limit vulnerability for hackers or signal jammers. Hereby requirement SR-APC-7 is met when communicating over radio signals. Drones can be individually approached using the identifiers. Manual control will be done over radio signals as the link budget for radio signal has a higher margin, which will be shown in \autoref{sec:cce_electronics}. The data rate of radio signals is high enough to fly manually.
+
+
+Wi-Fi requires a one-to-one connection to sent data. Therefore it is not suitable to send commands to all drones simultaneously trough Wi-Fi, as all drones would have to be approached one after each other. The commands would not be received instantly by every drone. Wi-Fi will be suitable for uploading the choreography on the drones, in-flight flight path adjustments and sending commands to individual drones. Wi-Fi features a high data rate, which is beneficial when uploading large data packets on the drone. Simple Wi-Fi routers used in home situations can host up to 32 devices, while professional routers can up that number to 300 devices. A drawback is that the maximum data rate drops with every additional connected device. When the drones are on the ground, the choreography can be uploaded one by one. If mid air adjustments are required, such as interaction between an actor on stage and the drone it's flight path, the data rate can be limiting when adjusting 300 flight paths at the same instance. However, this will mostly occur at indoor venues where it is required to fly with only 20 drones as stated by requirement OP-AP-8 and therefore the data rate will not be limiting. The drone will be able to send telemetry to the ground station using Wi-Fi. Malfunctioning drones can be detected by monitoring the telemetry and manual control can be taken in case needed. Wi-Fi is suitable to monitor the telemetry and therefore requirement CCE-SYS-7 is met. Measuring the battery its discharge rate is part of the selft diagnosis and the data will be send with the telemetry. Telemetry can be send to the ground station before the drones take-off from the landing pad. Therefore requirement OP-SYS-10 is met. Just like radio, the Wi-Fi connection can be made secure by encrypting the signal. This has to be done before data is sent to the Wi-Fi receiver. The data shall be decypted before it can be read. The impact in processing power will scale with the level of encryption. As the risk for a hacked signal is low, the level of encryption has to be minimal and therefore the reduced processing power is negligible. By implementing this requirement SR-APC-7 is also met for Wi-Fi communication. 
+
+As mentioned at the beginning of this section, the drones will be operated from a single location on the ground. Wi-Fi and radio communication allows for such a ground station and connectivity up to 300 devices. Therefore requirement OP-AP-4 is met. The drones will be connected at all times. The communication system will be redundant decrease the risk of loss of signal as mentioned in risk 23. If connection is lost or an unrecognizable signal is received, the drone will automatically go in safety mode. During safety mode the drones will try to fly back to their landing pads while it reestablishes connection. In case a stable connection is reestablished the drone can be put in normal operation mode manually. If the drone is unable to fly back and locate itself due to a failing GPS and UWB receiver, it can ask for manual control. In case manual control is unavailable it will shut down as it lost complete situational awareness. By implementing this feature requirement SR-ST-4.1 is met.
+
+
+
+% Make subsections for different subjects within subsystem
+
+\section{Design for Electronics}
+\label{sec:cce_electronics}
+In this section the design of the flight computer and related electronics will be discussed. The electronic hardware components such as sensors and antenna's are chosen and are implemented in a printed circuit board (PCB). Design for electronics is a topic that is not within the field of aerospace engineering and will therefore only be limited to high-level component selection and integration. The required components will be discussed in \autoref{subsec:cce_componentselections}, followed by a detailed list of selected components in \autoref{subsec:cce_component}. Finally a layout of the components on a PCB and the budget is presented in \autoref{subsec:cce_pcb}.
+
+
+\subsection{Component selection}
+\label{subsec:cce_componentselections}
+The electrical components required can be divided into different levels. The high-level components contain the parts of the PCB that will process data from the sensors and antenna's and that will run and store the main program ran by the flight computer. Low-level components such as diodes, transistors and capacitors which are used to connect the higher level components are not selected and should be investigated by a more specialized team. Most components necessary for the flight computer are widely available on the market. Therefore a selection based on price and functionality has to be made to pick the best suitable component. The electrical components related to power and propulsion are not mentioned here. These components include motors, ESC's, BMS and battery.
+
+The budgets assigned to the hardware are: manufacturing cost of €153.85, maintenance cost of €16.3, a mass of 10.4 gram and a power usage of 10.8 Watt. The budgets are all without the contingency margin. Hardware was selected for the first iteration and therefore the initial budgets were used as a reference. 
+
+In the following list the required components are stated and will be discussed individually.
+
+\begin{itemize}[noitemsep,nolistsep]
+    \item \textbf{Micro controller:} When choosing the micro controller 3 factors are important: processing power, energy consumption and cost. Most commercially available flight computers for drone racing and hobby use STM32 F4 micro controllers because of the cheap price and availability of open source flight software. Drones for light shows require more computing power, since the drone will use up to 3 different communication types at the same time and the computer still needs to control the motors and read sensors. For these reasons it is desirable to split the computations between 2 processors or have a micro controller with 2 cores, one of which can be used for flight controller and the second one for communications, so that the control process is not halted when external commands are received. Separate CPUs such as Intel core, Qualcomm Snapdragon or Samsung Exynos were not considered due to high price and power consumption. Also micro controllers with 8 or 16 bit architecture such as AVR or PIC were not considered due to low performance. Typical cost of micro controllers suitable for given application ranges from 5 to 20 euro. 
+    \item \textbf{EEPROM memory:} Internal flight memory is needed to store the telemetry data and reading show commands. According to the customer, the drone show commands take 25 kb of memory. The information could also be stored on the SD card, but this solution is more expensive. Typical price of  EEPROM memory does not exceed 5 euros.  
+    \item \textbf{IMU:} The internal measurement unit (IMU) will be used for measuring the attitude of the drone. The angles cannot be read of directly from the sensor. The gyroscope available on the chip will be used for determining accurate angular rates. The accelerometer on the chip can be used for measuring the gravitational acceleration and its direction. The accurate gyroscope measurement will drift over time have to be corrected using the accelerometer. Using both sensors and an algorithm that integrates and tunes the sensor inputs an accurate attitude determination can be performed using very simple equipment. Costs of a suitable IMU range between 4 and 10 euro.
+    \item \textbf{Magnetometer:} A magnetometer is a chip that works as a compass by measuring the earth's magnetic field and will be used to determine the drone it's heading. Magnetometers have a cost range from 4 to 15 euro.
+    \item \textbf{Barometer and temperature sensor:} A barometer will be used for accurate altitude determination. Low cost accurate pressure sensors are available that can measure altitude differences up to 10 centimeters of accuracy. The barometer cannot be exposed to direct sunlight as this will damages the sensor. The temperature sensor will be used to calibrate the barometer. Low cost solutions are available ranging from 6 to 15 euro.
+    \item \textbf{GPS:} Outdoor positioning will be done using GPS in combination with RTK. The GPS receiver needs to process the GPS data and correct it using the RTK data to make an accurate location prediction. GPS receivers are expensive as advanced hardware is required to reach high accuracy's. An accuracy range of 1 to 2.5 centimeter is achievable within budget. Prices range from 80 to 150 euro.
+    \item \textbf{GPS antenna:} An additional antenna is required to receive the GPS signal. The RTK signal will be received over radio signals. The antenna is produced by the same company as the GPS receiver and is selected for the chosen GPS receiver. Therefore the link budget is closed since the antenna receiver combination is designed for this application. A patch antenna will be put on the top of the drone to receive signals. Prices of the antenna range between 15 and 40 euros.
+    \item \textbf{Radio:} The radio transceiver will be used for receiving the RTK signal, receiving commands and communication when flying in the manual control mode. Cheap receivers are available on the market and cost ranges from 5 to 10 euro. The components will be selected based on the receiving sensitivity and transmitting power required to close the link budget.
+    \item \textbf{Radio antenna:} A radio antenna is required to receive the radio signal. An omni-directional antenna will be used as a reliable connection is required at all times. An omni-directional antenna will have a 360 degree receiving area and will allow the drone to rotate freely. A patch type antenna will be mounted at the bottom of the drone. The antenna gain will be selected based on what is required for the link budget. Only low gain antennas are suitable due to the selected type of antenna. Prices range between 4 and 8 euro.
+    \item \textbf{Wi-Fi:} A Wi-Fi module will be implemented to have Wi-Fi connectivity. The Wi-Fi receiver is chosen using a similar method as described for the radio receiver. The link budget for Wi-Fi will more difficult to meet and therefore extra attention is paid to the receiver sensitivity and transmitting power. The price of a Wi-Fi receiver range between 4 and 20 euro.
+    \item \textbf{Wi-Fi antenna:} Similar to the radio antenna is chosen a Wi-Fi antenna is chosen. Prices for a Wi-Fi antenna range between 2 and 15 euro.
+    \item \textbf{UWB receiver:} The Ultra Wide Band (UWB) receiver will be used for indoor positioning. It is a new technology which has recently entered the market in commercial products. Therefore the available hardware to choose from is sparse and market prices are hard to find. Prices range from 20 euros for a simple receiving chip up to hundreds of euros for a fully developed solution. The antenna will be included in the chosen solution.
+\end{itemize}
+
+\subsection{Components}
+\label{subsec:cce_component}
+For every component the operating voltage, power consumption, communication protocol, dimensions, temperature range and weight is stated. The values are found by analysing the data sheets for every component. \cite{mouserelectronics, digikey, taoglass, tinyeletronics, U-blox} In order to limit the use of voltage regulators it is preferred to have all components working at the same voltage. Power consumption is calculated by multiplying the operational current by the voltage. The prices are based on actual market values found when researching the availability of the products. The prices have been adjusted for large purchase numbers. Delivery costs are not included and the availability to deliver in the Netherlands is confirmed. The communication protocol is required to confirm the components can work together and that there are enough pins available on the micro controller. Dimensions are necessary for placing the chips on the PCB. Temperature range and weight are parameters could limit the final design. Masses of the components are rarely shown in data sheets. Some masses have been found and are directly put in the table. The missing masses have been calculated by multiplying the volume (calculated using the dimensions) by the density of Steel. Steel is chosen to overestimate the weight, which will prevent the manufactured PCB to be over budget.
+
+
+
+\begin{table}[H]
+\caption{Components selected for the PCB design.}
+\label{tab:eleccomponents}
+\begin{scriptsize}
+\begin{tabular}{l|lllrllll}
+\textbf{Component}                                                        & \textbf{Name}       & \textbf{\begin{tabular}[c]{@{}l@{}}Operating \\ voltage {[}V{]}\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Power con-\\ sumption {[}W{]}\end{tabular}} & \multicolumn{1}{l}{\textbf{\begin{tabular}[c]{@{}l@{}}Price \\ {[}Euro{]}\end{tabular}}} & \textbf{\begin{tabular}[c]{@{}l@{}}Communication \\ protocol\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}dimensions \\ XYZ {[}mm{]}\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Temperature \\ range\end{tabular}} & \textbf{Weight {[}g{]}} \\ \hline
+\textbf{microcontoller}                                                   & STM32H747           & 3.3                                                                           & 1.8843                                                                         & €12.43                                                                                   & \begin{tabular}[c]{@{}l@{}}6 SPIs, 4 I2C, \\ 4 USARTs\end{tabular}         & 7x7x0.45                                                                    & -40°C to +85°C                                                        & 0.218295                \\
+\textbf{\begin{tabular}[c]{@{}l@{}}EEPROM\\ memory\end{tabular}}          & 25CSM04             & 3.3                                                                           & 0.0099                                                                         & €2.55                                                                                    & SPI                                                                        & 5x6x0.7                                                                     & -40°C to +85°C                                                        & 0.2079                  \\
+\textbf{IMU}                                                              & MPU-6050            & 3.3                                                                           & 0.00033                                                                        & €4.00                                                                                    & I2C                                                                        & 4x4x0.9                                                                     & -40°C to +105°C                                                       & 0.14256                 \\
+\textbf{Magnetometer}                                                     & HMC5883L            & 3.3                                                                           & 0.00033                                                                        & €4.00                                                                                    & I2C                                                                        & 3.0x3.0x0.9                                                                 & -30°C to +85°C                                                             & 0.018                   \\
+\textbf{\begin{tabular}[c]{@{}l@{}}Barometer+\\ temperature\end{tabular}} & GY-63               & 3.3                                                                           & 0.00462                                                                        & €6.15                                                                                    & I2c and SPI                                                                & 2.45x4.45x1                                                                 & -40°C to +80°C                                                        & 0.00099                 \\
+\textbf{GPS}                                                              & NEO-M8P             & 3.3                                                                           & 0.2211                                                                         & €80.00                                                                                   & I2C                                                                        & 12.2x16x2.4                                                                 & -40°C to +85°C                                                        & 4.637952                \\
+\textbf{GPS antenna}                                                      & CAM-M8 (active)     & 3.3                                                                           & 0.2343                                                                         & €14.88                                                                                   &                                                                            & 9.6x14x1.95                                                                 & -40°C to +85°C                                                        & 2.594592                \\
+\textbf{Radio}                                                            & SX1276IMLTRT        & 3.3                                                                           & 0.396                                                                          & €4.88                                                                                    &                                                                            & 6.1x6.1x1                                                                   & -40°C to +85°C                                                        & 0.368379                \\
+\textbf{Radio antenna}                                                    & ISMP.868.35.6.A.02  &                                                                               &                                                                                & €16.17                                                                                   &                                                                            & 35x35x6                                                                     &                                                                       &                         \\
+\textbf{Wifi}                                                             & ATWINC3400A-MU-Y    & 3.3                                                                           & 0.21087                                                                        & €6.52                                                                                    & I2C                                                                        & 6x6x1                                                                       & -40°C to +85°C                                                        & 2.497                   \\
+\textbf{WiFi antenna}                                                     & SWDP.2458.15.4.A.02 &                                                                               &                                                                                & €4.00                                                                                    &                                                                            & 15x15x4                                                                     &                                                                       &                         \\
+\textbf{UWB module}                                                       & DWM1000             & 3.3                                                                           & 0.0594                                                                         & €13.10                                                                                   & SPI                                                                        & 6x6x0.8                                                                     & -40°C to +85°C                                                        & 0.105                  
+\end{tabular}
+\end{scriptsize}
+\end{table}
+
+\todo{Talk about wires and payload connection}
+\todo{Add about memory interaction with the show}
+
+In \autoref{tab:eleccomponents} the selected components are shown. All components are working at the same operating voltage and the components can be connected to the micro controller. The operating range is meeting the requirement and is limited to -30°C to +80°C. All hardware selected is available. Therefore the electronics meet requirement OP-AP-3.
+
+
+WiFi and Radio modules were selected with link budget in mind. \autoref{tab:link_budget} shows all link budget parameters for Wi-Fi and radio. It is assumed that the ground station will have a higher gain due to their static position during the show. The antenna's of the ground station can be directed towards the show its location. 5 dB gain classifies as an omni-direcital\cite{antenna_gains} antenna and therefore adjustments on the antenna its position during the show are not needed. As can be seen in the table, the required transmission power is smaller than the maximum transmitting power specified in the data sheet of the module. It can be seen that both link budgets are closed by more than 5 decibels margin which will guarantee a stable connection in clear weather. Thereby the Wi-Fi and radio modules are able to transmit and receive undisturbed data over 1200 meters which meets the CCE-AP-2.1 requirement.
+\begin{centering}
+    
+
+\begin{table}[H]
+\caption{Link budget}
+\label{tab:link_budget}
+\begin{tabular}{|l|r|r|}
+
+\hline
+Link budget dB                           & \multicolumn{1}{l|}{Radio} & \multicolumn{1}{l|}{Wifi} \\ \hline
+Free Space Path Loss                     & 92.72               & 101.63               \\ \hline
+Gain of the transmitting antenna         & 2                          & 5                         \\ \hline
+Gain of the receiving antenna            & 5                          & 5                         \\ \hline
+Receiver sensitivity                     & -100                       & -95                       \\ \hline
+Fade margin                              & 15                         & 15                        \\ \hline
+Required transmitting power              & 0.72               & 11.63               \\ \hline
+Maximum transmitting power of the module & 14                         & 17.5                      \\ \hline
+\end{tabular}
+\end{table}
+\end{centering}
+%Additional comments on components
+% Prices? Power consumptions? 
+The GPS receiver is equipped with RTK and will reach accuracy's up to 2.5 centimeter\cite{U-blox}. This will result in a high landing precision. Windy conditions and motor control will have an influence on the landing precision. Therefore the landing has to be executed carefully. In case a wind gust appears the landing should be postponed till the drone is in a stable condition. Using this method in windy conditions a landing precision up to 20 centimeters can be achieved. The maximum achievable outdoor landing precision is equal to the accuracy of the positioning chip. This can be achieved by descending slowly before touchdown.
+
+The chosen UWB receiver can reach accuracy's up to 10 centimeters\cite{UWBrange}. The precision can always be met as long as the drone is within range of the UWB ground stations. The landing precision can reach down to 10 centimeters.
+
+Using these two receivers the CCE-AP-4 requirement is met from a hardware perspective: the drones can position themselves within 10 centimeters of accuracy. The drone needs to be controlled stably in all weather conditions which will be discussed in \autoref{sec:cce_control} to fully meet the requirement.
+
+\subsection{Printed Circuit Board Design}
+\label{subsec:cce_pcb}
+% Write about pcb design, bugets, heat, antenna stuff
+All components have to be integrated on a PCB. The assembly and printing of the PCB will be outsourced to specialized companies. This will result in lower production costs, higher quality and large scale manufacturing possibilities. 
+
+The components stated in previous subsection will not be put on a single PCB due to possible interference and signal blockage by other drone parts and to prevent overheating. Instead, all components will be mounted on 5 separate boards to lower the total heat generated by a single PCB. The PCB with the GPS module and GPS antenna will be mounted on top of the drone for a maximum GPS range. Boards with radio, WiFi and UWB will be placed under the drone for a better connection with ground station. The PCB with the micro controller, memory, IMU, magnetometer and barometer will be placed inside the drone. This PCB is the flight computer. All boards will be connected to the flight computer with I2C or SPI bus and 2 additional wires for regulated 3.3 V power supply. The flight computer will have an USB-C connector installed.
+
+\textbf{Sustainability}\\
+The decision to separate the electronics is also driven by the environmental considerations. If better modules become available for the drones, there will be no need to replace the entire board. To increase the recyclability of the PCBs, the conductive traces will be gold plated, which does not increase the price significantly, but makes the electronics more attractive for the recycling facilities. This will make the electronics contribute positively to the SUS-EO-3 requirement.
+
+\textbf{Moisure risk mitigation}\\
+A coating will be applied over the PCB to protect is from moisture. Suitable coatings are available that can operate at temperature ranges between -55°C to +125°C Coatings are very inexpensive and costs will be low when applied at numerous PCB's\cite{rs-online}.
+
+\textbf{Design budgets}\\
+The top-level components that have been selected have a total cost of €168.68, a mass of 10.79 grams and a power consumption of 3.02 W. The costs of the PCB have been approximated by using the online tool at JLCPCB\cite{jlcpcb}. JLCPCB provides PCB building and assembly services and makes a prediction on the costs for high numbers of PCB's. The area of the PCB is estimated by locating the components on the PCB's in a strategic way. This is shown in \autoref{fig:PCB}. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width= \textwidth]{Figures/CCE/PCB.png}
+    \caption{Design of the 5 PCB's that will be included on the drone.}
+    \label{fig:PCB}
+\end{figure}
+
+The cost and mass of of the low-level components is estimated at €5.00 and 2 grams. The PCB manufacturing costs €0.93 and assembly costs €1.13. The selected top-level components will be delivered at JLCPCB and they will assemble all components on the final PCB's. In total 5 PCB's are needed. Therefore the manufacturing and assembly costs of the PCB's are multiplied by 5. The water-proofing coating per drone is estimated to be €1.30. Finally cost and mass for the cabling is added to the budget, which is estimated to cost €5.00 and have a mass of 5 gram based on an estimation on the required wire length multiplied by the wire density. This will all add up to the total budget shown in \autoref{tab:ccebudget}.
+
+\begin{table}[H]
+\caption{Final budgets for the CCE department}
+\label{tab:ccebudget}
+\begin{tabular}{l|ll}
+\textbf{Budget}    & \textbf{Value} & \textbf{Unit} \\ \hline
+Manufacturing cost & 191.61         & €             \\
+Maintenance cost   & 0.00           & €/lifetime    \\
+Mass               & 28.30          & g             \\
+Power consumption  & 3.02           & W            
+\end{tabular}
+\end{table}
+
+The hardware has been selected before the first design iteration. Therefore the budgets do not change and are the final budgets. The costs are withing the maximum allowable budget set during the preliminary design. The mass is over budget by 15 grams and the power consumption is below budget by 7 Watt.
+
+
+
+
+
+\section{Design for Control}
+\label{sec:cce_control}
+Quadcopter is a naturally unstable system. To perform choreography the drone has to be stable. Since the hardware is not physically available, the drone dynamics was simulated on the computer. Then the control algorithm was developed and tested on the drone model. Finally, a simple choreography was simulated and visualized. 
+
+\subsection{Drone dynamics} \label{CCE_drone_dynamics}
+Drone is a highly non-linear system with complex aerodynamic and gyroscopic effects. To simplify the simulation some assumptions were made: 
+\begin{itemize}[noitemsep,nolistsep]
+    \item Thrust acts from the center of the propeller strictly downwards in the drone reference frame
+    \item Aerodynamic drag is same in every flight direction
+    \item Propellers can change the rotation speed instantaneously
+    \item Trust and torque of the propellers increase quadratically with rotation speed and don't depend on the speed of the drone. 
+\end{itemize}
+The model with such assumptions is not detailed enough to determine the maximum performance limits, but it can prove the controller effectiveness in a typical flight regime. 
+
+The earth fixed and body coordinate frames are defined as follows: 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width= 0.5\textwidth]{Figures/CCE/coordinate_system.PNG}
+    \caption{coordinate system}
+    \label{fig:coordinate_system}
+\end{figure}
+The transformation from earth fixed(E) to body(b) frame is done using Yaw-Pitch-Roll Euler angles transformation. This transformation is given in equation \ref{eq:transformation}
+
+\begin{equation}
+\label{eq:transformation}
+    R_{E}^{b} = R_z R_y R_x = 
+    \begin{bmatrix}
+     c(\psi) & s(\psi) & 0\\
+     -s(\psi) & c(\psi) & 0\\
+     0 & 0 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+     c(\theta) & 0 & -s(\theta)\\
+     0 & 1 & 0\\
+     s(\theta) & 0 & c(\theta)
+    \end{bmatrix}
+    \begin{bmatrix}
+     1 & 0 & 0\\
+     0 & c(\phi) & s(\phi)\\
+     0 & -s(\phi) & c(\phi)
+    \end{bmatrix}
+\end{equation}
+Sine and cosine are denoted as s and c. The Transformation from b to E frame is denoted as $R_{b}^{E}$ and is equal to $(R_{b}^{E})^{-1}$.
+The state of the drone is fully described by 4 vectors: position and velocity in the E frame $\vec{p}$, $\vec{V}$, 3 euler angles $\vec{\theta}$  and rotational speed in the body frame $\vec{w}$. A state of the drone is denoted as $\vec{\Theta}$.  
+
+
+The derivative of the system state is a non-linear function, which depends on the system state and inputs. The resulting differential equation is discretized using forward Euler method. 
+
+\begin{equation}
+    \frac{d\vec{\Theta}}{dt} = F(\vec{\Theta},\vec{f})  
+    \quad \rightarrow \quad
+    \vec{\Theta}_{i+1} = dt*F(\vec{\Theta}_i,\vec{f}_i) + \vec{\Theta}_i
+\end{equation}
+
+The inputs to the system $\vec{f}$ is the vector of thrust settings of the motors from 0 to 1. The state vector contains 12 state variables: $\vec{\Theta} = (z,y,z,v_x,v_y,v_z,\phi,\theta,\psi,w_x,w_y,w_z)$ or $\vec{\Theta} =(\vec{p}, \vec{v}, \vec{\theta}, \vec{w})$. Then the derivative of the state is: $\frac{d\vec{\Theta}}{dt} =(\frac{d\vec{p}}{dt}, \frac{d\vec{v}}{dt}, \frac{d\vec{\theta}}{dt}, \frac{d\vec{w}}{dt})$. Each of the component of the state vector derivative is calculated as follows: 
+\begin{equation}
+\label{eq:position_derivative}
+   \frac{d\vec{p}}{dt} = \vec{v}
+\end{equation}
+
+As stated in the assumptions, the thrust and torque of the propellers are modeled as simple quadratic functions. 
+
+\begin{equation}
+\label{eq:cce_thrust_model}
+    T_n = c_t w_n^2 \quad \quad M_n = c_m w_n^2 \quad \textrm{for} \ n = 1,2,3,4
+\end{equation}
+
+Thrust and angular speed of each propeller is obtained from the thrust setting using \autoref{eq:cce_thrust_model}.Trust of n'th motor is $T_n = f_n * T_{max}$, where $T_{max}$ is the maximum thrust of the motor. For the rotational speed of n'th motor: $w_n = T_n/c_t$. 
+
+\begin{equation}
+\label{eq:velocity_derivative}
+   \frac{d\vec{v}}{dt} = \frac{1}{M} \left( F_g + F_a + R^E_b F_{thrust}\right)
+   = \frac{1}{M} \left[
+   \begin{pmatrix}
+    0 \\
+    0 \\
+    -Mg
+    \end{pmatrix} -
+    \frac{1}{2} \; \rho \; \vec{v} \| \vec{v}\| \; S \; C_d  +
+    R^E_b
+    \begin{pmatrix}
+    0 \\
+    0 \\
+    \sum_{n=1}^{4} T_n
+    \end{pmatrix}
+    \right]
+\end{equation}
+
+In \autoref{eq:velocity_derivative} garvity force and aerodynamic resistance are expressed in the E frame. The thrust force is expressed in the b frame, so it is multiplied by the transformation matrix $R^E_b$. Aerodynamic force acts in the opposite direction to the drone movement. S is the reference aerodynamic area. $f[n]$, $n=1,2,3,4$ are the thrust settings of each motor. 
+
+
+According to the transformation sequence defined in \autoref{eq:transformation} the relation between angular velocity of the drone in b frame and derivative of Euler angles is:
+\begin{equation}
+\label{eq:angles_derivative}
+   \vec{w} =  
+   W \frac{d\vec{\theta}}{dt} =
+   \begin{bmatrix}
+     1 & 0 & -s(\theta)\\
+     0 & c(\phi) & c(\theta)s(\psi)\\
+     0 & -s(\phi) & c(\theta)c(\phi)
+    \end{bmatrix}
+   \frac{d\vec{\theta}}{dt}
+   \quad \rightarrow \quad
+   \frac{d\vec{\theta}}{dt} = W^{-1} \vec{w}
+\end{equation}
+
+The derivative of the angular velocity $\frac{d\vec{w}}{dt}$ is calculated using Euler formula for rigid body rotation\ref{eq:euler_equation}:
+
+\begin{equation}
+\label{eq:euler_equation}
+    I \frac{d\vec{w}}{dt} + \vec{w} \times I\vec{w} = \vec{\tau}
+\end{equation}
+
+$\tau$ is external torque caused by the propellers, I is the drone moment of inertia matrix. Since the drone has spinning propellers, the above equation is modified to account for gyroscopic torque $\vec{G}$:
+
+\begin{equation}
+\label{eq:euler_equation_modified}
+    I \frac{d\vec{w}}{dt} + \vec{G} + \vec{w} \times I\vec{w} = \vec{\tau}
+    \quad \rightarrow \quad 
+    \frac{d\vec{w}}{dt} = \frac{1}{I} \left( -\vec{w} \times I\vec{w} - \vec{G} + \vec{\tau} \right)
+\end{equation}
+
+
+
+\begin{equation}
+\label{Gyroscopic_propeller}
+    \vec{G} = \sum_{n=1}^{4} w \times J_{pr} \vec{w_n} = 
+    J_{pr} \sum_{n=1}^{4} w \times  
+    \begin{pmatrix}
+     0 \\
+     0 \\
+     (-1)^{n} w_n
+    \end{pmatrix}
+\end{equation}
+
+
+
+Propeller torque around the z axis is simplified by omitting the angular acceleration of the propeller. This simplification reduces the number of state variables and does not degrade the model results much according to\cite{simple_control_paper}. 
+
+\begin{equation}
+\label{propeller_torques}
+    \vec{\tau} = 
+    \begin{pmatrix}
+     0 \\
+     0 \\
+     1 
+     \end{pmatrix}
+     c_m \left( w_1^2 - w_2^2 + w_3^2 - w_4^2 \right) +
+     \begin{pmatrix}
+     0 \\
+     1 \\
+     0 
+     \end{pmatrix}
+     c_t l_x \left( -w_1^2 - w_2^2 + w_3^2 + w_4^2 \right) + 
+     \begin{pmatrix}
+     1 \\
+     0 \\
+     0 
+     \end{pmatrix}
+     c_t l_y \left( w_1^2 - w_2^2 - w_3^2 + w_4^2 \right)
+\end{equation}
+
+Equations \ref{eq:position_derivative},\ref{eq:velocity_derivative}, \ref{eq:angles_derivative}, \ref{eq:euler_equation_modified} provide the derivative of all state variables. Given the initial state of the system, the state is plugged in the  
+
+
+\subsection{Control algorithm} \label{subsec:cce_control_algorithm}
+The control algorithm consists of 2 main parts: State estimator of the drone, and the controller. The first part is performed using Kalman filter \cite{kalman_filter}. Kalman filter is not modelled in this report, because it requires a measurement model of all on-board sensors. This part of the control algorithm is left for the future development. The focus of this section is primarily on the controller which takes a state estimation from Kalman filter and desired trajectory as an input and outputs a motor thrust setting.    
+The drone controller consists of 6 PID controllers: 4 inner loop controllers to control yaw, pitch roll and altitude and 2 outer loop PID controllers which transform desired x and y position into yaw and pitch angles for the inner controllers. The outputs of the controller are then mixed and send to the ESCs. The controller diagram can be seen in  \autoref{fig:controler}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/CCE/Controler_and_mixer.PNG}
+    \caption{Controller architecture}
+    \label{fig:controler}
+\end{figure}
+
+First the controller reads desired position from memory. Then the measured position of the drone is subtracted from the desired position. Altitude and yaw errors are passed directly to the inner PID controllers, x and y errors are transformed to the body frame and passed to the outer PID controllers. X and y error a re transformed to pitch and roll commands for the inner PIDs. Finally, the output of inner PIDs is transformed to the motor thrust setting in the mixer.
+
+Each PID controller has the following structure: 
+\begin{equation}
+    U = K_p \: e + K_i \: \int_0^t e dt + K_d \: \frac{de}{dt} 
+\end{equation}
+where e is the error between the desired and measured state , and p,i and d are gains which are different for every PID controller. To prevent unrealistic control output, every PID block has upper and lower bounds. These bounds are selected such that when control signals are passed through the mixer, the motor signals always stay between 0 and 1. 
+Altitude PID has a range (0-0.7), Yaw pitch and roll PID's have range (-0.1 - 0.1) This way if every PID block outputs maximum value the signal to motors is one. If the drone is rising, but roll, pitch and yaw PID's output -0.1, the motors will receive the thrust setting of 0.4 and the drone will still have enough thrust to climb. 
+
+Coordinate transformation block transforms the coordinates of desired location from E to b frame using \autoref{eq:transformation}. This block is needed to align x and y error with roll and pitch axis. 
+
+
+\subsection{Gain tuning} \label{subsec:gain_tuning}
+Each PID block has 3 gains, so the controller has 18 parameters in total. Blindly trying random combinations would be very time consuming, therefore the gains were tuned in a special order. 
+
+Firstly, the inner PIDs were tuned. To do this, the model was linearized about the equilibrium position, and all nonlinear effects such as gyroscopic torque or air resistance were ignored. Below the analysis of Altitude PID is presented. Yaw pitch and roll PIDs were analyzed in the same way.
+For simplicity Just PD controller was implemented first. The Newton second law in laplace domain is:
+\begin{equation}
+    m \ddot{x}(t) = T(t) - mg \quad \rightarrow \quad
+    s^2 m X(s) = T(s) + \frac{mg}{s} = P(s)
+\end{equation}
+Trust and gravitational force were combined in one term to simplify the transfer function:
+
+\begin{equation}
+    \frac{X(s)}{P(s)} = \frac{1}{s^2m}
+\end{equation}
+Then PD controller is implemented to the system: 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Figures/CCE/Transfer_func.PNG}
+    \caption{Closed loop transfer function}
+    \label{fig:controler}
+\end{figure}
+
+R(s) is the reference altitude, E(s) is the error and X(s) is measured altitude. $K_d$ and $K_p$ are derivative and proportional gains. Poles of the system can be found from the closed loop transfer function : 
+\begin{equation}
+\label{eq:closed_loop_tf}
+    \frac{X(s)}{R(s)} = \frac{K_p+K_d}{m s^2 + K_d s + K_p} \quad \rightarrow \quad 
+    s = \frac{-K_d \pm \sqrt{K_d^2 - 4mK_p}}{2m}
+\end{equation}
+For the system to be stable, real part of both poles must be negative. This is ensured by 2 conditions: $K_d >0$ and $K_p>0$. 
+To make the system critically damped, derivative and proportional gains should be chosen such that $K_d^2 = 4mK_p$. Unfortunately due to gravity,PD controller causes a constant offset in the altitude, so integration term has to be added. To make matters worse, the neglected air resistance introduces additional damping. As a result, the transfer function in \autoref{eq:closed_loop_tf} only provides a good initial guess of the proportional and derivative gains. Better values are then manually found by trial and error.
+
+Then X and Y(outer) PID controllers were tuned. These controllers also need I gain to cope with constant wind. Outer PID controller are coupled with inner ones, so it is hard to find optimal gains based on the total transfer function, therefore the tuning of outer controllers was also done manually. 
+
+
+\subsection{Simulation results}
+In this section the drone controller was put to the test by commanding the drone to perform different maneuvers, similar to those usually performed in a light show. The choreography is described by parametric curve in 3 dimensions. 
+\autoref{fig:dronestateshelix} shows a drone performing a horizontal helix maneuver in 50 seconds. 
+\begin{figure}[H]
+\label{fig:dronestateshelix}
+    \centering
+    \includegraphics[width=\textwidth]{Figures/CCE/horizontal_spiral_states.png}
+    \caption{Drone states during slow horizontal helix }
+    \label{fig:cce_helix_states}
+\end{figure}
+ \autoref{fig:cce_helix_slow} shows desired and actual trajectory of the drone. Initially the trajectories are far apart, because the drone starts at different location, but eventually it catches up and follows the pre-determined path quite well. If the drone attempts to perform the same trajectory twice as fast, the performance quality reduces significantly. This effect can be seen in \autoref{fig:cce_helix_fast}.
+\todo{link this all to requirements and announce that we will discuss them again in system analysis}
+
+
+\begin{figure}[H]
+     \centering
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Figures/CCE/horizontal_spiral.png}
+         \caption{Slow horizontal helix 3D view }
+         \label{fig:cce_helix_slow}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Figures/CCE/horizontal_spiral_fast.png}
+         \caption{Fast horizontal helix 3D view}
+         \label{fig:cce_helix_fast}
+     \end{subfigure}
+
+\end{figure}
+
+The controller allows the drone to follow predetermined path , therefore requirement CCE-SYS-8 (the drone shall perform choreography) is satisfied. 
+
+Drone performance depends on the mass, aerodynamic resistance and moment of inertia, so the behaviour of the drone will be different for different payloads. Optimal controller gains are also different, depending on the choreography. Optimal PID gain can be found computationally by defining an error function and minimizing it with some minimization algorithm. 
+The error function would take 18 parameters corresponding to p,i and d gains for 6 PID controllers, then simulate the drone trajectory  and output the error between the drone trajectory and desired trajectory defined by:
+
+\begin{equation}
+\label{eq:error_optimization}
+    e = \int_0^t [x_{ref}(t) - x_(t)]^2 + [y_{ref}(t) - y_(t)]^2 + [z_{ref}(t) - z_(t)]^2 dt
+\end{equation}
+
+So the function to be minimized maps PID gains to the trajectory error using \autoref{eq:error_optimization} for the error. Different optimization algorithms can be used for this method, in \cite{pid_tuning} Genetic algorithm is used. For this project Nedler-Mead method\cite{nelder_mead_method} was implemented, but due to long computing time of the error function, the controller gains were not significantly improved by the process. Post-DSE phase for controller design should include code optimization, and further attempts to optimize gains automatically. 
+
+
+
+\section{Electrical diagram} \label{sec:electrical_diagram}
+Electrical diagram displays all electrical components. coloured connections represent wires. Black and red wires indicate power supply wires, other colors indicate signals. The main power line connects flight computer, ESCs and payload in parallel, and has a voltage of 14.8V, which corresponds to a nominal battery voltage. The flight computer transforms this voltage to 3.3V to power all electronic components. Next to the data bus, all peripherals are connected to the flight computer via 2 power wires. As explained in \autoref{ch:power} the battery is connected to the BMS board. Each cell of the battery is connected to BMS separately(4 red wires in the diagram), grounds are combined in one wire. The BMS itself is connected to the charging source, which is a landing pad or any other external charging device. Charging voltage is 16.8V for Li-Po batteries. 
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 1\textwidth]{Figures/CCE/Electrical_diagram_2.PNG}
+    \caption{Electrical block diagram}
+    \label{fig:Electrical_diagram}
+\end{figure}
+
+\section{Software Diagram} \label{sec:ccesoftwarediagram}
+In this section software diagram is presented. This diagram shows the data transfer between components in the drone.  As explained in \autoref{subsec:cce_component}, the processor has 2 cores, the communication is processed by one core, and control is running on the second core. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 1\textwidth]{Figures/CCE/Software_diagram.PNG}
+    \caption{Software diagram}
+    \label{fig:Software_diagram}
+\end{figure}
+
+
+
+
+% Link all three previous sections together in the software diagram.
+Voltage can be read from the battery. 
+Landing position in known from take-off
+
+
+\section{Communication Flow Diagram} \label{sec:ccecommflowdiagram}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 1\textwidth]{Figures/Electronic diagram - Communication.png}
+    \caption{Communication flow diagram}
+    \label{fig:commflowdiagram}
+\end{figure}
+
+
+\section{Risk Analysis }
+\label{sec:cceriskanalysis}
+
+% ... & Electronics malfunction due to moisture. & Low & Catastrophic & Apply a coating or heat shrink on the sensitive electronic components. \\ \hline
+% ... & Communication signal is hijacked by a third party & Very low & Catastrophic & Implement a end of show program when abnormal communication signal are received. \\ \hline
+% ... & Malfunction when reading show program & Very low & Catastrophic & Implement a end of show program when abnormal communication signal are received. \\ \hline
+% ... & Battery voltage is too low & Very low & Catastrophic & Implement a end of show program when abnormal communication signal are received. \\ \hline
+
+New risk have been detected during the design phase. The likelihood and consequences of the mentioned risks are stated in \autoref{tab:newrisksCCE}. The risk mitigation response for every risk is stated in \autoref{tab:newmitigationCCE}.
+
+
+\begin{table}[H]
+\centering
+\caption{CCE related risks that were discovered in the detailed design.}
+\label{tab:newrisksCCE}
+\begin{scriptsize}
+\begin{tabular}{|p{0.4cm}|p{3cm}|p{0.4cm}|p{4.5cm}|p{0.4cm}|p{4.5cm}|}
+\hline
+\textbf{ID} & \textbf{Risk} & \textbf{LS} & \textbf{Reason for likelihood} & \textbf{CS} & \textbf{Reason for Consequence} \\ 
+\hline
+43 & Electronics malfunction due to moisture & 2 & Risk occurrence reasonably low. The cover should protect the drone from rain and water coming into the main body. & 4 & The flight computer can partially or fully fail during flight
+\\ \hline
+44 & Signal being jammed or hijacked & 1 & Likelihood is really low. Specialized equipment is needed to jam or reproduce the show's signals. & 5 & The electronics can potentially lose all communication and positional awareness.
+\\ \hline
+45 & Line of sight between ground station and drone is lost & 2 & Low, the flight path is programmed incorrectly or severe weather conditions make the drone drift. & 4 & The drones do not respond to commands and a potential collision can happen
+\\ \hline
+\end{tabular}
+\end{scriptsize}
+\end{table}
+
+
+
+\begin{table}[H]
+\centering
+\caption{CCE related risks that were discovered in the detailed design.}
+\label{tab:newmitigationCCE}
+\begin{scriptsize}
+\begin{tabular}{|p{0.4cm}|p{3cm}|p{9.2cm}|p{0.4cm}|p{0.4cm}|} 
+\hline
+\textbf{ID} & \textbf{Risk} & \textbf{Mitigation Response} & \textbf{LS} & \textbf{CS} \\ \hline
+43 & Electronics malfunction due to moisture & Apply a coating or heat shrink on the sensitive electronic components. Lower the likelihood. & 1 & 4 \\ \hline
+44 &  Signal being jammed or hijacked & Encrypt the signal to reduce the likelihood. Measure the frequencies used by other nearby systems to select the optimal channel. Introduce a safety mode on the drone when incorrect signals are received to reduce the chance of total failure. & 1 & 3 \\ \hline
+45 &  Line of sight between ground station and drone is lost & Program that the drones will fly back when connection is lost to resolve the line of sight issue. Shut the drone off when recovery is impossible to minimize damage. & 2 & 1 \\ \hline
+\end{tabular}
+\end{scriptsize}
+\end{table}
+
+
+
+
+
+
+
+\section{Verification and Validation CCE} \label{sec:cce_verification_validation}
+
+\subsection{Verification}
+
+\label{sec:cce_verification}
+The code for drone simulation was written in python and is more than 500 lines long. To verify that the equations from \autoref{CCE_drone_dynamics} were implemented correctly in the code a series of unit tests were performed. Unit tests are described in \autoref{tab:unit_tests}. 
+
+
+\begin{table}[H]
+\label{tab:unit_tests}
+\caption{Unit tests of the drone simulation}
+\begin{scriptsize}
+\begin{tabular}{|l|l|l|l|
+>{\columncolor[HTML]{C1FFC1}}l |}
+\hline
+\textbf{TAG} & \textbf{Block tested}                                                                         & \textbf{Test}                                                                                                                           & \textbf{Outcome}                                                                                                                                                                       & \cellcolor[HTML]{FFFFFF}\textbf{V?} \\ \hline
+VT-CCE-U.1   &                                                                                               & \begin{tabular}[c]{@{}l@{}}Multiply the transformation \\ by the inverse transformation\end{tabular}                                                   & Outputs identity matrix, as expected                                                                                                                                                                       & yes                                 \\ \cline{1-1} \cline{3-5} 
+VT-CCE-U.2   & \multirow{-2}{*}{\begin{tabular}[c]{@{}l@{}}Transformation from \\ E to b frame\end{tabular}} & \begin{tabular}[c]{@{}l@{}}set yaw pitch and roll to\\ predetermined values and \\ compute the matrix manually\end{tabular}             & \begin{tabular}[c]{@{}l@{}}Exact match \\ with program result\end{tabular}                                                                                                             & yes                                 \\ \hline
+VT-CCE-U.3   & Position derivative                                                                           & \begin{tabular}[c]{@{}l@{}}Run the simulation with disabled\\  forces and rotations\end{tabular}                                        & \begin{tabular}[c]{@{}l@{}}x,y,z position increases \\ linearly with time,\\ proportionally to velocity\end{tabular}                                                                   & yes                                 \\ \hline
+VT-CCE-U.4   &                                                                                               & Disable all forces, except gravity                                                                                                      & \begin{tabular}[c]{@{}l@{}}drone accelerates in the \\ negative z direction at\\  rate of 9.81 m/s\textasciicircum{}2\end{tabular}                                                     & yes                                 \\ \cline{1-1} \cline{3-5} 
+VT-CCE-U.5   &                                                                                               & \begin{tabular}[c]{@{}l@{}}Set the thrust of each motors to\\  1/4 of total weight\end{tabular}                                         & \begin{tabular}[c]{@{}l@{}}drone hovers on the same\\ altitude, slowly drifts up or down, \\ depending on the rounding\end{tabular}                                                    & yes                                 \\ \cline{1-1} \cline{3-5} 
+VT-CCE-U.6   & \multirow{-3}{*}{Velocity derivative}                                                         & \begin{tabular}[c]{@{}l@{}}Manually calculate the thrust\\ of the drone, such that terminal \\ velocity is 100 m/s upwards\end{tabular} & \begin{tabular}[c]{@{}l@{}}The drone reaches 100 m/s with\\  the given thrust setting\end{tabular}                                                                                     & yes                                 \\ \hline
+VT-CCE-U.7   & Euler angles derivatives                                                                      & \begin{tabular}[c]{@{}l@{}}Calculate the transformation\\  matrix by hand for 3 random angles\end{tabular}                              & \begin{tabular}[c]{@{}l@{}}Results match the \\ program outcome\end{tabular}                                                                                                           & yes                                 \\ \hline
+VT-CCE-U.8   &                                                                                               & \begin{tabular}[c]{@{}l@{}}Spin propellers 1 and 2 faster\\  than 3 and 4\end{tabular}                                                  & \begin{tabular}[c]{@{}l@{}}w\_y is negative, decreases\\  proportionally to the torque\end{tabular}                                                                                    & yes                                 \\ \cline{1-1} \cline{3-5} 
+VT-CCE-U.9   &                                                                                               & \begin{tabular}[c]{@{}l@{}}Spin propellers 1 and 4\\  faster than 2 and 3\end{tabular}                                                  & \begin{tabular}[c]{@{}l@{}}w\_x is positive, increases\\  proportionally to the torque\end{tabular}                                                                                    & yes                                 \\ \cline{1-1} \cline{3-5} 
+VT-CCE-U.10  &                                                                                               & \begin{tabular}[c]{@{}l@{}}Spin propellers 1 and 3\\  faster than 2 and 4\end{tabular}                                                  & \begin{tabular}[c]{@{}l@{}}w\_z is positive, increases\\  proportionally to the torque\end{tabular}                                                                                    & yes                                 \\ \cline{1-1} \cline{3-5} 
+VT-CCE-U.11  & \multirow{-4}{*}{Derivatives of angular velocity}                                             & \begin{tabular}[c]{@{}l@{}}Decrese the moment\\  of inertia of the drone\end{tabular}                                                   & \begin{tabular}[c]{@{}l@{}}Same torque results\\ in faster rotation\end{tabular}                                                                                                       & yes                                 \\ \hline
+VT-CCE-U.12  &                                                                                               & Set integral gain of altitude PID to 0                                                                                                  & \begin{tabular}[c]{@{}l@{}}Drone flies at constant \\ offset from desired altitude\end{tabular}                                                                                        & yes                                 \\ \cline{1-1} \cline{3-5} 
+VT-CCE-U.13  &                                                                                               & \begin{tabular}[c]{@{}l@{}}Set unstable proportional and\\ derivative gains as predicted by\\  linearized model\end{tabular}            & \begin{tabular}[c]{@{}l@{}}Drone position diverges\\ from the desired state\end{tabular}                                                                                               & yes                                 \\ \cline{1-1} \cline{3-5} 
+VT-CCE-U.14  &                                                                                               & \begin{tabular}[c]{@{}l@{}}Plot the output of each PID\\ module for different altitude\\  and angle commands\end{tabular}               & \begin{tabular}[c]{@{}l@{}}The output is bounded to the\\ specified value. Motor input after \\ the mixer is bounded to (0-1)\end{tabular}                                             & yes                                 \\ \cline{1-1} \cline{3-5} 
+VT-CCE-U.15  & \multirow{-4}{*}{Inner PID controllers}                                                       & Plot the integral term of each PID                                                                                                      & \begin{tabular}[c]{@{}l@{}}The integral term stops rising\\ when saturation is reached\end{tabular}                                                                                    & yes                                 \\ \hline
+VT-CCE-U.16  &                                                                                               & \begin{tabular}[c]{@{}l@{}}Remove the coordinate\\ transformation block\end{tabular}                                                    & \begin{tabular}[c]{@{}l@{}}Drone is able to position itself for\\ yaw angle less than 90 degree,\\ for other yaw settings the drone \\ diverges from the desired position\end{tabular} & yes                                 \\ \cline{1-1} \cline{3-5} 
+VT-CCE-U.17  &                                                                                               & Set the desired position far away.                                                                                                      & \begin{tabular}[c]{@{}l@{}}Drone pitch and roll angles reach \\ maximum value of 0.5 rad\end{tabular}                                                                                  & yes                                 \\ \cline{1-1} \cline{3-5} 
+VT-CCE-U.18  & \multirow{-3}{*}{Outer PID controllers}                                                       & \begin{tabular}[c]{@{}l@{}}Introduce constant horizontal\\ wind while maintaining position\end{tabular}                                 & \begin{tabular}[c]{@{}l@{}}Without the i gain, the \\ drone has a constant offset. If i\\ gain is added, the drone is able \\ to hover on the right spot\end{tabular}                  & yes                                 \\ \hline
+\end{tabular}
+\end{scriptsize}
+\end{table}
+
+To check if all parts of the software are properly integrated together, a system test was performed. The drone initial coordinates and angles were set to 0 and then the drone was commanded to fly to coordinates $(x,y,z) = (100,100,1000)$ while maintaining 2 rad yaw angle. \autoref{fig:cce_system_test} shows how all 12 state variables change during the simulation. Orange line indicate the desired position, blue line represents actual drone state. The simulation is done for a drone in this paper\cite{ref_drone_param}, but thrust to weight ratio is changed to 3. The controller receives state update 500 times per second, which is a standard update rate for consumer FPV drones \cite{PID_frequency}.  The simulation itself is running at 1000 Hz. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/CCE/System_check.png}
+    \caption{System test}
+    \label{fig:cce_system_test}
+\end{figure}
+
+Similar simulations were performed with different with different trajectories and simulation frequencies, to make sure that at 1000 Hz the solution has converged. 
+
+
+\subsection{Validation}
+\label{sec:cce_validation}
+To validate the tools and design choices experiments must be performed on a pre-production unit. In this section validation tests are proposed. If the drone performs well in these tests, the CCE subsystem design can be considered successful.  
+
+
+Microcontroller and electronic components were selected to be compatible together. Once the circuit board is actually assembled, some tests can be
+performed to check if the hardware is functional. 
+\begin{table}[H]
+\caption{Validation of drone electronics}
+\label{tab:cce_electronics_validation}
+\begin{tabular}{|l|l|l|}
+\hline
+TAG         & Description                                                                            & Test                                                                                                                                 \\ \hline
+VAL-CCE-1 & \begin{tabular}[c]{@{}l@{}}Check interference of \\ communication modules\end{tabular} & \begin{tabular}[c]{@{}l@{}}Turn on GPS, WiFi,  Radio\\  and UWB at the same time and \\ observe the effect on data rate\end{tabular} \\ \hline
+VAL-CCE-2 & \begin{tabular}[c]{@{}l@{}}Check power consumption\\ of the electronics\end{tabular}   & \begin{tabular}[c]{@{}l@{}}Connect the electronics to the\\ power measurement setup and \\ run the software\end{tabular}             \\ \hline
+VAL-CCE-3 & Check the mass of the electronics                                                      & \begin{tabular}[c]{@{}l@{}}Use scales to weight\\ the electronics\end{tabular}                                                       \\ \hline
+\end{tabular}
+\end{table}
+
+
+For communication and positioning the following tests are proposed: 
+
+\begin{table}[H]
+\caption{Validation of drone communication and positioning}
+\label{tab:cce_communication_validation}
+\begin{tabular}{|l|l|l|}
+\hline
+TAG         & Description                                                                                       & Test                                                                                                                                  \\ \hline
+VAL-CCE-4 & \begin{tabular}[c]{@{}l@{}}Confirm that link budget is closed for WiFi \\ and Radio.\end{tabular} & \begin{tabular}[c]{@{}l@{}}Separate the drone and ground\\ station 1200 meters apart and send\\ commands to the drone\end{tabular}    \\ \hline
+VAL-CCE-5 & Confirm the satellite navigation is working                                                       & \begin{tabular}[c]{@{}l@{}}Fly the drone at different speeds\\  and altitudes while monitoring the \\ GPS signal quality\end{tabular} \\ \hline
+VAL-CCE-6 & \begin{tabular}[c]{@{}l@{}}Confirm the satellite indoor \\ navigation is working\end{tabular}     & \begin{tabular}[c]{@{}l@{}}Record positional accuracy with\\ different number of ground beacons\end{tabular}                          \\ \hline
+\end{tabular}
+\end{table}
+
+
+To validate control algorithm and simulation program these tests are proposed: 
+
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+\begin{table}[H]
+\caption{Validation of drone simulation and controller}
+\label{tab:cce_control_validation}
+\begin{tabular}{|l|l|l|}
+\hline
+TAG         & Description                                                                                                 & Test                                                                                                                    \\ \hline
+VAL-CCE-7 & \begin{tabular}[c]{@{}l@{}}Check if the simulation assumptions\\ are realistic\end{tabular}                 & \begin{tabular}[c]{@{}l@{}}compare the simulated choreography \\ to the real one performed by the drone.\end{tabular}   \\ \hline
+VAL-CCE-8 & \multirow{2}{*}{\begin{tabular}[c]{@{}l@{}}Check if the control gains\\ are selected properly\end{tabular}} & \begin{tabular}[c]{@{}l@{}}Record the drone responce to the\\ disturbances and compare to the\\ simulation\end{tabular} \\ \cline{1-1} \cline{3-3} 
+VAL-CCE-9 &                                                                                                             & \begin{tabular}[c]{@{}l@{}}Manually change the gains and \\ observe changes in the responce.\end{tabular}               \\ \hline
+\end{tabular}
+\end{table}
+
+
+
+\section{Compliance Matrix }
+\label{sec:ccecompliancematrix}
+In \autoref{tab:ccecompliancematrix} the compliance matrix is shown. The requirements have been discussed and verified in previous sections and the outcome is summarized in the table. Not all requirements related to control are shown in the table. These requirements will be discussed in the \autoref{ch:systemanalysis} and will be summarized in the final compliance matrix. A few requirements applicable to all departments have been discussed but are not shown in this table. These requirements will also be discussed in \autoref{ch:systemanalysis} and \autoref{ch:finaldesign}.
+
+\begin{table}[H]
+\caption{Compliance matrix for the CCE subsystem requirements}
+\label{tab:ccecompliancematrix}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Sub-department} & \textbf{TAG} & \textbf{Requirement} & \textbf{Verified?} \\ \hline
+ & CCE-AP-2.1 & There shall be an undisturbed communication to the furthest drone at 1200 m distance. & \cellcolor[HTML]{C6EFCE}{\color[HTML]{006100} Yes} \\ \cline{2-4} 
+ & CCE-SYS-7 & The drone telemetry shall be monitored & \cellcolor[HTML]{C6EFCE}{\color[HTML]{006100} Yes} \\ \cline{2-4} 
+ & OP-AP-4 & The drones shall be operated from a central location & \cellcolor[HTML]{C6EFCE}{\color[HTML]{006100} Yes} \\ \cline{2-4} 
+ & OP-SYS-10 & The energy supply’s discharge rate shall be verifiable before every flight & \cellcolor[HTML]{C6EFCE}{\color[HTML]{006100} Yes} \\ \cline{2-4} 
+ & SR-APC-7 & The connection between the ground station and the drone shall   be secure. & \cellcolor[HTML]{C6EFCE}{\color[HTML]{006100} Yes} \\ \cline{2-4} 
+ & SR-SYS-5.2 & The operator shall have an emergency stop button & \cellcolor[HTML]{C6EFCE}{\color[HTML]{006100} Yes} \\ \cline{2-4} 
+ & SR-AP-4: & The connection to the drones shall not be lost during any show, also in urban environments & \cellcolor[HTML]{C6EFCE}{\color[HTML]{006100} Yes} \\ \cline{2-4} 
+ & CCE-SYS-9 & The drones shall be able to be manually controlled. & \cellcolor[HTML]{C6EFCE}{\color[HTML]{006100} Yes} \\ \cline{2-4} 
+ & SR-ST-4.1 & Show shall safely end if connection is lost & \cellcolor[HTML]{C6EFCE}{\color[HTML]{006100} Yes} \\ \hline
+%  & SUS-EO-3 & At least 80\% of drone mass shall be recyclable. & \cellcolor[HTML]{C6EFCE}{\color[HTML]{006100} Yes} \\ \cline{2-4} 
+%  & OP-AP-3 & The drones shall be available in the year 2025 & \cellcolor[HTML]{C6EFCE}{\color[HTML]{006100} Yes} \\ \cline{2-4} 
+% \multirow{-12}{*}{Electronics} & AD-SYS-6 & The drone shall be operable in a temperature range between 3 deg and 40   deg & \cellcolor[HTML]{C6EFCE}{\color[HTML]{006100} Yes} \\ \hline
+\multicolumn{1}{|c|}{} & CCE-SYS-8 & Choreography shall be executed. & \cellcolor[HTML]{C6EFCE}{\color[HTML]{006100} Yes} \\ \cline{2-4} 
+\multicolumn{1}{|c|}{\multirow{-2}{*}{Control}} & CCE-AP-4 & The drones shall be able position themselves within 0.5m   accuracy & \cellcolor[HTML]{C6EFCE}{\color[HTML]{006100} Yes} \\ \hline
+\end{tabular}
+}
+\end{table}

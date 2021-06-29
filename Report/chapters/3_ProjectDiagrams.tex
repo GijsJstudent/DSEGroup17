@@ -1,0 +1,33 @@
+\chapter{System's Functional Analysis}
+\label{ch:functionalanalysis}
+In this chapter, the functional analysis is presented. The goal of the functional analysis is to list all the functions the system shall perform to be able to complete its mission.  The functional analysis consists of the functional flow diagram which is presented in \autoref{funcflowdiag}, and the functional breakdown structure, presented in \autoref{funcbreakstruc}.
+
+\section{Functional Flow Diagram}
+\label{funcflowdiag}
+The functional flow diagram displays the functions of the system in a logical order. If all the system functions can be fulfilled, all the used requirements will be met. Each function has a unique tag and color to define its level in the functional flow diagram. The general flow of the FFD is summarised below:
+
+\begin{itemize}[noitemsep,nolistsep]
+    \item Manufacturing the drone is the first step of the operation. Once the fleet of drones has been built the show preparation can start.
+    \item The show preparation is one of the most time consuming parts of the operation. it starts by setting up the ground station, unpacking the drones, setting up the perimeter and performing tests. 
+    \item Before the flight, a practise run has to be done. The drones can be tested to withstand the environment, detect faulty drones, and check if the drones can follow the choreography.
+    \item Once the practise run has been done successfully, the show can start. The show is one of the shortest activities of the operation, but the whole operations revolves around the success of the show.
+    \item The last phase of the operation is the end of the show. First the drones have to safely fly back to their landing pads. The clean up of the drones, equipment and ground station is the final task of the operation.   
+\end{itemize}
+
+Note that in the functional flow diagram, functions may be performed in parallel (AND junctions) or in optional paths (OR junctions).
+
+\section{Functional Breakdown Structure}
+\label{funcbreakstruc}
+Unlike the functional flow diagram, the functional breakdown structure presents the functions the drone must perform hierarchically in an AND tree.
+The most important conclusion from the FBD will be listed below:
+
+\begin{itemize}[noitemsep,nolistsep]
+    \item The FBS starts with a description of pre-flight operations. This part consists of the functions that will be performed before the flight, such as assembling the drone, setting up the show perimeter, and performing pre-flight tests.
+    \item Performing maintenance on the drone is an important function to ensure a long lifetime of the drone.
+    \item To ensure proper functioning of the drone components, the power source of the drone must be operational. This will be done by charging the batteries, and ensuring that they can be recharged by wireless charging.
+    \item To ensure an entertaining show, the payload should be operable. They should be integrated, activated and follow a dynamic payload protocol. 
+    \item The communication between drone and ground station is crucial for success of the show. The drones shall have an uploaded choreography. In case anything goes wrong, the drones can be controlled manually, or fly back using a retrieval signal.
+    \item The end of the drone show is not the end of the operation. Once the show is over, shut down procedures need to be followed, the drones need to be retrieved, and the site should be cleaned up. These steps should be done following government regulations and the environment shall not be harmed in the process.
+\end{itemize}
+
+% 6 pages: NOTICE EDITORS WHEN YOU ARE GOING OVER OR UNDER THIS LIMIT!

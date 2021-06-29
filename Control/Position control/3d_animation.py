@@ -55,13 +55,13 @@ def update_graph(frame, sfactor, lines):
 fig = plt.figure()
 ax = Axes3D(fig)
 
-ax.set_xlim3d([-15, 15])
+ax.set_xlim3d([-10, 10])
 ax.set_xlabel('X')
 
-ax.set_ylim3d([-15, 15])
+ax.set_ylim3d([-10, 10])
 ax.set_ylabel('Y')
 
-ax.set_zlim3d([-15, 15])
+ax.set_zlim3d([0, 20])
 ax.set_zlabel('Z')
 
 ax.set_title('3D Test')
@@ -115,9 +115,10 @@ line5 = ax.plot([tra_x[0], tra_x[0]],[tra_y[0], tra_y[0]+0.5],[tra_z[0], tra_z[0
 lines = [line1, line2, line3, line4, line5]
 
 
+
 line_ani = animation.FuncAnimation(fig, update_graph, int(len(time_array)/sfactor), fargs=(sfactor, lines),
                                    interval=10, blit=False)
-line_ani.save('vertical_helicle.gif', writer='imagemagick', fps=30)
+line_ani.save('heading following.gif', writer='imagemagick', fps=30)
 plt.show()
 
 
@@ -129,12 +130,13 @@ Axes3D.plot(ax, flight_data.provide(0)[0], flight_data.provide(1)[0], flight_dat
 Axes3D.plot(ax, X_profile, Y_profile, Z_profile)
 plt.show()
 
+"""
 fig, axs = plt.subplots(4, 3, figsize=(14, 7), sharex=True)
 time_array = flight_data.provide(1)[1]
 print("time array len", len(time_array))
 print("asasas", len(flight_data.provide(1)[0]))
 
-"""
+
 for ax, i in zip(axs.flat, range(12)):
     ax.plot(time_array, flight_data.provide(i)[0])
 

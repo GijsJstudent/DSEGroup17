@@ -198,12 +198,45 @@ pid_gains = [ 9.39362754e-01 ,-1.25274567e-03 , 1.03179595e-01 , 6.05617003e-01,
   1.34284217e-01 ,-6.24434720e-04 , 2.40449375e-01 , 7.90964222e-01,
   1.00254316e-01 , 7.49856318e-01]
 """
-max_time = 25
+max_time = 40
+dt = 0.001
+N_time = int(max_time/dt)
 time_stamps = 20000
-time_array = np.linspace(0,max_time,25000)     
+time_array = np.linspace(0,max_time,N_time)     
 
  
-  
+
+# spiral with 0 wind and heading following
+"""
+max_time = 20
+dt = 0.001
+N_time = int(max_time/dt)
+
+time_array = np.linspace(0,max_time,N_time)     
+Z_profile = np.ones(len(time_array)) * 10
+Theta = np.linspace(0,3.14*4,N_time)
+R = np.linspace(0,10,N_time)
+X_profile = np.cos(Theta) * R
+Y_profile = np.sin(Theta) * R
+X_1_profile = np.hstack((X_profile[1:],X_profile[-1]))
+Y_1_profile = np.hstack((Y_profile[1:],Y_profile[-1]))
+D_X = (X_profile - X_1_profile)/dt
+D_Y = (Y_profile - Y_1_profile)/dt
+
+Yaw_profile = np.arctan2(D_Y,D_X)
+new_yaw = [0,0]
+suma = 0
+for i in range(len(Yaw_profile)-2):
+    if Yaw_profile[i]>Yaw_profile[i+2]:
+        suma += np.pi
+    new_yaw.append(suma+Yaw_profile[i])
+Yaw_profile = np.array(new_yaw)   +  np.pi/2      
+#Yaw_profile = np.ones(len(time_array)) * 0
+x_wind = np.ones(len(time_array)) * 0
+y_wind = np.ones(len(time_array)) * 0
+z_wind = np.ones(len(time_array)) * 0  
+"""
+
 # fancy trajectory with 0 wind
 """
 Z_profile = np.linspace(0,20, len(time_array))
@@ -230,21 +263,63 @@ y_wind = np.ones(len(time_array)) * 0
 z_wind = np.ones(len(time_array)) * 0
 """
 
+"""
+# lorents attractor:
+max_time = 300
+dt = 0.001
+N_time = int(max_time/dt)
+time_stamps = 20000
+time_array = np.linspace(0,max_time,N_time) 
+ 
+def Der(vec,r,b,sigma):
+    x = vec[0]
+    y = vec[1]
+    z = vec[2]
+    x_dot = sigma*(y-x)
+    y_dot = x*(r-z)-y
+    z_dot = x*y - b*z
+    return(np.array([x_dot,y_dot,z_dot]))*0.03
 
+r = 28
+b = 8/3
+sigma = 5
+vec = np.array([5,5,5])
 
+solution = []
+
+for t ,i in zip(time_array, range(len(time_array))):
+    vec_dot = Der(vec,r,b,sigma)
+    vec = vec + vec_dot*dt
+    solution.append(vec)
+
+solution = np.array(solution).transpose()
+X_profile = solution[0]
+Y_profile = solution[1]
+Z_profile = solution[2]
+Yaw_profile = np.ones(len(time_array)) * 0
+x_wind = np.ones(len(time_array)) * 0
+y_wind = np.ones(len(time_array)) * 0
+z_wind = np.ones(len(time_array)) * 0
+"""
 
 # position keeping with wind gusts 
+max_time = 40
+dt = 0.001
+N_time = int(max_time/dt)
 
-Z_profile = np.linspace(0,20, len(time_array))
-Z_profile = np.ones(len(time_array)) * 0
-Y_profile = np.ones(len(time_array)) * 0
-X_profile = np.ones(len(time_array)) * 0
+time_array = np.linspace(0,max_time,N_time)
+  
+Z_profile = np.linspace(0,5, len(time_array))
+#Z_profile = np.ones(len(time_array)) * 0
+Y_profile = np.linspace(0,0, len(time_array))
+X_profile = np.linspace(0,0, len(time_array))
 Yaw_profile = np.ones(len(time_array)) * 0
 
 x_wind = np.ones(len(time_array)) * 0
-x_wind[5000:]  = np.ones(len(x_wind[5000:])) * 15
+x_wind[int(max_time/(5*dt)):]  = np.ones(len(x_wind[int(max_time/(5*dt)):])) * 15
 y_wind = np.ones(len(time_array)) * 0
 z_wind = np.ones(len(time_array)) * 0
+
 
 """
 Z_profile = np.ones(len(time_array)) * 1000
@@ -254,8 +329,8 @@ Yaw_profile = np.ones(len(time_array)) * 0
 x_wind = np.ones(len(time_array)) * 0
 y_wind = np.ones(len(time_array)) * 0
 z_wind = np.ones(len(time_array)) * 0
-"""
 
+"""
 
 
 Command_matrix = np.vstack((X_profile,Y_profile,Z_profile,Yaw_profile))
@@ -268,7 +343,7 @@ flight_data = simulate_drone(pid_gains, time_array ,Command_matrix,Wind_gusts)
 
 flight_data.save("flight_data")    
 
-"""
+
 fig, axs = plt.subplots(4, 3,figsize = (14,7),sharex=True)
 time_array = flight_data.provide(1)[1]
 
@@ -292,16 +367,33 @@ for ax,i in zip(axs.flat,range(12)):
     
 plt.show()
 
-"""
 
-fig, axs = plt.subplots(2)
-axs[0].plot(time_array, flight_data.provide("x")[0],label = "Drone x coordinate" )
-axs[0].plot(time_array, X_profile, label = "Desired x coordinate" )
-axs[0].set( ylabel="x [m]")
+
+fig, axs = plt.subplots(5)
+
+axs[0].plot(time_array, x_wind, label = "Wind speed in x direction")
+axs[0].set( ylabel="wind speed [m/s]")
+
+axs[1].plot(time_array, flight_data.provide("x")[0],label = "Drone x coordinate" )
+axs[1].plot(time_array, X_profile, label = "Desired x coordinate" )
+axs[1].set( ylabel="[m]")
+
+
+
+
+axs[2].plot(time_array, flight_data.provide("v_x")[0],label = "Drone velocity in x direction")
+axs[2].set( ylabel="[m/s]")
+
+axs[3].plot(time_array, flight_data.provide("pitch")[0],label = "Drone pitch angle")
+axs[3].set( ylabel="[rad]")
+
+axs[4].plot(time_array, flight_data.provide("w_y")[0],label = "Drone angular velocity around y axis")
+axs[4].set( ylabel="[rad/s]", xlabel= "[time]")
 axs[0].legend()
-
-axs[1].plot(time_array, x_wind, label = "Wind speed in x direction")
-axs[1].set( ylabel="wind speed [m/s]")
+axs[1].legend()
+axs[2].legend()
+axs[3].legend()
+axs[4].legend()
 #axs[1].legend()
 plt.show()
 

@@ -1,0 +1,262 @@
+\chapter{Subsystem Design Approach}
+\label{ch:BudgetBreakdown}
+
+% Content:
+% Method used
+% Final resource allocation
+
+% 12 pages: NOTICE EDITORS WHEN YOU ARE GOING OVER OR UNDER THIS LIMIT!
+
+% ONLY 8 pages needed
+
+% Include subsystem design approach
+
+
+% Requirements - drive 
+% Risk - how we will approach them
+% Budgets
+% Design N2 chart?
+
+In this chapter the design approach taken during the detailed design phase will be discussed. The general design approach is discussed in \autoref{SDA:designapproach}, followed by a recap of the driver and killer requirements in \autoref{SDA:driverkillerreq}. Thereafter the preliminary budgets and budgeting strategy is presented in \autoref{SDA:budgets}. Finally the chapter structure for the subsystem design is discussed in \autoref{SDA:chapterstructure}.
+
+
+% ----- Welcome to this systems engineering madness -------
+
+
+\section{Design Approach} \label{SDA:designapproach}
+%maybe subsections or bold letters 
+% Big paragraph explaining the structure of the subsystems chapters and the logic behind it
+One of the goals of the detailed design phase is to produce a final design with the highest possible level of detail. This is achievable by splitting up the team in smaller departments and designing on a smaller, more detailed, scale. The same team member will be working on the same part for a longer period of time and therefore more expertise can be build up within the time frame of the DSE. Another goal is to produce the most optimal design: a perfect fit within the requirements. Optimisation is a dynamic process. By having the information in a central place the components can adapted to the most up to date information.
+
+Combining these two goals is a systems engineering challenge: optimization will limit the level of detail that can be achieved while maximum level of detail is desired. The team decided proceed the detailed design phase in iterations. From the project planning a set time frame is assigned for subsystem design. During this phase the iterations were performed by all the departments. A method of communication was constructed to have the most efficient iterations. The departments updated their department specific components based on the previous update. Every department constructed a method or tool to rapidly design and select hardware. By designing this tool for dynamic input parameters rapid responses can be delivered in case of a design update. The iterations are structured by deadlines. The initial goal was to to a new iteration every two days. During the detailed design it was observed that the tools and methods are fast enough to produce numbers more often and therefore additional iterations where put in place. Integration will be part of the iterations: by communicating the latest update to the rest of the team the team can adapt to the latest design. By the final iteration an integrated design is delivered. In \autoref{tab:iterations} the iteration and the deadline dates are shown.
+
+\begin{table}[H]
+\caption{Table showing the iteration dates and goals}
+\label{tab:iterations}
+\begin{tabular}{l|llllll}
+\textbf{Iteration} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6 - Final} \\ \hline
+\textbf{Date} & 4-6-21 & 8-6-21 & 9-6-21 & 10-6-21 & 11-6-21 & 11-6-21 \\
+\textbf{Goal} & \begin{tabular}[c]{@{}l@{}}Increasing\\ design\\ confidence\end{tabular} & \begin{tabular}[c]{@{}l@{}}Decreasing\\ weight\end{tabular} & \begin{tabular}[c]{@{}l@{}}Decreasing\\ weight\end{tabular} & \begin{tabular}[c]{@{}l@{}}Decreasing\\ weight\end{tabular} & \begin{tabular}[c]{@{}l@{}}Optimizing for\\ requirements\end{tabular} & \begin{tabular}[c]{@{}l@{}}Optimizing for\\ requirements\end{tabular}
+\end{tabular}
+\end{table}
+
+The goals of the iteration are shown in the table. The iterations start at at the point of preliminary budgeting. During in the midterm report\cite{midterm} the design budgets for every concept was presented. The budgeting done for the selected concept is taken as an input parameter of the first iteration. 
+
+The first goal is to decrease the uncertainties from the preliminary budgeting during the first iteration. Preliminary budgeting is done using statistics obtained from a paper which have been gathered at the time the paper was written. During the first iteration the departments focused on building more specific tools that are able to make a more detailed and certain estimations on the department specific budgets.
+
+The second goal is to decrease the weight. This was done during iteration 2, 3 and 4. To fit the requirements the drone has to be a light as possible. A lightweight drone will reduce the size and the production costs. Therefore focus is put on finding lighter components that can perform the task.
+
+Finally the goal is to optimize the design for the requirements. The end goal of the design is to meet all requirements. Therefore putting emphasis only on lowering the weight will not be suitable. Some departments have different priorities and therefore choices have to made to create the best fit. An example of a choice that has been made during the final iteration was that the team had to choose between are more lightweight drone or a smaller propeller diameter. The smaller propeller diameter was chosen as this had more benefits.
+
+Every department will be responsible for part of the final design. In \autoref{tab:departmentdesign} the design activities are summed per department. In the following chapters these design activities will be discussed in detail.
+
+\todo{Check by every department:
+-CCE (done)
+-Power (done)
+-}
+\begin{table}[H]
+\caption{Table stating the department design activities}
+\label{tab:departmentdesign}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Department} & \textbf{Design activities} \\ \hline
+Propulsion and Aerodynamics & Motors, propellers and aerodynamic cover. \\ \hline
+Power & Battery, electronic speed controller and battery management system. \\ \hline
+\begin{tabular}[c]{@{}l@{}}Communication, \\ control and electronics\end{tabular} & \begin{tabular}[c]{@{}l@{}}Flight computer, sensors, communication protocols and control \\ simulation\end{tabular} \\ \hline
+Structures & Frame design \\ \hline
+Operations & Landing gear and operational activities \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Driver and Killer requirements} \label{SDA:driverkillerreq}
+
+The driver and killer requirements have been reviewed during the detailed design phase. In \autoref{tab:driverrequirements} the updated driver requirements are shown. These requirements are affecting all subsystems and maintained during the iterations. In the table a short explanation is given regarding the effect on the design. In the following chapters the requirements will be discussed in detail.
+
+
+
+
+\begin{table}[H]
+\caption{Driver requirements}
+\label{tab:driverrequirements}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{TAG} & \textbf{Requirement} & \textbf{Reasoning} \\ \hline
+COST-AP-1 & The drones shall cost no more than   "1000,- per piece. & Use of expensive materials or concepts is   limited \\ \hline
+COST-AP-2 & \begin{tabular}[c]{@{}l@{}}The expected cost of replacing parts in 1000 light shows shall be\\  nomore than "650,-.\end{tabular} & Use of expensive materials or concepts is limited \\ \hline
+SUS-EO-3 & At least 80\% of drone mass shall be recyclable. & Material selection is limited \\ \hline
+OP-AP-3 & The drones shall be available in the year 2025 & \begin{tabular}[c]{@{}l@{}}Components have to be selected off-the-shelf \\ hardware and design is limited in technology\end{tabular} \\ \hline
+OP-AP-2 & The drones shall be suitable for mass transport & A small sized drone is preferred \\ \hline
+OP-AP-8 & \begin{tabular}[c]{@{}l@{}}The minimum amount of drones    in  one  show    shall  be 20 for \\ indoor shows, where ’indoors’ means venues such as concert halls or stadium\end{tabular} & Special equipment is required \\ \hline
+POP-SYS-2.2 & The drone shall have a minimum thrust to weight ratio of 3 & Heavy motors are required \\ \hline
+SP-SYS-1.3.1 & The megaphone or speaker shall have a power consumption of 20W & High powerconsumption \\ \hline
+SP-AP-1.4.1 & Future innovations shall have specifications up to a weight of 0.6kg & Heavy components are required to lift the drone \\ \hline
+SP-AP-1.4.2 & \begin{tabular}[c]{@{}l@{}}Future innovations shall have specifications up to a 20W power \\ consumption\end{tabular} & High powerconsumption \\ \hline
+SP-AP 1.4.3 & \begin{tabular}[c]{@{}l@{}}Future innovations shall have specifications up to dimensions of \\ 20cm x 20cm x 20cm\end{tabular} & The payload requires a specially shaped drone \\ \hline
+POP-AP-3.2 & \begin{tabular}[c]{@{}l@{}}The drones shall be able to fly for 15 minutes of showtime with \\ a heavy payload.\end{tabular} & A large battery is required \\ \hline
+POP-AP-3.8 & \begin{tabular}[c]{@{}l@{}}The drones shall be able to fly for 20 minutes of showtime with a \\ lights as a payload.\end{tabular} & A large battery is required \\ \hline
+AD-AP-1 & The drones shall be able to fly in 6BFT wind conditions. & Additional power is required \\ \hline
+OP-AP-6 & The area off the take-off zone shall be at most 1m2 per drone & Constraining the design space \\ \hline
+\end{tabular}
+}
+\end{table}
+
+Requirements negotiations have taken place during the midterm period. Using the initial budgeting a new requirements proposal was constructed and accepted. The killer requirements where eliminated according to the sizing method. However, some of the driver requirements stated in the table became killer requirements during the iterations. The requirements where not met and changes to the design had to be made. At the final iteration all killer requirements where met and thus eliminated again.
+
+
+\section{Budgeting During the Detailed Design Phase} \label{SDA:budgets}
+%explain how iterations were done, how we make sure right input/output combination 
+
+The primary design budgets cover will be discussed in the list below. Every department had to reproduce these budgets for every iteration in order to optimize the design.
+\begin{itemize}[noitemsep,nolistsep]
+    \item \textbf{Mass:} Mass is the most important design parameter. During the detailed design phase it showed that most of the driver requirements were translated in a mass reduction. Therefore mass reduction was very important to meet the requirements.
+    \item \textbf{Power usage:} Power usage is the secondary budget that will have a big influence on the mass. A lower power consumption is always preferred as it lowers the chance of a mass increase. However, power consumption is directly related to parameters such as propeller size and payload functionality. It should be carefully evaluated if the benefits of a lower power consumption out weight the drawbacks.
+    \item \textbf{Production costs:} A requirement is set on the maximum production cost. Therefore the cost is closely evaluated every iteration in order to prevent the design from being too expensive. Mass has the biggest influence of cost: A lower mass will have a high impact on the costs related to the power and propulsion departments.
+    \item \textbf{Maintenance costs:} A requirement is set on the maximum maintenance costs. During the requirements negotiations these costs were increased to have more room for battery replacements. In case the design performs better than specified in the requirement, the performance should be reduced to the required performance and the maintenance costs should be lowered. The maintenance costs cover the expected replacements and the routine repairs.
+\end{itemize}
+
+%Talk about secondairy budgets - link to n2 chart
+Every department has its own set of department specific parameters. These parameters are related to what the department is designing. These parameters will also be updated by every iteration.
+
+Mass will be the most important budget that will be used by all departments. Every iteration will have a newly calculated total mass and therefore the departments are required to work with inputs that can be dynamic. A so called snowballing effect is created when weight is added: a heavier drone will result in bigger propeller blades, heavier motors, bigger batteries and a more reinforced frame. More weight is added to the drone and the design will be heavier each iteration that is performed until it converges to a final value. When weight has to be added the drone will not meet the desired performance as there is always not enough power available to meet the flight time requirement. Therefore it is desired to converge to a lower weight in order to meet all requirements.
+
+During preliminary budgeting a total mass estimation was made. The departments started to design using this initial mass. After the first iteration the design was heavier compared to the preliminary budgeting and therefore the weight had to increase. In order to meet the requirements more weight should be added than necessary by the iteration. Therefore margins are put in place.
+
+Contingency margins are applied over the mass budget. After each iteration a new total weight is produced. Margins are added to the weight to ensure there's is room for uncertainties. The total mass including the added margin is communicated back to the departments and will be used for the next iteration. The margins are shown in \autoref{tab:margins}. The margins on preliminary budgeting are high: the data contains many uncertainties. It can be seen that the margins decrease over time. The propulsion and aerodynamics and power department have a rapidly decreasing margin. This is due to the fact that these departments will be selecting off the shelf flight hardware in an early stage. The structures department has the highest contingency margins. This originates from the fact that the structures department has to design many different uniquely shaped components which introduced a lot of uncertainties. The control, communication and power department has a constant contingency margin of 10 \%. Hardware is selected during the first iteration however unlike the power department a larger uncertainty is present for manufacturing. Finally the operations department did design the landing legs. The department finalized the tool for calculating the weight during the first iterations. Therefore the margins are set low from the second iteration.
+
+
+\begin{table}[H]
+\caption{Table containing contingency margins.}
+\label{tab:margins}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l|lllllll}
+\textbf{Margin table} & \textbf{\begin{tabular}[c]{@{}l@{}}Preliminary \\ budgeting\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Iteration \\ 1\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}iteration \\ 2\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Iteration \\ 3\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Iteration \\ 4\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Iteration \\ 5\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Final \\ margins\end{tabular}} \\ \hline
+\begin{tabular}[c]{@{}l@{}}Propulsion \& \\ Aerodynamics\end{tabular} & 30.00\% & 5.00\% & 5.00\% & 5.00\% & 5.00\% & 5.00\% & 5.00\% \\
+Power & 30.00\% & 5.00\% & 5.00\% & 5.00\% & 5.00\% & 5.00\% & 5.00\% \\
+\begin{tabular}[c]{@{}l@{}}Structure \& \\ Payload\end{tabular} & 30.00\% & 20.00\% & 15.00\% & 15.00\% & 10.00\% & 10.00\% & 10.00\% \\
+\begin{tabular}[c]{@{}l@{}}Controllability, \\ Communications \& \\ Electronics\end{tabular} & 30.00\% & 10.00\% & 10.00\% & 10.00\% & 10.00\% & 10.00\% & 10.00\% \\
+Operations & 30.00\% & 10.00\% & 5.00\% & 5.00\% & 5.00\% & 5.00\% & 5.00\%
+\end{tabular}
+}
+\end{table}
+
+% Talk about that the 5% margin is too low
+It can be argued that a contingency margin of only 5\% for the Aerodynamics, propulsion and power department is too low as the team should account for larger uncertainties in case of a design change. However, the goal is to rapidly iterate and optimize the total design. Therefore higher margins will result in an over designed product. It is preferred to do additional iterations over setting high margins as this allows for the most optimal design to be chosen.
+
+The table above only mentions contingency margins for the mass budget. The other budgets are checked during every iteration. The power budget will be heavily dependent on the weight and is difficult to constrain to a set value. Therefore an increase in power was notified to the systems engineer, who can confirm that the increase is within margins. These margins follow from the margins set on the mass and are calculated case specific. The production and maintenance cost budgets are taken from the preliminary budgeting and are decreased by 20\% to have margin. In case a department goes over budget, a new budget is set for that department and the budgets for other departments are lowered. This can only be performed in case other departments indicate that they will remain below budget.
+
+The budgets obtained during preliminary are shown in \autoref{tab:prelimbudgets}. Contingency margins are not subtracted from these budgets. The budgets with the subtracted contingency margin are given as the starting point of the first iteration for every department. In the table it can be seen that no weight is assigned for the operations department. During preliminary budgeting it was not considered that the operations department will design the landing gear. To compensate for this budget was subtracted from the structures department and added to the operations department during the first iteration.
+
+\begin{table}[H]
+\caption{Table containing preliminary budgets}
+\label{tab:prelimbudgets}
+\centering
+\begin{tabular}{l|llll}
+\textbf{Department} & \textbf{Mass {[}kg{]}} & \textbf{Power {[}W{]}} & \textbf{\begin{tabular}[c]{@{}l@{}}Production \\ Costs {[}€{]}\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Maintenance \\ Cost {[}€/lifetime{]}\end{tabular}} \\ \hline
+\begin{tabular}[c]{@{}l@{}}Propulsion \&\\ Aerodynamics\end{tabular} & 0.43 & 158.89 & 230.77 & 16.30 \\
+Power & 0.36 & 0.00 & 41.85 & 544.03 \\
+Structure \& Payload & 0.86 & 20.00 & 219.69 & 16.30 \\
+\begin{tabular}[c]{@{}l@{}}Controllability, \\ Communications \& \\ Electronics\end{tabular} & 0.01 & 10.83 & 153.85 & 16.30 \\
+Operations & 0.00 & 0.00 & 76.92 & 16.30
+\end{tabular}
+\end{table}
+
+\section{Communication During the Detailed Design Phase}
+%relations between subsystems
+% N2 chart
+
+% Talk about budget monitoring during iterations
+% Rules during iterations
+
+
+
+Communication was a very important aspect of the detailed design phase. A pitfall would be that the departments will communicate and agree on decisions without informing the rest of the team. However, communicating everything to the full team would be very time consuming. To solve this issue the master systems design sheet was constructed. This sheet will function as a big parameter and budget library which is accessible to every department. By putting all design decisions in this sheet communication was done in a very effective way. 
+
+In \autoref{tab:examplemsds} a row of the master systems design sheet is shown. In this table a slice of the library tab is shown. The first row contains the iterations and the value obtained preliminary budgeting (statistics). This row is followed by a row stating the department. All parameters are sorted by department in the sheet. Finally the parameter is shown in the third row. It has a unique identifier to aid a quick lookup in the sheet, followed by a parameter name and unit. Every iteration has a different value.
+
+\begin{table}[H]
+\caption{An example input for the master systems design sheet.}
+\label{tab:examplemsds}
+\centering
+\begin{tabular}{lll|lllllll}
+\rowcolor[HTML]{C0C0C0} 
+\textbf{ID} & \textbf{Parameter} & \cellcolor[HTML]{C0C0C0}\textbf{Unit} & \textbf{Statistics} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6 - Final} \\ \hline
+\rowcolor[HTML]{EFEFEF} 
+\textbf{1} & \textbf{\begin{tabular}[c]{@{}l@{}}Propulsion and \\ Aerodynamics\end{tabular}} & \cellcolor[HTML]{EFEFEF}\textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} \\
+1.16 & \begin{tabular}[c]{@{}l@{}}Power max speed \\ and headwind \\ (heavy configuration)\end{tabular} & W & 900 & 536 & 290 & 342 & 272 & 251 & 234
+\end{tabular}
+\end{table}
+
+The detailed design phase started by making a sheet where every department could fill in their required parameters. The departments where asked to add the required parameters to the master systems design sheet and make a fist estimate in the statistics box in case the parameter was not set during preliminary budgeting. By filling in a statistical value every department had numbers to work with during the first iteration.
+
+Besides the required parameters every department had to fill in the primary budget parameters. By doing this the systems engineer can keep track of the total budgets and act in case a department is over budget. A special dashboard tab is created which is used to construct the total budgets for every iteration. The margins are applied on this tab to calculate the total weight.
+
+All departments where required to fill in numbers for every iteration. By updating the numbers during every iteration the design will adapt to the latest developments in the departments. In case the values did not change the same value had to be entered again for the next iteration. This required the departments to confirm their numbers for every iteration with a minimal effort.
+
+Decisions such as the number of propellers, frame material and propeller diameter can all be put in the library. Every department has access to the numbers and therefore if information on the design is need to continue it can be looked up. While the departments work on an iteration and information has to be retrieved, the departments will use the parameters from the previous iteration. Therefore the used information for every iteration will be static: information used during the iterations will not change. However the detailed design phase will be highly dynamic: every iteration performed the design will converge to a more optimal configuration. One exception is made from the procedure of reading parameters from the previous iterations. The power department is so dependent on the power required by the propulsion department and therefore these two departments work together on producing numbers for an iteration. The battery is sized based on the power required after these parameters are given by the propulsion department.
+
+In the next chapters the design for the subsystems will be discussed. The required parameters obtained during this detailed design phase are obtained from the master systems design sheet. To aid the understanding of parameters that are exchanged a design N2 chart is made. In this N2 chart the output of every department is shown on the horizontal lines. Inputs for the departments are shown on the vertical line. The design N2 chart can be seen in \autoref{tab:designn2} A box on the diagonal stating the total budgets is added. This is done to show the interaction between the departments and the total budgets.
+
+\begin{table}[H]
+\caption{Exchange of parameters visualized in a design N2 chart.}
+\label{tab:designn2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+\cellcolor[HTML]{FFE599}\textbf{\begin{tabular}[c]{@{}l@{}}Propulsion \&\\ Aerodynamics\end{tabular}} & \begin{tabular}[c]{@{}l@{}}Power required, \\ motor current\end{tabular} & Thrust coefficients & \begin{tabular}[c]{@{}l@{}}Dimensions, \\ operating temperature, \\ propeller diameter, \\ aerodynamic requirements\end{tabular} &  & \begin{tabular}[c]{@{}l@{}}Mass, \\ costs, \\ power consumption\end{tabular} \\ \hline
+Voltage & \cellcolor[HTML]{FFE599}\textbf{Power} & Voltage & Dimensions, &  & \begin{tabular}[c]{@{}l@{}}Mass, \\ costs\end{tabular} \\ \hline
+ &  & \cellcolor[HTML]{FFE599}\textbf{CCE} & Dimensions, & Landing precision & \begin{tabular}[c]{@{}l@{}}Mass, \\ costs, \\ power consumption\end{tabular} \\ \hline
+ &  & Dimensions & \cellcolor[HTML]{FFE599}\textbf{\begin{tabular}[c]{@{}l@{}}Structures \&\\ Payload\end{tabular}} &  & \begin{tabular}[c]{@{}l@{}}Mass, \\ costs, \\ power consumption\end{tabular} \\ \hline
+ &  &  & Dimensions, & \cellcolor[HTML]{FFE599}\textbf{Operations} & \begin{tabular}[c]{@{}l@{}}Mass, \\ costs\end{tabular} \\ \hline
+Total mass & Power consumption &  & Masses &  & \cellcolor[HTML]{FFE599}\textbf{Total budgets} \\ \hline
+\end{tabular}
+}
+\end{table}
+
+
+
+\section{Subsystem Chapter Structure} \label{SDA:chapterstructure}
+In this section an overview of the structure in the following chapters will be given. The chapters cover the subsystem design.
+% %Functional Overview
+% Refer to functional analysis chapter with the diagrams and how each subsystem gives an overview of their functions
+Every chapter will start with a functional overview. The functional overview will provide an overview of what the subsystem will design during the detailed design to full fill its desired functions. The tasks are linked to the functions described in the functional flow diagram and functional breakdown structure.
+
+% %Risk Analysis Approach
+% explain how subsystems deal with risk and where to find the final recap at the end of report
+The functional overview is followed by a recap of the risk analysis done during the midterm report\cite{midterm}. The risks and the mitigation responses will be repeated. During the design these mitigation responses will be implemented. Newly discovered risks will be discussed in a separate risk section at the end of the chapter.
+
+
+\todo{(Paul) I don't know if this is where I'm supposed to introduce the risk assessment methodology. If it must be put somewhere else, tell me}
+The identification and assessment of these new risks will follow the same procedure conducted in the previous design phases of the project: as each department develops the design of the drone, they will identify risks, which they will gauge in terms of likelihood and impact of consequence, using the risk scores displayed in \autoref{tab:risk_LSandCS}. This will act as the primary factor for determining the extent of the necessary mitigation response. Once a proper mitigation response has been identified for the risk, updated risk scores will be provided, determining the effectiveness of the mitigation in reducing the gravity of the risk. At the end of the report (REF IN WHAT SECTION/CHAPTER), a set of risk maps will be shown, summarising all the identified risks, and displaying their severity before and after the implementation of the mitigation responses.
+
+\begin{table}[H]
+    \caption{Description of the risk scores, LS (likelihood) and CS (consequence).}
+    \label{tab:risk_LSandCS}
+    \centering
+    \begin{tabular}{c|p{0.85\linewidth}} \hline
+        \textbf{LS} & \textbf{Description} \\ \hline
+        1 & Risk probability very low, risk occurrence very unlikely \\
+        2 & Risk probability low, risk rather unlikely to occur \\
+        3 & Moderate risk probability \\
+        4 & Risk probability high, risk rather likely to occur \\
+        5 & Risk probability very high, risk occurrence very likely \\ \hline \hline
+        \textbf{CS} & \textbf{Description} \\ \hline
+        1 & Impact negligible: inconvenience, impact on technical performance insignificant \\
+        2 & Impact marginal: degradation of secondary mission, small performance reduction \\
+        3 & Impact moderate: some technical setbacks, non-optimal performance \\
+        4 & Impact critical: mission success questionable, some reduction in technical performance \\
+        5 & Impact catastrophic: mission failure or severe non-achievement of performance \\
+    \end{tabular}
+\end{table}
+
+% %Requirements
+% - requirements will be mentioned at the beginning of each subsystem design that they correspond to
+A list of requirements is provided in every chapter. The relevant requirements applicable to the subsystem are listed and the requirements will be discussed in the method section. All requirements will be covered in the chapters. The requirements that cannot be answered in the subsystem will be discussed in \autoref{ch:finaldesign}.
+
+% %Method
+In the method section the design will be discussed. The tools or methods constructed will be shown and results will be presented. The method section is followed by verification and validation. The procedures taken will be verified an validated.
+% %Verification and Validation
+
+Finally the chapters end by filling in a compliance matrix. The requirements that have been met by the design presented in the subsystems chapter will be shown.
+
+%   -this includes of tools/method and of design (compliance matrix)

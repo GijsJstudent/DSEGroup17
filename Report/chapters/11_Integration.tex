@@ -1,0 +1,270 @@
+\chapter{Subsystem Integration}
+\label{ch:finaldesign}
+% show how everything fits together
+
+% Deliverables:
+%     -Configuration (Layout)
+%     8 pages: NOTICE EDITORS WHEN YOU ARE GOING OVER OR UNDER THIS LIMIT!
+
+\autoref{ch:propulsion} to \autoref{ch:operations} presented the overview and results of each subsystem design. This chapter explains how all subsystems integrate with each other.\autoref{SI:requirements} presents the requirements and risks that are taken into account in the integration process.\autoref{SI:integration overview} explains the integration of each subsystem and \autoref{SI:final design} gives an overview of the final design. Note that the process of integration was already started during the subsystem design phase and that the final results presented in the subsystem design chapters are from after integration.  
+
+\section{Requirements and Risks related to integration} 
+\label{SI:requirements}
+
+In \autoref{tab:integrationrequirements} the requirements related to integration are shown. These requirements have not been (fully) answered in the previous chapters and will discussed in this chapter. The compliance matrix for these requirements will be shown in \todo{add ref}.
+
+\autoref{tab:integrisk} presents the risks with respect to integration that have to be mitigated. These risks were identified during the subsystems design.
+
+
+\begin{table}[H]
+\caption{Requirements related to integration}
+\label{tab:integrationrequirements}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{TAG} & \textbf{Requirement} \\ \hline
+
+SP-AP 1.4.3   & Future innovations shall have specifications up to dimensions of 20cm x 20cm x 20cm \\ \hline
+OP-AP-6 & The area off the take-off zone shall be at   most 1m2 per drone \\ \hline
+OP-AP-2.2 & The volume of the drones shall not exceed 0.5m\textasciicircum{}3 \\ \hline
+AD-AP-2       & The drone shall be able to fly in rainfall up to 10mm/hour \\ \hline 
+SR-SYS-8 & \begin{tabular}[c]{@{}l@{}}The drone’s electronics and propulsion system shall remain operational \\ under raining conditions of up to 10mm/hr.\end{tabular} \\ \hline
+SP-SYS-6 & \begin{tabular}[c]{@{}l@{}}The drone body should be tolerable to transportation and in-flight vibrations\end{tabular} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\caption{Risks related to integration}
+\label{tab:integrisk}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{ID} & \textbf{Risk} \\ \hline
+50& Arms misaligned in body \\ \hline
+51 & Arms get loosened from body \\ \hline
+42 & Loosend attachment of landing gear \\ \hline
+\end{tabular}
+\end{table}
+
+
+\section{Subsystems Integration Overview} 
+\label{SI:integration overview}
+
+The drone frame as presented in \autoref{ch:structures} is the basis of the integration. All subsystems are to be facilitated by the frame. In this section the integration of each subsystem is presented by department. An overview of the fully integrated drone is shown in \autoref{fig:exploded view}. Here, all drone parts have been assigned a number to which is referred in the text.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.9\textwidth]{Figures/Renders/exploded view numbered.png}
+    \caption{Overview of integrated final design}
+    \label{fig:exploded view}
+\end{figure}
+
+\subsection{CCE Integration}
+%what goes where and why, how attach to frame
+The CCE subsystem consists of 5 PCBs that need to be incorporated in the drone. These are the flight controller, GPS, WiFi, Radio and UWB. These parts are represented by numbers 20, 17, 18, 8, 16 respectively. The flight controller is placed in the middle of the frame inside the main box. This is done such that the flight controller experiences as little disturbances as possible during flight. All other PCBs are put on top to have a better signal with respect to the satellite and ground stations, as explained in \autoref{ch:cce}. 
+
+In the iterations for the frame design the GPS was initially put inside the main box. During integration the GPS was moved to the top and the frame dimensions were adjusted as explained in \autoref{ch:structures}.
+
+\subsection{Power integration} \label{subsec:powerintegr}
+The power subsystem consists of 3 parts. The battery, the ESC and the BMS. The BMS will be investigated in detail in the post DSE phase, as mentioned in \autoref{ch:power} and described in \autoref{ch:postdseactivities}. It is represented by number 21 and assigned a place in the main box of the frame. The reason for its placement is that all cables from the motors and landing gear, through which the battery is recharged as explained in \autoref{ch:operations}, end in that box. The ESC, represented by 12 is placed in the main box for that same reason.
+
+The battery is put on top of the main frame box, as explained in \autoref{ch:structures}. As the drone is designed for shows, the payload should go on the bottom. Therefore the battery can only be placed on the top part of the drone. As the CCE components need to be all the way on top the battery is placed as shown. The advantage of this battery placement is that the center of gravity is close to the center of thrust. Therefore the force that rotates the drone becomes more efficient, due to a smaller moment of inertia, given the drone improved better control and stability.
+
+The battery is fixed in its own compartment such that it can not move around. This compartment is made 10\% higher than the battery thickness as explained in \autoref{ch:structures}. This space should however be filled by a compressible material to make sure the battery can not move up and down. This will be further explored in the post DSE-phase as explained in \autoref{ch:postdseactivities}. 
+
+The pin indicated with 11 can be pushed down, after which the battery can slide in. The pin is spring loaded, so it will pop up after the battery is positioned and secure it in place. A detailed design of this pin is to be performed in the post-DSE phaseas explained in \autoref{ch:postdseactivities}. 
+
+\subsection{Landing Gear Integration}
+Two sets of landing gear are designed for the drone as explained in \autoref{ch:operations}. This means there must be a detachable connection between the landing gear and the frame. For the detachment method the risk of loosend attachment of the landing gear(Risk 42) must be taken into account. Furthermore, each landing leg includes a charging pin which realises wireless charging. A cable has to go up through the leg to be connected to the power system.
+
+The landing gear can be either attached to the arms or to the main body of the frame. Attaching it to the main body however requires external structures. This is because the landing gear needs to mounted away from the main body to include the payload by requirement SP-AP 1.4.3. This attachment option adds mass and makes the drone less aerodynamic, therefore attachment to the arms is first explored.
+
+The arms were not designed for coping with landing loads. Attaching the landing legs to the arms introduces the risk that the arms brake at collision with the ground. To study the viability of this option the verified arm sizing tool of \autoref{ch:structures} is used. The load case is changed to harsh landing, for which the following adjustments are made to the tool.
+\begin{itemize}[noitemsep,nolistsep]
+    \item The thrust force is set to 0 for a harsh landing.
+    \item The flight speed is 0, the wind speed of 13.8m/s(6bft) is still considered.
+    \item An impact force is added to beam where the landing legs are placed. 
+\end{itemize}
+
+The landing legs are placed far enough from the body to make place for the 20x20x20cm payload with a margin of 1 cm. They will not be placed further outwards to limit the size of the required landing pad. with this requirement SP-AP 1.4.3 is satisfied.
+
+The tool shows that in a 2g landing, for which the landing legs are designed, the stress in the arms only reaches 3.3Mpa, compared to the maximum allowed stress of 14.6Mpa. This means the legs can indeed be attached to the arms. For landings with higher impact the landing gear will fail rather than the arms. The landing legs are represented by number 6.
+
+Initially, the landing gear was going to be screwed into the arm and this mechanism was used to perform the subsystem design iterations. However, this raised a structural integrity concern with the large size of the hole required on the arm, and the risk of loosening due to vibrations. For this reason, an extra part to facilitate the attachment was designed. This part is made out of PP as the rest of the frame, and it is bonded to the lower part of the arm. It has a hole which aligns with a small hole of 3mm in diameter on the arm to allow for the charging cables from the charging pin to enter the inside of the arm, into the frame body, and connected to the BMS. On the bottom side, it contains a hollow cylinder, 1cm long and 3mm thick, with two lateral holes to which the landing gear fits tightly. To prevent rotation of the landing gear inside its attachment a spring loaded pin is incorporated. Both sides of this pin are compressed after which the landing gear is put in position. Once the pin and the holes in the attachment align the pin will elongate again and secure the landing gear in place. This mechanism is shown in \autoref{fig:lgattach} and \autoref{fig:lginside}. 
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{Figures/Renders/LG_attach_render.png}
+  \captionof{figure}{Landing gear attachment via the PP part bonded to the arm and spring loaded pin, outside view}
+  \label{fig:lgattach}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{Figures/Renders/Lg_attach_inside.png}
+  \captionof{figure}{Landing gear attachment via the PP part bonded to the arm and spring loaded pin, inside view}
+  \label{fig:lginside}
+\end{minipage}
+\end{figure}
+
+To mitigate risk 42, a tight O-ring is put into place to tightly seal the space between the leg and the attachment piece. The landing leg touches with the PP attachment. Therefore the compressive forces are not taken up by the spring loaded but but by the attachment piece and the arm. 
+
+This attachment mechanism was designed after the subsystem design iterations were concluded. As shown in \autoref{ch:operations} the added mass and cost of this new mechanism fitted within the margins. Note that the spring pin was not chosen in detail and it's left for a more detailed design phase in \autoref{sec:postdseactivities}. 
+
+In the iterations for the the landing gear design the height was determined based on the height of the drone body, including payload. This was done to ensure stackability to meet requirement OP-AP-2. However, during integration miscalculations in the height were spotted for which the length of the landing gear had to be adjusted. These miscalculations originated from not taking into account the height of the electronics, the increased height of the casing due to its shape and the height of the payload mount that was not taken into account. The final length of the landing gear is presented in \autoref{ch:operations}.
+
+\subsection{Propulsion system integration} \label{subsec:propintegr}
+The motors must be mounted onto the arms onto which the propellers are attached. As the arms are circular tubes this cannot be done directly. Instead a mount is needed. In the mass calculations of the structures subsystem an estimation of the mass of the motor mount is made from iteration 4 onwards. For the iterations a simplified model of the mount is used. The mount was modelled in "SolidWorks" as a circular tube that fit onto the arm attached to a circular disk with the diameter of the motor. This gave an initial mass of 10 grams per mount.
+
+After the iterations a more detailed design of the motor mount was made as presented in \autoref{fig:motormount}. The mount is made of PP and has a mass of 8.38grams each as given by the modelling tool. The strength of this mount must be verified through Finite Element models in the post-DSE phase as described in \autoref{ch:postdseactivities}. The mount is to be permanently screwed onto the end of the arm to avoid misalignment and ease the manufacturing procedure. To ensure the mount does not get loose as a result of vibrations "loctite" \cite{loctite} is used.
+
+The mount will be produced via injection molding for which the estimated cost for 4 mounts(so per drone) is \EUR{72}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.5\textwidth]{Figures/Renders/Motor_mount.png}
+    \caption{Motor Mount Design}
+    \label{fig:motormount}
+\end{figure}
+
+An unbalanced motor introduces axial loads onto the arm. To meet requirement SP-SYS-6 a vibrational analysis is performed on the propeller-motor-arm integration. For this analysis the continuous system is converted into an equivalent discrete system. In this system the arm is modelled as a mass-less linear spring connector and the mass of the motor, propeller and arm are lumped into a mass component at the top of this beam. The mass of the landing gear is neglected in this analysis. It is assumed that all the deformation is in the connector and that the unbalance in the motor causes harmonically forced undamped vibrations.
+
+The equation of motion in \autoref{eq:eom} follows from the free body- and kinetic diagram. The deflection as a function of time is given by \autoref{eq:axialdefl}  and follows from solving this equation of motion, after noticing that the forcing- and natural frequency, given by \autoref{eq:wn} and \autoref{eq:wf} are not the same and assuming the movement starts from rest. The critical case for the vibrational analysis is the point were the natural- and forcing frequency are closest to each other. This is the case for the maximum RPM of the motors of 7643, as given in \autoref{eq:wf}
+
+\begin{multicols}{2}\setlength{\columnseprule}{0pt}
+\begin{equation}\label{eq:eom}
+   \Ddot{X} + w_n^2 X = f_0 \cos{w_f t}
+\end{equation}
+\break
+\begin{equation} \label{eq:axialdefl}
+   X(t) = \frac{f_0}{w_n^2 - w_f^2}\cos{w_n t} + \frac{f_0}{w_n^2 - w_f^2}\cos{w_f t}
+\end{equation}
+\end{multicols}
+
+
+\begin{multicols}{3}\setlength{\columnseprule}{0pt}
+\begin{equation} \label{eq:f0}
+   f_0 = \frac{F_0}{m_c}
+\end{equation}
+\break 
+\begin{equation} \label{eq:wn}
+    w_n = \sqrt{\frac{K}{m_c}} = \sqrt{\frac{E A}{LB \cdot m_c}}
+\end{equation}
+\break
+\begin{equation} \label{eq:wf}
+    w_f =  7643 \left(\frac{2\pi}{60}\right)
+\end{equation}
+\end{multicols}
+
+The stress in the arm caused by the unbalance in the motor is given by \autoref{eq:armstress} and is dependent on the maximum deflection. The offset between the center of gravity causing the unbalance of the motor and resulting in this deflection is given by \autoref{eq:ofset} and is derived from the radial acceleration.
+\begin{multicols}{3}\setlength{\columnseprule}{0pt}
+\begin{equation} \label{eq:armstress}
+    \sigma_{arm} = \frac{E\cdot  X(t)}{LB}
+\end{equation}
+\break
+\begin{equation} \label{eq:ofset}
+    O =  \frac{\sigma_{arm} A}{m_{rotor} w_f^2}
+\end{equation}
+\break
+\begin{equation}\label{eq:maxarmstress}
+    \sigma_{arm}_{max} = F_0 \frac{\sigma_{max}}{\sigma_{arm}}
+\end{equation}
+\end{multicols}
+To calculate the offset for which the arm would fail a tool is set up. This tool implements all equations above to calculate the offset. $m_c$ consists of the mass of the propeller, motor and arm. $m_rotor$ are the rotating part of the motor and the propeller. No information is available for the mass fraction rotor and stator of the motor. Therefore for the critical case it assumed the whole motor rotates.
+
+In the tool $F_0$ is given the value 10. This outputs a certain stress $\sigma_{arm}$. As their is a linear relation between the forcing load and the response, the maximum stress in the arm is given by \autoref{eq:maxarmstress} where $\sigma_{max}$ is the yield stress of the material pp. The critical offset for which the arm will fail is then computed using this value and is 42.8mm. This offset is very large and is not expected. 
+
+A second aspect of the vibrational analysis is fatigue. The loading cycles of the arm for a 1000h flight hours goes into the millions, as the propeller rotates with 7643RPM. However, as the arm is loaded to only 0.32\% of the maximum stress, it is concluded that fatigue is not an option. With this analysis requirement SP-SYS-6 is complied with with respect to the in-flight vibrations. Nothing can be concluded for the transportation vibrations as this depends on the to be determined carrying structure and the road conditions.
+
+To verify the used tool, first the linearity of the response with respect to the forcing load is investigated. For ($F_0 = 10, X_t_{max} = 6.417\cdot 10^-6$) and ($F_0 = 20, X_t_{max} = 1.253\cdot 10^-5$). Indeed the maximum deflection doubled and the assumption is validated. The next validation step is plot the response and see what happens when the natural frequency is almost equal to the forcing frequency. In this situation "Beats" phenomena is expected, which is indeed the response as visible in \autoref{fig:beats}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.4\textwidth]{Figures/beats.PNG}
+    \caption{Validation for when W_n nears W_f}
+    \label{fig:beats}
+\end{figure}
+
+
+\subsection{Structures integration}
+As introduced in \autoref{ch:structures} the frame consists of 4 parts. The main box, which is made up by parts number 10 and 13, the top plate indicated by number 9 and the arms indicated by number 5.
+
+The arms are to be permanently fixed inside the frame \cite{midterm}. To make sure the arms are not misaligned in the body (Risk 50) thread is used. To ensure the arms will not get loosend from the body (Risk 51) "loctite" \cite{loctite} is used. The arms are attached under a 45 degree angle with the body. This is done such that required arm length, including the propeller radius and clearance to the body, can be minimised. This will help to meet requirements OP-AP-6, OP-AP-2 and OP-AP-2.2 The arms are made 5mm longer for this attachment mechanism. Whether this 5mm is enough margin to ensure the arms stay attached to the frame should be verified by analysis and testing in the post-DSE phase, as described in \autoref{ch:postdseactivities}.
+
+The final dimensions of the frame body were determined after integration with all subsystems. A few corrections had to be made. First of all, the GPS was initially placed inside the main box. However the CCE department made a new request to put the GPS on top. Therefore the top plate had to be made longer. The width of the top-plate was adjusted such that it could fit on top of the battery compartment. The aft wall of the battery compartment was made lower to reduce mass, and the front wall was replaced by a loaded pin, to make the battery easily removable. Secondly, in the iterations the length of the main box was the same as the battery length, whereas it should have included the thickness of the battery compartment wall and casing. This was corrected for after integration. The height of the main box was made 4mm taller to be able to screw in the arms. Lastly, the corners of the main box were cut to incorporate the arms. Therefore it no longer had a rectangular shape and the width of the frame had to be adjusted for this to fit the battery. After implementing these corrections every subsystem fits nicely in the frame body as can be seen in \autoref{fig:exploded view}.
+
+The main box part numbers 10 and 13 are joined together by screws. This is done as these parts must be removable to access the flight Controller, ESC and BMS. The top plate can be welded to the battery compartment walls of part number 10 as it can be permanently fixed.
+
+\subsection{Sizing of the drone casing} 
+To ensure the PCBs on top of the frame remain operational under raining conditions (requirement SR-SYS-8) a casing is designed to protect these components. The propulsion system already meets the requirement.
+
+The shape of the casing was determined following the advice of the aerodynamics department to be cylindrical. The basis of the casing is rectangular to exactly fit the main box dimensions. The part is to be produced by injection molding and therefore given a minimum thickness of 2mm \cite{minmolding}. 
+
+The casing was designed to exactly fit around the drone after integrating all subsystems. This resulted in the casing as shown by number 15 with a final mass of 57 grams. Producing this piece would cost \EUR{35} \cite{materialbible}.
+
+To join the casing to the structure a waterproof rubber lining is made around the main body where the casing fits onto. To secure the casing in place a hinge mechanism is designed. This mechanism works as follows:..............................
+
+The hinges will be made of PP via injection molding. They have a mass of 4 grams each and will cost \EUR{52} to produce 2 of them for each drone.
+
+With this casing requirement SR-SYS-8 is satisfied.
+
+% explain how hinge mechanism works, show drawings
+% discuss rainfall requirement
+
+\todo{Walid, add description hinge mechanism, how it opens, ability to withstand rain}
+
+
+
+\section{Overview of Integrated Final Design}
+\label{SI:final design}
+After concluding the subsystem design and integration the final design is presented. Note that this final design does not include holes for cables nor their masses. This is to be explored in the post-DSE phase as explained in \autoref{ch:postdseactivities}.
+
+An overview of all the parts is shown in \autoref{fig:exploded view} and their total masses are given in \autoref{tab:finalmassbreak}. The final mass is 2065.4 grams, which fits in the budget of 2110 grams. There is still a 44.6 gram margin left for actions proposed for the post-DSE phase.
+\todo{lucas is this correct? or is the budget not 2.11 anymore?}
+
+An cost breakdown of the final design is presented in \autoref{ch:finance}.
+
+\begin{table}[H]
+\centering
+\caption{Mass breakdown of final design}
+\label{tab:finalmassbreak}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Department} & \textbf{Part} & \textbf{Mass[grams]} \\ \hline
+Propulsion & Propellers & 40 \\ \cline{2-3}
+            & Motors & 372 \\ \hline
+Power & Battery & 580\\ \cline{2-3}
+    & ESC & 12.1 \\ \hline
+CCE& PCBs & 30 \\ \hline
+Structures& Frame Body(incl Payload mount & 165  \\\cline{2-3}
+    & Frame arms & 68 \\\cline{2-3}
+    & Motor Mounts & 32  \\\cline{2-3}
+    & Casing(incl hinge) & 65  \\\cline{2-3}
+    & Payload Heavy & 600 \\\cline{2-3}
+    & Payload light & 317  \\ \hline
+Operations& Long Landing legs and craters &101.3 \\ \cline{2-3}
+        & Short Landing legs and craters & 78 \\ \hline
+Total & Mass & 2065.4 \\ \hline
+\end{tabular}
+\end{table}
+
+The size of the full drone is 720.34X623.13X250.51mm. This includes the propellers and the casing. with these dimensions the drone satisfies requirement PO-AP-6 as the area of the drone is only 0.44\textasciicircum{}2. Furthermore requirement OP-AP-2.2 is verified as the volume of the drone is only 0.11\textasciicircum{}3.
+
+\begin{longtable}[c]{|p{2.2cm}|p{8.2cm}|p{2cm}|}
+\caption{Compliance matrix for for the integration}
+\label{tab:complianceintegr}\\
+\hline
+\textbf{Tag} & \textbf{Requirement} & \textbf{Verified?} \\ \hline
+\endfirsthead
+%
+\endhead
+%
+SP-AP 1.4.3   & Future innovations shall have specifications up to dimensions of 20cm x 20cm x 20cm &\cellcolor[HTML]{C1FFC1} Yes\\ \hline
+OP-AP-6 & The area off the take-off zone shall be at most 1m2 per drone &\cellcolor[HTML]{C1FFC1} Yes \\ \hline
+OP-AP-2.2 & The volume of the drones shall not exceed 0.5m\textasciicircum{}3 &\cellcolor[HTML]{C1FFC1} Yes\\ \hline
+AD-AP-2       & The drone shall be able to fly in rainfall up to 10mm/hour &\cellcolor[HTML]{C1FFC1} Yes \\ \hline 
+SR-SYS-8 & \begin{tabular}[c]{@{}l@{}}The drone’s electronics and propulsion system shall remain operational \\ under raining conditions of up to 10mm/hr.\end{tabular} & \cellcolor[HTML]{C1FFC1}Yes\\ \hline
+SP-SYS-6 & \begin{tabular}[c]{@{}l@{}}The drone body should be tolerable to transportation and in-flight vibrations & Flight yes, Transportation depends on client\end{tabular} \\ \hline
+\end{longtable}
+
+
+
+

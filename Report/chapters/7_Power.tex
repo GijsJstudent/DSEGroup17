@@ -1,0 +1,555 @@
+\chapter{Power Subsystem}
+\label{ch:power}
+
+The power subsystem is a key component of the drone, as it provides all the electronics on board as well as the motors with the energy they require to carry out their function. Sizing of the the power subsystem will be covered in the following chapter. First, an overview of the susbystem's functions and risks is laid out in \autoref{sec:powerfunc&riskrecap}. Then, the requirements that will define the design process are contained in \autoref{sec:powerlistofrequirements}. \autoref{sec:powercalc} then describes the design process of sizing the components of the power subsystem, as well as the results obtained from this process. The risks identified during the detailed design phase are shown in \autoref{sec:powerriskanalysis}. Following, \autoref{sec:powerverificationandvalidation} covers the verification and validation of the methodology employed. Finally, a compliance matrix of the requirements to meet is shown in \autoref{sec:powercompliancematrix}.
+
+
+% 10 pages: NOTICE EDITORS WHEN YOU ARE GOING OVER OR UNDER THIS LIMIT!
+
+\section{Functional and Risk Overview of Power}
+\label{sec:powerfunc&riskrecap}
+
+The goal of the power subsystem is to provide the other subsystems of the drone with the energy they require and to meet the flight time requirements at low cost. This requires selecting a economically efficient battery and ESC system with a low mass and great performance. As mentioned in the functional flow diagram and in the functional breakdown structure the main functions of the power subsystems are:
+
+%Link between the FBS and FFD should be done
+
+
+%mention goal and explain. 
+%look at FFD and get the functions that relate to the power section
+%Add more functions if needed and correct in the FFD
+% present their relation to the Requirements
+
+\begin{itemize}[noitemsep,nolistsep]
+    \item To provide power to all subsystems of the drone:
+    \begin{itemize}[noitemsep,nolistsep]
+        \item To the motors via the ESC
+        \item To the flight computer/controller
+        \item To the payload
+    \end{itemize}
+    \item Have enough power to be able to have a flight time of:
+    \begin{itemize}[noitemsep,nolistsep]
+        \item 15 min showtime with heavy payload
+        \item 20 min showtime  with light payload
+    \end{itemize}
+\end{itemize}
+
+Risks that were identified prior to the detailed design of the power supply are displayed in \autoref{tab:riskspower}. Let it be noted that those do not encompass fully the risks of the power supply, as the detailed design phase will reveal new risks. Those will be discussed in \autoref{sec:powerriskanalysis}.
+
+%Risk table up to midterm.
+\begin{longtable}[c]{|p{0.65cm}|p{4cm}|p{1.6cm}|p{1.9cm}|p{6cm}|}
+\caption{Risks related to power and their mitigation responses}
+\label{tab:riskspower}\\
+\hline
+\textbf{ID} & \textbf{Risk} & \textbf{Likelihood} & \textbf{Consequence} & \textbf{Mitigation response} \\ \hline
+\endfirsthead
+%
+\endhead
+%
+13 & Power supply draining too quickly & Very low & Critical & Take the risk. \\ \hline
+19 & Battery swelling due to abusive use & Moderate & Critical & Design container with clearance in volume to allow for expansion of the battery. \\ \hline
+20 & Battery Ignition & Low & Catastrophic & Protect the battery from spreading flames to the rest of the drone. \\ \hline
+21 & Overdischarge of the battery beyond recommended DoD & Very High & Moderate & Set maximum time limit for show / warn operators to be prepared for heavier maintenance costs due to more frequent battery swaps. \\ \hline
+\end{longtable}
+
+The identified risks are accompanied with appropriate risk mitigations. Implementation of those risk mitigations will take place during the design and when operating the drones after they have been completed.
+
+
+\section{List of Requirements Power}
+\label{sec:powerlistofrequirements}
+
+The requirements that pertain to the power unit are displayed in \autoref{tab:powerequirements}. In order to guarantee that the final product functions properly and satisfies the customer, the design process will focus on ensuring that the power source meets those requirements.
+
+
+\begin{table}[H]
+\centering
+\caption{Requirements related to Powersubsystem}
+\label{tab:powerequirements}
+%\resizebox{\textwidth}{!}{%
+\begin{tabular}{|p{2.7cm}|p{2cm}|p{10cm}|}
+\hline
+\textbf{Sub-department} & \textbf{TAG} & \textbf{Requirement} \\ \hline
+\multirow{4}{*}{Power}                                                   
+                          & POP-AP-3.1    & The drones shall be able to fly for 15 minutes for preparations and checkups.    \\ \cline{2-3}                                               
+                          & POP-AP-3.2    & The drones shall be able to fly for 15 minutes of showtime with a heavy payload.  \\ \cline{2-3}  
+                          & POP-AP-3.8    & The drones shall be able to fly for 20 minutes of showtime with a lights as a payload.  \\ \cline{2-3}     
+                          & POP-SYS-3.7   & The energy storage shall be fully charged within 60min. \\ \cline{2-3} 
+                          & AD-SYS-6      & The drone shall be operable in a temperature range between 3 deg and 40 deg.  \\ \hline 
+\multirow{3}{*}{Sustainability}      & SUS-AP-1      & The drones shall be powered by renewable energy sources.                                                                       \\\cline{2-3} 
+                          & SUS-EO-6      & The components of the energy storage shall not contaminate the environment.                                                         \\\cline{2-3}
+                          & SUS-EO-3      & At least 80\% of drone mass shall be recyclable.       \\ \hline
+                          
+\multirow{2}{*}{Payload}  & SP-SYS-1.3.1  & The megaphone or speaker shall have a power consumption of 20W                                                               \\\cline{2-3} 
+                          & SP-AP-1.4.2   & Future innovations shall have specifications up to a 20W power consumption   
+                                                                    \\ \hline
+\multirow{4}{*}{Operations}   & OP-AP-2	      & The drones shall be suitable for mass transport. \\ \cline{2-3}
+                          & CCE-AP-2      & The show location shall be at most 1000 m apart from the ground station.                          \\\cline{2-3}
+                        & CCE-AP-3     & The drones shall be recharged wirelessly through their landing pads.                       \\\cline{2-3}
+                          & CCE-SYS-3.2      & The drone shall be able to recharge autonomously on the landing pad between preparation and show.           \\\hline
+
+\end{tabular}%
+
+\end{table}
+
+\section{Design for Power}
+\label{sec:powercalc}
+% Make subsections for different subjects within subsystem
+
+Sizing of the power subsystem's components was conducted according to a process involving evaluation of power required during the flight phases of the drone, as well as regression of battery characteristics based on statistical data.
+
+The type of battery studied are lithium-polymer batteries, which present a number of advantages with respect to other power sources. Inherently, they will comply with requirements OP-AP-2, as they are very compact and can be transported easily, provided they are safely contained. Requirement SUS-EO-6 is also met with this type of power source: during normal use, no waste, pollutants or any form of components exit the interior of the battery. Working temperature ranges of li-po batteries are within -20 -- 60 °C, with charging temperatures between 0 -- 45 °C \cite{simon_2019}. This allows cover of requirement AD-SYS-6. For the remaining requirements, proper sizing of the battery must be conducted.
+
+\subsection{Data Gathering \& Analysis}
+\label{sub:power_dataanalysis}
+
+%battery stuff
+For the calculations of the different battery characteristics, a database of existing batteries on the market was used \cite{notion}. After removing erroneous points among the data (some batteries enlisted missed critical information, such as their mass, or their capacity for example), this database was found to consist of 137 li-po batteries. It includes technical information on capacity, weight, cost and other technical performance characteristics. This allowed for the creation of plots of different of these characteristics, such that relations between them could be established through the method of regression. An example of such a plot can be seen in \autoref{fig:Batdata_weight_capa}. Approximating battery characteristics based on its required capacity was then made possible. It was decided to use this method of statistical regression to produce battery properties throughout the first design iterations, as this method proved to be more time efficient than searching for a specific battery for each iteration. Selection of a specific battery model among those in the database was only performed for iterations 5 onward, as the process narrows down on a final design.
+
+%input plots here
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/Power/Batterydata_Weight_Capa.png}
+    \caption{Plot of the battery weight versus capacity. Each point is a singular battery in the database.The whole data set \\ allows for a linear regression. Identical data processing was conducted for the battery volume and cost.}
+    \label{fig:Batdata_weight_capa}
+\end{figure}
+
+
+
+
+\subsection{Inputs}
+\label{sub:powerinputs}
+Obtaining the characteristics of the adequate battery and ESC depends on a number of variables. At the start of each iteration, the latest of these values are used as inputs for the computation of new battery characteristics, and selection of the ESC.
+
+The inputs required are displayed in \autoref{tab:powerinputs}.
+% Please add the following required packages to your document preamble:
+% \usepackage{longtable}
+% Note: It may be necessary to compile the document several times to get a multi-page table to line up properly
+\begin{longtable}{p{0.4\linewidth}p{0.1\linewidth}p{0.1\linewidth}}
+\caption{The inputs for power calculations.}
+\label{tab:powerinputs}\\
+\textbf{Inputs}                   & \textbf{Symbol} & \textbf{Unit} \\ \hline
+\endfirsthead
+%
+\endhead
+%
+Power required for flight         & $P_{\mathit{flight}}$     & [W]     \\
+Power required of flight computer & $P_{\mathit{FC}}$        & [W]       \\
+Power required of payload         & $P_{\mathit{pl}}$        & [W]       \\
+Maximum motor current             & $I_{\mathit{max, m}}$        & [A]  \\
+Battery efficiency                & $\eta_{\mathit{bat}}$       & [-]   \\
+Capacity degradation constant     & $k_{\mathit{loss,\%}}$    &  [-]      \\
+Depth of Discharge                & $\mathit{DoD}$          & [-]       \\
+End-of-Life factor                & $\mathit{EOL}$          & [-]       \\
+Control correction factor         & $k_\mathit{control}$    & [-]       \\
+Number of shows in one lifetime   & $n_{\mathit{shows}}$    & [-]       \\
+Number of flights per show        & $\frac{n_{\mathit{flights}}}{show}$ & [-]
+\end{longtable}
+
+the input $P_{\mathit{flight}}$ was obtained in the form of a function dependent on the airspeed experienced by the drone ($P_{\mathit{flight}} \rightarrow P_{\mathit{flight}}(V)$). Two of these functions were requested from the propulsion department, one for a drone carrying the heavy payload, the other for the light payload. The battery efficiency is an inherent property of the battery, and can be assumed to be equal to $95\%$. The depth of discharge, $\mathit{DoD}$, is kept at a value of $80\%$ throughout the design: this ensures that the design will be able to fulfil its mission without draining too much energy from the battery, which may damage it and shorten its lifetime. By adhering to this practice, the mitigation of risk $21$ is assured from a design perspective. The capacity degradation constant $k_{\mathit{loss,\%}}$ defines how many percents of the maximum capacity of the battery is lost per cycle. Its value was estimated to be of -0.056\% of the Beginning-of-Life capacity per cycle \cite{BU_how_to_prolong_lithium_based_batteries}. The end of life factor $\mathit{EOL}$ relates to the degradation of the battery over its lifetime. It defines at what percentage of maximum capacity loss the battery is sent to recycle and becomes replaced by a new one. It is set to be equal to $80 \%$, as it is common practice to retire batteries at this state of capacity loss \cite{battery_life_and_how_to_improve_it}. The control correction factor $k_{\mathit{control}}$ is used as a safety margin to account for small trajectory corrections the drone will perform during flight. It has been assumed to be equal to $5\%$ throughout the whole design phase. Finally, the number of shows and flights per show help determine the amount of battery replacements the drone will have to go through over its lifetime.
+
+
+\subsection{Battery Sizing Methodology} %endurance calc 
+\label{sub:Power_tool}
+
+
+The method aims at establishing the total energy required for a given mission. For this, the power required over the time spent in different flight phases must be obtained:
+\begin{equation}
+    E_{\mathit{r}} = \int P_{\mathit{r}} dt
+\end{equation}
+
+For this, an approximation of the flight phases of a typical mission is created. Those consist of takeoff, travel to initial position for the start of the show, showtime, travel back to the landing pads, and landing. Each flight phase is given an estimated duration (for the travel phases, this estimation is derived from the movement speed of the drone, which is assumed to be equal to its maximum movement speed, $20$ m/s, and the distance to travel), and is broken down into a fraction of time spent hovering, and another dedicated to flying at maximum speed. By balancing these two complementary fractions, an estimation of the flight regime of the drone, and the corresponding power required to fly, can be obtained for each flight phase. The power required for each flight phase is built up of the time fractions spent in either flight formation, and the power required for flying in that formation:
+
+\begin{equation}
+    P_{\mathit{r,flight}} = \%_{\mathit{hover}} \cdot P_{\mathit{hover}} + (1 - \%_{\mathit{hover}}) \cdot P_{\mathit{move}}
+\end{equation}
+
+The power required for activating the payload and using the flight computer are added to the power required for flight. For the case of the heavy payload, a value of 20 W was used, to ensure compliance with requirements SP-SYS-1.3.1 and SP-AP-1.4.2. For the light payload, a value of 10 W was originally used, and could be further reduced after a number of iterations to 6 W. This is discussed in \autoref{sec:modpayload}. This yields the total power required for the given flight phase:
+
+\begin{equation}
+    P_{r,phase} = P_{\mathit{r,flight}} + P_{\mathit{computer}} + P_{\mathit{payload}}
+\end{equation}
+
+From the time spent and power required in each flight phase, the total energy to allocate to each phase can be obtained. Summing all of those energy values yields the total energy the battery shall provide for the mission:
+\vspace{-0.5mm}
+\begin{equation}
+    E_r = \sum P_{\mathit{r,phase}} \cdot t_{\mathit{phase}}
+\end{equation}
+
+This can be calculated for a number of flight situations, depending on wind speeds, average distance between landing pads and show location, or whether the drone is operating a heavy- or a light payload.
+
+In parallel to the computations with regards to power required, a simple model was created, which focuses on the energy available, and the degradation of the battery. First, an estimate of the number of cycles a battery can go through over its lifetime before reaching end of life is performed:
+
+\begin{equation}
+    n_{\mathit{cycles}} = \frac{\mathit{EOL} - \mathit{BOL}}{k_{\mathit{loss,\%}}}
+\end{equation}
+
+Here, the terms $\mathit{BOL}$ and $\mathit{EOL}$ refer to the beginning- and end-of-life factors, as defined in \ref{sub:powerinputs} (with $\mathit{BOL}$ having a similar definition to $\mathit{EOL}$). Let it be noted that, although the theoretical value of $\mathit{BOL}$ is $100\%$, in practice, batteries rarely begin their functional lives at full capacity. This is due to the fact that batteries already experience (small) capacity degradation between their time of production, and time of first use. Another reason for this is the fact that manufacturers tend to overestimate their battery capacities \cite{BU_how_to_prolong_lithium_based_batteries}. For this reason, $\mathit{BOL}$ is given a value of $95\%$. This assumption also helps guarantee that, were the final product's energy capacity differ from the value predicted by the model, that value would be higher (and therefore result in a more performant drone) than that of the model.
+
+Then the characteristics of the battery are generated. It can be done either by picking a specific battery from the database, or by the method of regression shown in \ref{sub:power_dataanalysis}. From these battery characteristics, the energy capacity is extracted to perform the battery degradation calculations:
+
+\begin{multicols}{2}
+\noindent
+    \begin{equation}
+    E_{\mathit{BOL}} = E_{\mathit{bat}} \cdot \frac{\eta_{\mathit{bat}} \cdot \mathit{DoD} \cdot \mathit{BOL}}{(1 + k_{\mathit{control}})}
+    \label{eq:E_BOL}
+    \end{equation}
+    \begin{equation}
+    E_{\mathit{EOL}} = E_{\mathit{bat}} \cdot \frac{\eta_{\mathit{bat}} \cdot \mathit{DoD} \cdot \mathit{EOL}}{(1 + k_{\mathit{control}})}
+    \label{eq:E_EOL}
+    \end{equation}
+\end{multicols}
+
+Here, $E_{\mathit{BOL}}$ and $E_{\mathit{EOL}}$ refer to the total energy available from the battery at the beginning- and end-of-life, after taking into account battery efficiency, depth of discharge, state of life factors ($BOL$ or $EOL$) and the controllability safety margin.
+
+These calculations allow for a complete battery degradation prediction model, which takes shape in the form of the following equation:
+
+\begin{multicols}{2}
+\noindent
+    \begin{equation}
+    E(t) = k_{\mathit{loss}} \cdot t + E_{\mathit{BOL}}
+    \label{eq:E_of_t}
+    \end{equation}
+    \begin{equation}
+    k_{\mathit{loss}} = \frac{E_{\mathit{EOL}} - E_{\mathit{BOL}}}{n_{\mathit{cycles}}}
+    \label{eq:kloss}
+    \end{equation}
+\end{multicols}
+
+Here, the time variable $t$ is expressed in number of cycles experienced by the battery. The capacity loss coefficient $k_{\mathit{loss}}$ is essentially a translation of $k_{loss,\%}$, which defines the amount of available Wh lost in the battery capacity upon completion of one cycle.
+
+From the generated battery characteristics, an observation of the achievability of possible mission scenarios can be performed. This can be automated in a combined analysis of a large number of scenarios (which vary in wind speeds and show location distance from takeoff area). All of this can then be condensed into the flight envelope of the drone.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/Power/FLE_HEAVY_IT3.png}
+    \caption{Flight envelope of the drone. This particular envelope was the result of the 4th iteration,\\ for the case of the drone carrying a heavy payload.}
+    \label{fig:FLE_HEAVY_IT3}
+\end{figure}
+
+\autoref{fig:FLE_HEAVY_IT3} shows an example of the flight envelope. Let it be noted that the term "flight envelope" does not conventionally refer to the graph shown here, at least not within the context of aircraft design. However, it was deemed appropriate to use this terminology for this purpose, as it displays similar information to conventional flight envelopes (a space defined by set conditions, displaying combinations of conditions which result in an achievable mission). For the purposes of the flight envelope created, as can be seen from \autoref{fig:FLE_HEAVY_IT3}, the space is composed of two variables, the wind speed, as well as the distance between the landing pad and the show location. These variables influence the travel time before and after the show, and the power required for flight throughout the whole mission (as heavier winds and poorer weather conditions cause the drone to require more power). From the graph, it seems that moving away from the energy increases the energy required for the mission. This is logical, as flying farther and against heavier winds leads to more energy consumption. The space is divided into three regions, distinguished by the following color code:
+\begin{itemize}[noitemsep]
+    \item Green: for the specified battery, the mission is achievable for most states of life, even "old" batteries, which have gone through a large number of cycles.
+    \item Yellow: for the specified battery, the mission is achievable, but "old" batteries which have undergone a large number of discharge cycles will not be able to fulfil the mission, or do so with difficulty.
+    \item Red: the mission is questionably achievable. Batteries must be "young"/close to brand new to achieve the mission.
+\end{itemize}
+Two additional regions are present, which are not visible in the diagram, but are nonetheless important to mention:
+\begin{itemize}[noitemsep]
+    \item A "bright green" region, which indicates the scenarios possible for all batteries, at all states of life, even when they have reached their EOL.
+    \item A "bright red" region, which indicates the scenarios which are unachievable, even for a brand new battery that hasn't been through any discharge cycles.
+\end{itemize}
+
+As batteries become older, their total capacity decreases and they become less suited for missions under harsh conditions: their utility becomes more constrained, and their ability to fulfil their mission narrows down to a smaller portion of the graph, focalised around the bottom left area.
+
+One last particular note to mention: in order to delimit the three regions, a definition must be set on what a "young" or an "old" battery means. These terms are simply defined by a number of cycles experienced: those delimitations are set at 100 cycles, and 200 cycles, respectively.
+
+The flight envelope allows for the confirmation of the adequacy of a certain power unit. Throughout all iterations, the choice of a set of battery characteristics (either by regression or by selection of a specific data point) with satisfying capacity performance in the flight envelope lead to a final size of the power unit. Those characteristics are the outputs of the iteration process, and are discussed in \autoref{sub:poweroutputs}.
+
+
+% \vspace{-1cm}
+% \begin{multicols}{2}\setlength{\columnseprule}{0pt}
+% \begin{equation}
+%     E_{\mathit{bat}} = \frac{E_{\mathit{total}}}{\eta_{\mathit{total}}}
+% \end{equation}
+% \break
+% \begin{equation}
+%     \eta_{\mathit{total}} = \eta_{\mathit{bat}} \cdot \mathit{DoD} \cdot \mathit{EOL}
+% \end{equation}
+% \end{multicols}
+
+% \vspace{-0.5cm}
+% The total efficiency $\eta_{\mathit{total}}$ is built up of the battery output efficiency, $\eta_{\mathit{bat}}$ ($\char`~$95\%), the chosen Depth of Discharge, $\mathit{DoD}$ (which lies within 70 -- 90\%), and an End-of-Life factor, $\mathit{EOL}$ ($\char`~$80\%) to ensure that the battery can still deliver enough energy for a complete mission at its end of life.
+
+% Obtaining the required battery capacity for the mission yields the mass, volume, and price characteristics through the previously described process of statistical regression as described in \autoref{sub:power_dataregression}. Calculations for the maintenance cost of the battery are done through estimating the number of battery replacements for the complete lifetime of a drone. 
+
+% The obtained battery is sized according to the most energy demanding flight situation, which means that spare energy can be allocated for additional flight time for the remaining flight situations. Followup computations are made to calculate how much additional time can be allocated to showtime for these situations.
+
+\subsection{Electronic Speed Controller selection}
+
+%ESC stuff
+Selection of the ESC was previously conducted according to an available database \cite{midterm,drive_calculator}. However, it was found to be rather outdated, and could not allow for an estimation of the ESC cost, as the prices of each item were not part of the database. This led to the decision of building a custom ESC database, which is more appropriate for the purposes of the project at hand. This was done by documenting adequate characteristics from commercially available ESCs (a total of 41 ESCs were analysed). The main sizing requirement for the choice of the ESC is the maximum current the motors can withstand. A secondary factor to consider during selection of the ESC is the compatibility with the battery: ESCs are given a voltage range, expressed in number of lipo cells at which the ESC can properly operate. This voltage range is not considered during design, but is checked at the end of each iteration, to ensure that the battery and the ESC are compatible with each other. Analysis of the database yielded the conclusion that price was the most important factor to minimise, as ESCs tend to be very lightweight, and it can safely be assumed that their contribution to the total mass of the drone will be very marginal.
+
+Among other potential considerations, the choice of configuration of the ESC is worthy of mentioning: quadcopters are a very popular design configuration for multirotor drones, and as such, a lot of companies offer their ESCs in a "4 in 1" configuration, which covers the control capabilities for 4 separate rotors in one single ESC. 4 in 1 ESCs tend to be cheaper and more compact than singular ESCs, but cost more in terms of maintenance (a broken 4 in 1 ESC must be replaced entirely).
+
+\subsection{Battery Management System}
+
+To ensure the safe operation of the battery during flight and to prevent it from overcharge or overdischarge, as well as provide information about the battery state of life, a Battery Management System (or BMS) must be added to the design. It acts as a safety bridge between the battery and the charging load, and can balance the charge level of each individual cell, to help reduce battery damage. The BMS is also necessary to allow the drone to recharge through the landing pad. As such, the BMS is a crucial component, as it helps mitigate risks 13 and 21, as well as provides the functions required for compliance with requirements CCE-AP-3 and CCE-SYS-3.2.
+
+Initial investigation of the BMS was conducted, the selection of the BMS will mainly depend on the charging and discharging amperage. Those values can be obtained from the mission duration or the charging time, and total battery capacity. BMS chips are also designed with a number of lipo cells in mind. Ensuring that the BMS is compatible with the battery is another important factor to keep in mind during selection.
+
+Acquisition of a final BMS model to implement within the system could not be performed. It is recommended to evaluate fully detailed BMS solutions for the drone in the future, as the design becomes more detailed.
+
+\subsection{Outputs} % iteration table
+\label{sub:poweroutputs}
+
+As mentioned in \autoref{sub:Power_tool}, each iteration terminates with the acquisition of battery characteristics which are suitable for the mission at hand. The obtained characteristics for each iteration are displayed in \autoref{tab:Battery_iteration}. Iterations 1 through 4 used statistical regressions from the database, while iterations 5 and 6 were conducted with the selection of a specific battery. It can be observed that the battery characteristics improve over time, with the exception of iteration 4, which results in a heavier, larger, and more expensive battery than iteration 3. This is due to the fact that this iteration saw a significant increase in the power required for flight, due to the reduction of the propeller size. This led to the necessity for more power, more energy, and therefore a larger battery. However, as further iteration progressed, it was made possible to further reduce the size of the battery, as it was possible to obtain singular batteries with better performance characteristics than those normally predicted by regression. This allowed for lighter batteries, with better capacities, which lowered the weight of the drone for the following iteration, and allowed for further reduction of the power required.
+
+
+\begin{table}[H]
+\centering
+\caption{Battery iteration table}
+\label{tab:Battery_iteration}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Iteration  & Mass [kg] & Dimensions [mm $\times$ mm $\times$ mm] & Capacity [Wh] & Voltage [V] & Maintenance cost [Euro] & Production costs [Euro] \\ \hline
+Statisitcs & 0.36      & 135 $\times$ 42 $\times$ 44             & 145           & 14.8        & 544.03                  & 41.85                   \\ \hline
+1          & 0.86      & 170.91 $\times$ 56.74 $\times$ 43.94    & 144.58        & 14.8        & 714.59                  & 119.1                   \\ \hline
+2          & 0.71      & 163.42 $\times$ 54.25 $\times$ 42.02                      & 117.85        & 14.8        & 455.74                  & 81.38                        \\ \hline
+3          & 0.60      & 157.11 $\times$ 52.15 $\times$ 40.40                      & 97.14         & 14.8        & 378.19                     & 67.53                        \\ \hline
+4          & 0.65      & 159.99 $\times$ 53.11 $\times$ 41.13                       & 106.37        & 14.8        & 550.35                     & 73.71                        \\ \hline
+5          & 0.62      & 139 $\times$ 47 $\times$ 48.5                      & 106.56        & 14.8        & 434.71                     & 58.22                        \\ \hline
+Final      & 0.58      & 152 $\times$ 46 $\times$ 37                      & 103.6         & 14.8        & 446.95                  & 59.86                        \\ \hline
+\end{tabular}
+}
+\end{table}
+
+
+A few more specifications can be mentioned with regards to the selected battery for the final iteration. The model in question is produced by manufacturer "Zeee". It is a 4-S lipo battery with a charge capacity of 7000 mAh. The number of cells (and therefore the voltage) is the same as that of the power sources of the two drones mentioned in \autoref{sec:targetcost}. However, Starling being a larger, more power demanding product, the charge capacity of the battery had to be larger than that of its competitors. Although priced at $72.99 \$$ ($60.21 €$) on Amazon \cite{amazon_battery}, it has been assumed that the price of purchase for our purposes would be lower, as buying a large quantity of batteries directly from the manufacturer will reduce expenses. It has been assumed that the retailer entertained a $20 \%$ profit margin, which could be cut from purchasing expenses by buying directly from the manufacturer. This assumption stems from typical margins encountered in the industry \cite{jhaveri_jagtap_2017}. The specifications of the battery indicate a charge rate of maximum 1C, which corresponds to a charging amperage of 7 A, or a charging time of 1 hour for a completely empty battery (with $DoD$ = 100\%). Accounting for the fact that normal usage of the batteries will only require to recharge 80\% of their capacity, requirement POP-SYS-3.7 is satisfied.
+
+The battery characteristics obtained from the final iteration yielded the flight envelopes shown in \autoref{fig:FLE_HEAVY_FINAL} and \autoref{fig:FLE_LIGHT_FINAL}. The first consideration to be made with respect to these diagrams is that the most power hungry case seems to be the light payload. At first it may seem counter intuitive, as the light payload requires less power, and therefore should consume less energy. That is indeed correct, however, the missions for heavy and light payload also differ in showtime duration. While the drone is required to operate a heavy payload for only 15 minutes of showtime, it must be able to conduct a show with a light payload for 20 minutes. This explains where the higher energy consumption in the light payload case comes from.
+
+Another important note to consider is the fact that the "bright green" region has now made its appearance in the flight envelope: this means that some mission cases will always be fulfilled, even with batteries which are at their end-of-life. Furthermore, a heavy portion of the graph is achievable by all batteries which have been submitted to 200 cycles or more. For harsher missions (the yellow region), battery state checks should be preformed prior to the mission to ensure that the state of life of the battery will allow for the mission to be completed. Overall, the flight envelopes displayed show a rather satisfactory result, as the battery selected will be able to provide enough energy for the fulfilment of missions under 6 BFT wind conditions, as well as missions with show location distances of 1000 m (in some cases, the battery may even have enough energy to fulfil missions beyond those requirements, but this consideration is not of relevance to the design, as the drone will be limited in other design aspects, such as the reach of the communication signal for example). The selected battery will comply with the set endurance requirements (POP-AP-3.1, POP-AP-3.2, POP-AP-3.8). From a power unit standpoint, the drone will also be able to reach distances as far as 1000 m from the ground station (provided the batteries are in sufficiently good condition), which ensures compliance with requirement CCE-AP-2
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/Power/FLE_HEAVY_FINAL.png}
+    \caption{Flight envelope of the final iteration: heavy payload case.}
+    \label{fig:FLE_HEAVY_FINAL}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/Power/FLE_LIGHT_FINAL.png}
+    \caption{Flight envelope of the final iteration: light payload case.}
+    \label{fig:FLE_LIGHT_FINAL}
+\end{figure}
+
+For the ESC, the product selected is the "Air50 3-6S 50A 4In1 ESC", manufactured by Racestar \cite{banggood_ESC}. It presents all necessary characteristics for an appropriate interface with the battery (3-6S Lipo compatibility) and the motors (55 A continuous current capability). The choice of a 4in1 ESC was made, because of their advantageous price and their compactness. 4in1 ESC's however present a higher risk than 4 separate ones: a shorted 4in1 ESC requires a full replacement. As such, ESC shortout will be added to the technical risk register. ESCs short out due to sudden interruption of the propellers; although the risk of this happening is fairly low during showtime, the personnel operating the drones during show preparation and dismantling should be careful not to hold or manipulate the drones by the propellers, to minimise the risk.
+
+
+\begin{table}[H]
+\centering
+\caption{ESC iteration table}
+\label{tab:ESC_iteration}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Iteration  & Mass [g] & Dimensions [mm $\times$ mm $\times$ mm] & Cost [Euro] & Maintenance cost [Euro] \\ \hline
+Statistics & 25     & 36 $\times$ 36 $\times$ 7               & 46.15       & 16.30                   \\ \hline
+1          & 8.5    & 36 $\times$ 36 $\times$ 7               & 14.81       & 16.30                   \\ \hline
+2          & 8.5    & 36 $\times$ 36 $\times$ 7               & 14.81       & 16.30                   \\ \hline
+3          & 8.5    & 36 $\times$ 36 $\times$ 7               & 14.81       & 16.30                   \\ \hline
+4          & 8.5    & 36 $\times$ 36 $\times$ 7               & 14.81       & 16.30                   \\ \hline
+5          & 8.5    & 36 $\times$ 36 $\times$ 7               & 14.81       & 16.30                   \\ \hline
+Final          & 12.1    & 30.5 $\times$ 30.5 $\times$ 7               & 28.27       & 16.30                   \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+
+
+
+\section{Risk Analysis Power}
+\label{sec:powerriskanalysis}
+
+During the detailed design, additional risks have been identified. They can be seen in \autoref{tab:newriskspower}, along with their risk scores.
+
+\begin{table}[H]
+\centering
+\caption{Power related risks that were discovered in the detailed design.}
+\label{tab:newriskspower}
+\begin{scriptsize}
+\begin{tabular}{|p{0.4cm}|p{3cm}|p{0.4cm}|p{4.5cm}|p{0.4cm}|p{4.5cm}|}
+\hline
+\textbf{ID} & \textbf{Risk} & \textbf{LS} & \textbf{Reason for likelihood} & \textbf{CS} & \textbf{Reason for Consequence} \\ 
+\hline
+32 & Battery Mechanical stresses & 2 & Risk occurrence reasonably low. Mechanical stresses are not expected during flight, but operators and show personnel may cause accidents & 5 & Mechanical damage like puncture or dropping the battery can cause the battery to catch fire or to explode \\ \hline
+33 & ESC shortout & 2 & Risk occurence relatively low: drone shows in open areas (no trees/obstacles to hit the props) & 4 & No link between power and propeller anymore. one propeller inoperative. \\ \hline
+52 & Battery too old to complete mission & 4 & depends on wind speed and distance between takeoff and show location. Battery degradation is inevitable and will cause complications if left unchecked. & 5 & Endurance of battery not high enough to finish the show. Show ends prematurely, drones unable to fly back to base. \\ \hline
+\end{tabular}
+\end{scriptsize}
+\end{table}
+
+Following the identification of the risks, mitigation responses were developed, to help reduce the extent of the risks. Those can be seen in \autoref{tab:newrisks_mitigation_power}.
+
+\begin{table}[H]
+\centering
+\caption{Mitigation responses to the newly identified risks.}
+\label{tab:newrisks_mitigation_power}
+\begin{scriptsize}
+\begin{tabular}{|p{0.4cm}|p{3cm}|p{9.2cm}|p{0.4cm}|p{0.4cm}|} 
+\hline
+\textbf{ID} & \textbf{Risk} & \textbf{Mitigation Response} & \textbf{LS} & \textbf{CS} \\ \hline
+32 & Battery Mechanical stresses & Carry battery during transport in adapted lipo safe bags/cases (lower likelihood: safer containment. lower consequence: battery damage will not harm or cause damage to environment) & 1 & 3 \\ \hline
+33 & ESC Shortout & Train personnel not to carry the drones by the propellers. (lower probability: less chances of interrupting propeller movement) & 1 & 4 \\ \hline
+52 & Battery too old to complete mission & Perform battery age checks before the shows. Replace batteries when they are outside of the flight envelope for a given mission. & 1 & 4 \\ \hline
+\end{tabular}
+\end{scriptsize}
+\end{table}
+
+
+
+
+
+% \begin{itemize}[noitemsep,nolistsep]
+%     \item Fire/explosion proof container
+%     \item Charge in fire/explosion proof casing
+%     \item Store in suitable temperature
+%     \item Inspection of batteries for any type of damage
+%     \item Soldering procedures?
+%     \item Special fire extinguisher in case of (chemical) fire
+%     \item Don't store batteries at full capacity more then few days 
+%     \item Don't discharge battery below 20 \%
+%     \item Enforce maximum flight time duration.
+    
+% \end{itemize}
+
+
+
+%what to add next to the items described in the risk register?
+
+%https://www.thedronegirl.com/2015/02/07/lipo-battery/ Used for for finding risks
+% -Mechanical damage
+% -Transport? Requires special transport packaging stuff. But dont store for long periods in these special bags
+% -Storage
+% -Use of damaged batteries due to overcharge or it falling during operation => all batteries require inspection
+% -Environment temperature effects
+% -Use of fire/explosion proof container is important while charging?
+% -Explosion and chemical fire => special fire extinguisher is required in storage room
+% -Never store at full storage for longer then 2-3 days
+% -Storage room cannot be too hot or too cold
+% -Charging batteries while its warm is a scary thought
+% -If soldering is involved be careful can  cause short out
+% Never charge below 3V and above 4.2V
+
+
+% We need to consider connectors in the design with the structures and electronics department
+
+% Balance lead?
+
+% -Done use batteries directly after charging. They might still be too hot and need to cool down
+ %https://www.cnydrones.org/lipo-batteries-and-safety-for-beginners/ => usefull link
+
+
+
+
+\section{Verification and Validation Power}
+\label{sec:powerverificationandvalidation}
+
+%for now our verification and validation method is to compare this method to existing drones
+
+The complete methodology described in this chapter was condensed in one tool. The following section will discuss the verification and validation process that was conducted on this tool.
+
+\textbf{Code Verification} \newline
+First, it must be said that the power unit sizing tool was built in Microsoft Excel instead of Python. This was done for ease of quick access to multiple team members. The architecture of Microsoft Excel presents some disadvantages with respect to Python. Among them, a reduced flexibility in the freedom of operations, due to a somewhat reduced amount of functions and lack of exhaustive and well documented libraries. However, advantages are present as well: the most important one being the ability to develop the tool faster than in Python, and to implement changes and fixes with instantaneous results.
+
+The tool was thoroughly checked throughout development for errors and inconsistencies such as unexpected orders of magnitudes, divisions by zero, or circular computations. Upon completion of the tool, a series of unit tests was put in place, to verify the correct implementation of the different functions. Those unit tests can be found in \autoref{tab:unitVerif_power}. The structure of the information presented is as follows. First a test tag is given for identification purposes (where VT stands for 'Verification', POW for 'Power', U for 'Unit test'). Then the outputs to test and the inputs to change are mentioned, followed by a description of the test and finally its outcome.
+
+\begin{scriptsize}
+\begin{longtable}[c]{|p{1.25cm}|p{1.25cm}|p{1.25cm}|p{5cm}|p{5cm}|p{0.5cm}|}
+\caption{Unit verification tests of power unit sizing tool.}
+\label{tab:unitVerif_power}\\
+\hline
+\textbf{TAG} & \textbf{Output to test} & \textbf{Input to vary} & \textbf{Test} & \textbf{Outcome} & \textbf{V?} \\ \hline
+\endfirsthead
+%
+\endhead
+%
+VT-POW-U.1 & $E_{\mathit{bat}}$ & $m_{\mathit{bat}}$ & change $m_{\mathit{bat}}$ to the value of the intercept of the regression line ($m_{\mathit{bat}}$ vs $E_{\mathit{bat}}$), expect $E_{\mathit{bat}}$ to be equal to zero & $m_{\mathit{bat}}$ = 0.074020176491188 kg, $E_{\mathit{bat}}$ = 0 Wh & \cellcolor[HTML]{C1FFC1} yes \\ \hline
+VT-POW-U.2 & $V_{\mathit{bat}}$ & $m_{\mathit{bat}}$ & change $m_{\mathit{bat}}$ to the value of the intercept of the regression line ($m_{\mathit{bat}}$ vs $E_{\mathit{bat}}$), expect $V_{\mathit{bat}}$ to be equal to the intercept of the regression line ($V_{\mathit{bat}}$ vs $E_{\mathit{bat}}$) & $m_{\mathit{bat}}$ = 0.074020176491188 kg, $V_{\mathit{bat}}$ = 136253.37 mm$^3$ & \cellcolor[HTML]{C1FFC1} yes \\ \hline
+VT-POW-U.3 & ${\mathit{Cost}}_{\mathit{bat}}$ & $m_{\mathit{bat}}$, $\%_{\mathit{profit}}$ & change $m_{\mathit{bat}}$ to the value of the intercept of the regression line ($m_{\mathit{bat}}$ vs $E_{\mathit{bat}}$), expect ${\mathit{Cost}}_{\mathit{bat}}$ to be equal to the intercept of the regression line (${\mathit{Cost}}_{\mathit{bat}}$ vs $E_{\mathit{bat}}$) (with an expected retailer profit margin of zero) & $m_{\mathit{bat}}$ = 0.074020176491188 kg, ${\mathit{Cost}}_{\mathit{bat}}$ = 3.11 € & \cellcolor[HTML]{C1FFC1} yes \\ \hline
+VT-POW-U.4 & ${\mathit{Cost}}_{\mathit{bat}}$ & $\%_{\mathit{profit}}$ & set retailer profit margin to 100\%, expect battery cost to be equal to zero. Set it to 0\%, expect battery price to be the same as the value from the database. & $\%_{\mathit{profit}}$ = 100\%, $\mathit{Cost}_{\mathit{bat}}$ = 0 €. $\%_{\mathit{profit}}$ = 0\%, $\mathit{Cost}_{\mathit{bat}}$ corresponds exactly with value from the database. & \cellcolor[HTML]{C1FFC1} yes \\ \hline
+VT-POW-U.5 & Flight Envelope & $P_{\mathit{flight}}$ & set $P_{\mathit{flight}}$ to a constant value, independent of airspeed, expect flight envelope results to only vary along the distance axis & $P_{\mathit{flight}}$ = 170, Flight envelope only depends on distance & \cellcolor[HTML]{C1FFC1} yes \\ \hline
+VT-POW-U.6 & Flight Envelopes & $P_{\mathit{flight}}$, $P_{\mathit{payload}}$, $t_{\mathit{showtime}}$ & Set identical input values for both heavy and light payload, expect their flight envelopes to be identical & $P_{\mathit{flight}}$ = $f(V)$, $P_{\mathit{payload}}$ = 20 W, $t_{\mathit{showtime}}$ = 20 min (all values identical for heavy and light payload), flight envelopes are identical & \cellcolor[HTML]{C1FFC1} yes \\ \hline
+VT-POW-U.7 & Flight Envelopes & $m_{\mathit{bat}}$ & set $m_{\mathit{bat}}$ such that battery capacity is zero, expect the flight envelopes to be completely "bright red". set it such that battery capacity is extremely large, expect the flight envelopes to be completely "brigh green" & $m_{\mathit{bat}}$ = 0.074020176491188 kg ($E_{\mathit{bat}}$ = 0 Wh), flight envelopes are completely bright red. $m_{\mathit{bat}}$ = 100000 kg ($E_{\mathit{bat}}$ = 184678213.92 Wh), flight envelopes are completely bright green. & \cellcolor[HTML]{C1FFC1} yes \\ \hline
+VT-POW-U.8 & $P_{\mathit{r,flight}}$ & $P_{\mathit{flight}}$ & set $P_{\mathit{flight}}$ equal to zero, expect the flight power required for each phase to be equal to zero & $P_{\mathit{flight}}$ = 0, $P_{\mathit{r,flight}}$ = 0 for all flight phases & \cellcolor[HTML]{C1FFC1} yes \\ \hline
+VT-POW-U.9 & $n_{\mathit{cycles}}$ & $k_{\mathit{loss,\%}}$ & double $k_{\mathit{loss,\%}}$, expect $n_{\mathit{cycles}}$ to be halved. & $k_{\mathit{loss,\%}}$ = -0.056\%, $n_{\mathit{cycles}}$ = 267.8571429, $k_{\mathit{loss,\%}}$ = -0.112\%, $n_{\mathit{cycles}}$ = 133.9285714 & \cellcolor[HTML]{C1FFC1} yes \\ \hline
+VT-POW-U.10 & $E_{\mathit{BOL}}$, $E_{\mathit{EOL}}$ & $DoD$, $\eta_{\mathit{bat}}$ & halve the inputs separately, expect $E_{\mathit{BOL}}$ and $E_{\mathit{EOL}}$ to halve & $DoD$ = 0.8, $E_{\mathit{BOL}}$ = 71.2373, $E_{\mathit{EOL}}$ = 59.9893, $DoD$ = 0.4, $E_{\mathit{BOL}}$ = 35.6186, $E_{\mathit{EOL}}$ = 29.9946, $\eta_{\mathit{bat}}$ = 0.95, $E_{\mathit{BOL}}$ = 71.2373, $E_{\mathit{EOL}}$ = 59.9893, $\eta_{\mathit{bat}}$ = 0.475, $E_{\mathit{BOL}}$ = 35.6186, $E_{\mathit{EOL}}$ = 29.9946 & \cellcolor[HTML]{C1FFC1} yes \\ \hline
+%VT-POP-U.1 &  &  &  &  & \cellcolor[HTML]{C1FFC1} yes \\ \hline
+\end{longtable}
+\end{scriptsize}
+
+\textbf{Calculation Verification}
+
+Ensuring that the implementation of the computations within the tool is not sufficient to call the model valid. The obtained model must also be proven to provide realistic and usable values. In order to verify the model, it was decided that an application of the tool on an existing drone would be conducted. No suitable comparison method could be found for evaluating battery degradation or costs. Therefore, this comparison with a commercial product will focus on the endurance calculations.
+For these purposes, the case of the Mavic 2 Pro from DJI was studied \cite{dji_official_mavic2pro}. The following relevant information was retrieved from the product's specification sheet:
+
+\begin{itemize}[noitemsep]
+\itemsep0em
+    \item Takeoff weight: 907 grams
+    \item Max hovering time (no wind): 29 minutes
+    \item Battery capacity: 3850 mAh
+    \item Battery Voltage: 15.4 V
+\end{itemize}
+
+Due to the way the tool operates, a number of assumptions needed to be made, to allow for an appropriate estimation of some of the inputs (as there is very little information available regarding some input values, such as flight power for example). The following assumptions will be made:
+
+\begin{itemize}[noitemsep]
+\itemsep0em
+    \item the power required is a constant value of 120 W per kg of material in flight, which corresponds to a very efficient system \cite{szyk_2018}. This value encompasses power required from the flight computer as well.
+    \item the drone flight profile consists of a singular phase, in which the drone is constantly hovering.
+    \item Depth of discharge is set at 100\%. DJI most likely obtained their maximum hovering time of 29 minutes by fully draining the battery.
+    \item $\eta_{\mathit{bat}}$ remains equal to 95\%. It is a typically common value, and stems from dissipation of energy during conversion.
+    \item the battery is assumed to be brand new. the corresponding $BOL$ is taken to be 95\% 
+    \item there is no payload. All the power drawn from the battery is used for flight. DJI most likely aims for the set of flight conditions which will yield the most optimistic endurance results, to help them advertise their product.
+    \item no control correction factor is applied. The drone performs no manoeuvres, and does not require to counteract on any aerodynamic disturbances: $k_{\mathit{control}}$ = 0.
+\end{itemize}
+
+Applying those assumptions to the model, as well as the mass and battery characteristics of the drone to the model yields the following results:
+
+\begin{itemize}[noitemsep]
+    \item Total battery capacity: 59.29 Wh
+    \item Battery available energy: 53.51 Wh
+    \item Power required for hovering: 108.84 W
+    \item Total hovering time: 29 min 30 s
+\end{itemize}
+
+The total hovering time computed from the model corresponds well with the 29 minutes of hovering time advertised by DJI. The computation error is:
+
+\begin{equation}
+    \epsilon = \frac{\left | 29.50 - 29 \right |}{29} = 1.72\%
+\end{equation}
+
+Application of the methodology to the case of the DJI drone yields satisfactory results. Ideally, a more deep investigation of the first assumption made in this process (120 W of power required per kg of mass in flight) should be done, as it is not fully certain whether this value is applicable to the presented drone. A future recommendation for the verification of the model would be the case study of the battery degradation estimator.
+
+\textbf{Validation}
+
+Validation of the calculations made in the present chapter would require a fully functional prototype of a drone, such that endurance tests could be performed under different mission scenarios. For these tests, a wind tunnel would be recommended, as the ability to observe the variation of the drone's endurance under different wind speeds would be of significant utility. Additionally, evaluation of the degradation of the battery will require study of the evolution of the capacity over the lifetime of one drone, which is being used in a similar fashion as the expected frequency of usage of the drones to be designed. Repeated charge/discharge would require less time, but will provide inaccurate results, as the battery will not be subjected to the additional degradation caused by time, which contributes heavily to the calendar life of the battery \cite{battery_life_and_how_to_improve_it}.
+
+Implementing those tests will allow for confirmation of the accuracy of the tool. Unfortunately, it is not possible at this stage of the project to acquire or develop a drone prototype, which limits the capability to perform validation. Therefore, focus on the validation of the tool is recommended in the future.
+
+
+\section{Compliance Matrix Power}
+\label{sec:powercompliancematrix}
+
+%maybe here link to the risk register to show that we actually do something with it
+
+The power related requirements are displayed in \autoref{tab:compliance_power}. As can be seen, the drone will be able to comply with all requirements.
+
+
+\begin{table}[H]
+\centering
+\caption{Compliance matrix for the power subsystem.}
+\label{tab:compliance_power}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|p{12cm}|c|}
+\hline
+\textbf{TAG} & \textbf{Requirement}   & \textbf{Compliance} \\ \hline
+POP-AP-3.1 & The drones shall be able to fly for 15 minutes for preparations and checkups. & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+POP-AP-3.2 & The drones shall be able to fly for 15 minutes of showtime with a heavy payload. & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+POP-AP-3.8 & The drones shall be able to fly for 20 minutes of showtime with a light as a payload. & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+POP-SYS-3.7 & The energy storage shall be fully charged within 60min. & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+%AD-SYS-6 & The drone shall be operable in a temperature range between 3 deg and 40 deg. & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+SUS-AP-1 & The drones shall be powered by renewable energy sources. & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+SUS-EO-6 & The components of the energy storage shall not contaminate the environment. & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+%SUS-EO-3 & At least 80\% of drone mass shall be recyclable. & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+SP-SYS-1.3.1 & The megaphone or speaker shall have a power consumption of 20W & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+SP-AP-1.4.2 & Future innovations shall have specifications up to a 20W power consumption & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+OP-AP-2 & The drones shall be suitable for mass transport. & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+CCE-AP-2 & The show location shall be at most 1000 m apart from the ground station. & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+CCE-AP-3 & The drones shall be recharged wirelessly through their landing pads. & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+CCE-SYS-3.2 & The drone shall be able to recharge autonomously on the landing pad between preparation and show. & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+Requirement AD-SYS-6 is met from the standpoint of the power source. However, it must also be complied with on a system level. This requirement will be further discussed in \autoref{ch:systemanalysis}.

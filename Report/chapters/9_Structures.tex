@@ -1,0 +1,818 @@
+\chapter{Structures Subsystem Design}
+\label{ch:structures}
+
+The structures subsystem is the interface between all other subsystems and should be designed to facilitate and protect these. This chapter will present the steps taken to design such a structure. The subsystem consists of the frame and the payload integration. The landing gear is closely related to the stackability of the drone and compatibility with the landing pad, and therefore designed by the operations department in \autoref{ch:operations}. The design of the subsystem is done while ensuring producability and integration of other subsystems.
+
+\autoref{sec:strucfuncrecap} and \autoref{sec:struclistofrequirements} present an overview of the functions the subsystem must perform, the risks identified in the preliminary design phase \cite{midterm} and the requirements related to the structures subsystem. This is done first to create an overview of all that should be taken into account in constructing the frame and payload integration. \autoref{sec:struccalc} describes the approach to estimate the frames size, mass and cost and presents the results of the iterations performed. \autoref{sec:modpayload} describes the payload integration method.
+
+The last part of this chapter is dedicated to the analysis of the frame design.In \autoref{sec:strucriskanalysis}the risks identified during the detailed design are shown. \autoref{sec:strucverificationandvalidation} describes the verification and validation of the tools and subsystem and lastly \autoref{sec:struccompliancematrix} presents the compliance of the design with the requirements presented at the beginning of the chapter.
+
+
+%Deliverables:
+%   -Structural Characteristics
+%   -Material Characteristics-check
+%   -Verification & Validation
+% 
+% 10 pages: NOTICE EDITORS WHEN YOU ARE GOING OVER OR UNDER THIS LIMIT!
+
+\section{Functional and Risk Overview of Structures}
+\label{sec:strucfuncrecap}
+The goal of the structures department is to find the optimal balance between mass, cost and sustainability properties of the frame, while meeting requirements. This ranges from choosing a suitable material, define the cross sectional and drone dimensions and determine the mass and cost.
+
+The main functions to be performed by the structures subsystem are:
+\begin{itemize}[noitemsep,nolistsep]
+    \item Manufacture drone
+    \item Allow for routine maintenance
+    \item Provide structural integrity during flight conditions and landing 
+    \item Provide space to integrate all subsystems and the modular payload
+    \item Provide manoeuvrability and stability(?)
+    \item Protect subsystems from defined weather conditions
+\end{itemize}
+For this project, it has been determined that structures can be divided into 3 parts:
+\begin{itemize}[noitemsep,nolistsep]
+    \item Frame design
+    \item Payload integration design
+    \item Production/manufacturing plan, to be presented in \autoref{ch:productionplan}
+    
+\end{itemize}
+\autoref{tab:riskstructures} presents the risks identified in the preliminary design phase regarding the structures sub-system. It also shows their likelihood and consequence and the mitigation response which should be implemented in the design. Note that more detailed risks regarding the detailed design will be identified once the design is developed. These will be presented in \autoref{sec:strucriskanalysis}
+
+\begin{scriptsize}
+\begin{longtable}[c]{|p{0,65cm}|p{4cm}|p{1,6cm}|p{1,9cm}|p{6cm}|}
+\caption{Risks related to structures and their mitigation responses}
+\label{tab:riskstructures}\\
+\hline
+\textbf{ID} & \textbf{Risk} & \textbf{Likelihood} & \textbf{Consequence} & \textbf{Mitigation response} \\ \hline
+\endfirsthead
+%
+\endhead
+%
+11& The components of the drone can not withstand the rain& Very low & Catastrophic & Take the risk, focus on waterproofing during design. Investigate implementation of waterproofing technologies \\ \hline
+15 & Frame fails under high loads & Very low & Catastrophic & Add a redundancy margin to structure's design.\\ \hline
+17 & Not all components can be recycled/reused & Low & Moderate & recyclability as an important selection criteria for materials.\\ \hline
+19 & Li-Po battery swells due to abusive use & Moderate & Critical & Design Battery container with clearance in volume for expansion of battery (lower consequence: swelling will less likely burst into flames).\\ \hline
+29 & Structure catches on fire.& Moderate & Catastrophic & Fire resistance as an important consideration during thermoplastic material choice (lower risk: choosing fireproof material lowers chance of fire). \\ \hline
+
+\end{longtable}
+\end{scriptsize}
+
+
+\section{List of Requirements Structures}
+\label{sec:struclistofrequirements}
+\autoref{tab:strucrequirements} presents the requirements related to the structures subsystem. On the left column the sub-department they mostly relate to is stated. These requirements will be used as a guide to design the frame, together with the required functionalities and risk mitigation strategies. Note that the payload will not be designed In this project. It is up to the customer to attach a payload that meets the requirements. However its size and way of integration should be considered in the subsystem design.
+
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+% \usepackage{longtable}
+% Note: It may be necessary to compile the document several times to get a multi-page table to line up properly
+\begin{table}[H]
+\centering
+\caption{Requirements related to structures subsystem}
+\label{tab:strucrequirements}
+%\resizebox{\textwidth}{!}{%
+\begin{scriptsize}
+\begin{tabular}{|p{2cm}|p{2cm}|p{10cm}|}
+\hline
+\textbf{Sub-department} & \textbf{TAG} & \textbf{Requirement} \\ \hline
+\multirow{11}{*}{Payload} & SP-AP-1       & The drones shall be able to carry changeable payloads\\ \cline{2-3}                                                                       
+                          & SP-AP-1.1     & The light source shall be visible in urban darkness over a distance of 4km    \\ \cline{2-3}                                               
+                          & SP-SYS -1.1.1 & The drone shall have an RGB Illumination   \\ \cline{2-3}  
+                          & SP-AP-1.2     & The pyrotechnics shall weigh no more than 0.6kg                                                                              \\ \cline{2-3} 
+                          & SP-ST-1.2.1   & The pyrotechnics shall not reach spectators                                                                                  \\\cline{2-3} 
+                          %& SP-SYS-1.2.2  & The pyrotechnics shall not cause the drone's center of gravity to move outside of the stability and controllabillity margins \\\cline{2-3} 
+                          & SP-AP-1.3     & A megaphone or speaker shall be included in the drones                                                                       \\\cline{2-3} 
+                          
+                          & SP-AP-1.4.1   & Future innovations shall have specifications up to a weight of 0.6kg                                                         \\\cline{2-3} 
+                          
+                          & SP-AP-1.4.3   & Future innovations shall have specifications up to dimensions of 20cm x 20cm x 20cm                                          \\ \hline
+\multirow{15}{*}{Frame}   & SP-SYS-1.5    & Structures shall accommodate power unit                                                                                      \\\cline{2-3} 
+                          & SP-SYS-1.6  & Structures shall accomodate electronics                                                       
+17 errors58 warnings
+                               \\\cline{2-3} 
+                          & SP-EO-2       & Drones shall not sink in the water                                                                                           \\\cline{2-3} 
+                          & SP-SYS-4.1    & Any structural part of the frame shall not experience plastic deformation under flight conditions                            \\\cline{2-3} 
+                          & SP-SYS-6      & The drone body should be tolerable to transportation and in-flight vibrations                                                \\\cline{2-3} 
+                          & POP-AP-2      & The drone shall be able to achieve a velocity of 20m/s                                                                       \\\cline{2-3} 
+                          
+                          & AD-AP-1       & The drone shall be able to fly in 6bft wind                                                                                  \\\cline{2-3} 
+                          & AD-AP-2       & The drone shall be able to fly in rainfall up to 10mm/hour                                                                   \\\cline{2-3} 
+                          & AD-SYS-6      & The drone shall be operable in a temperature range between 3deg and 40deg                                                    \\\cline{2-3} 
+                          & OP-AP-2.2     & The volume of the drones shall not exceed 0.5m\textasciicircum{}3                                                            \\\cline{2-3} 
+                          & OP-AP-6       & The area off the take-off zone shall be at most 1m2 per drone                                                                \\\cline{2-3} 
+                          & SUS-EO-3      & At least 80\% of drone mass shall be recyclable.                                                                             \\\cline{2-3} 
+                          & SUS-EO-4      & The drone shall not break down into small parts.                                                                             \\\cline{2-3} 
+                          & OP-AP-3       & The drones shall be available in the year 2025  \\ \cline{2-3}
+                          & SR-AP-6 & Each drone shall have a lifetime of at least a 1000 flight hours \\ \cline{2-3}
+                          & COST-AP-1 & The drones shall cost no more than 1000\EUR{} per piece\\ \hline
+\end{tabular}%
+
+\end{scriptsize}
+\end{table}
+
+
+\section{Design for Structures: Frame}
+\label{sec:struccalc}
+% Make subsections for different subjects within subsystem
+% overview preliminary design
+The preliminary design phase concluded that a drone frame should be designed that consists of 4 arms that are fixed to the frame body \cite{midterm}. This is done following the approach presented in this section.
+
+\subsection{Choice of cross section}
+
+The arms of the drones carry flight loads introduced by drag forces and thrust forces. The cross section of these arms is chosen to be a closed hollow circle for the following reasons:
+\begin{itemize}[noitemsep,nolistsep]
+    \item To protect the motor wires against rain, the cross section is chosen to be hollow to provide a casing for wires coming from the brushless motors. This is to satisfy requirement AD-AP-2.
+    \item The cross-section is circular rather than square as its more inertia efficient. This is beneficial for the volume requirement and is more sustainable as the mass of the frame will be lower, decreasing the power required.
+    \item The cross-section is circular rather than square as this shape is more aerodynamic, resulting in a lower drag coefficient. The drag force is directly scaled by the outer diameter, so the circular tube will result in a more efficient design than a square tube.
+\end{itemize}
+
+This cross-sectional shape is used as a basis for the calculations to come.
+
+\subsection{Defining the critical load case}
+\label{critical-loadcase}
+
+The arms should be designed for the critical loading conditions. This condition will demand the most of the structural integrity and is identified to be:
+
+\textit{Flying against the maximum wind speed(6bft by requirement AD-AP-1) with maximum flight speed(20m/s by requirement POP-AP-2), while providing maximum thrust}
+
+The forces on the arm during this critical case is presented in %\autoref{fig:critical load case}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics{}
+%     \caption{Caption}
+%     \label{fig:my_label}
+% \end{figure}
+Present drawing with forces:
+
+As seen in the drawing, the arm experiences bi-axial bending. Bending around the y-axis is created by the drag forces and bending around the x-axis is created by the forces of thrust forces. Furthermore, the weight of the arm and of the motors and propellers create bending relieve around the x-axis. The maximum bending moment around the y-axis is experienced when the drag force is maximum, which occurs when flying at maximum flight speed against the wind speed. The maximum bending moment around the y-axis is experienced when the thrust force is maximum. Indeed, maximum flight speed is achieved at the maximum thrust setting as shown in \autoref{ch:propulsion}, so this critical load case is realistic to occur in the shows.
+
+\subsection{Sizing of the arms}\label{subsec:armsizing}
+With the cross sectional shape and the critical loading condition defined the arms are sized according to:
+\begin{itemize}[noitemsep,nolistsep]
+    \item Bending loads: To make sure the frame does not experience plastic deformation by requirement SP-SYS-4.1.
+    \item Deflection: To mitigate vibrations loads by requirement SP-SYS-4.1, and to not have the thrust vector deviate thus far that the flight speed of 20m/s by requirement POP-AP-2 can not be met.
+    \item Shear: To secure the arms can carry the shear forces.
+    \item Fatigue: To be able to fly a 1000 flight hours by requirement SR-AP-6.
+   
+\end{itemize}
+ 
+To perform calculations on the sizing of the arms several assumptions had to be made:
+\begin{itemize}[noitemsep,nolistsep]
+    \item The arms can be modelled as cantilever beams, clamped at the frame. 
+    \item The cross sectional properties and material properties are constant over the length. 
+    \item The thrust vector is exactly aligned above the neutral axis of the arm and the drag force is symmetrically distributed over the length of the arm. This assumption eliminates torsion loads. An unbalanced motor could introduce some torsion, but this assumed to be negligible.
+    \item Assume the tilt angle of the drone while flying at maximum speed is small. For flying forward the thrust vector will be tilted forward, The drag force will then come in at an angle to the arm. As the cross section is symmetrical and round, the area affected by the drag force will remain the same. It will however cause bi-axial bending in y and x direction. With this assumption the arms will be slightly over designed, as the drag force component in y direction when flying at a tilted angle will cause some bending relief. 
+    \item The mass of the motor mount at the tip of the arm is neglected. The motor with propeller needs to be attached to the arm. As the arm is circular, a motor mount is required. However, the mass of this mount is neglected in sizing the arms. This assumption must be checked in verification procedures to ensure it is a valid assumption.
+    \item The absolute value of the shear stress $V$ is equal to $\sqrt{V_x^2 + V_y^2}$.
+    \item The walls of the arms will not be considered as thin-walled. The minimum thickness of the walls is more than 10\% of the maximum arm outer diameter of ... \todo{Insert maximum arm diameter}.
+
+\end{itemize}
+
+\textbf{Sizing for bending loads} \newline
+To size the arms such that they withstand the bending loads of the critical load case \autoref{eq:bl} to \autoref{eq:bll} are used. These equations follow from a symmetric beam analysis under bi-axial bending using the sign convention that a moment is positive if it causes a positive stress in the positive quadrant of the x,y axis system \cite{SAD}.
+
+
+\begin{equation} \label{eq:bl}
+    \sigma_z = \frac{M_x y_{max}}{I_{xx}} + \frac{M_y X_{max}}{I_{yy}} \leq \frac{\sigma_{max}}{K_s}
+\end{equation}
+\begin{multicols}{2}\setlength{\columnseprule}{0pt}
+\begin{equation}
+     I_{xx} = I_{yy} =\frac{\pi}{64} \left(d0^4 - di^4\right)
+\end{equation}
+\break
+\begin{equation}
+     y_{max} = x_{max} = \frac{d0}{2}
+\end{equation}
+\end{multicols}
+
+
+\begin{multicols}{2}\setlength{\columnseprule}{0pt}
+\begin{equation}
+   Wd = 0.5 \rho_{air}  v^2 d0  cd
+\end{equation}
+\break
+\begin{equation}
+   M_x = Ft \cdot LB - Fp \cdot LB - \frac{Ww \cdot LB^2}{2} -F_{lg}\cdot L_{lg}
+\end{equation}
+\end{multicols}
+
+\begin{multicols}{2}\setlength{\columnseprule}{0pt}
+\begin{equation}
+     Ww = \rho_s  \frac{\pi}{4}  (d0^2 - di^2)  g
+\end{equation}
+\break
+\begin{equation} \label{eq:bll}
+      My = \frac{Wd\cdot LB^2}{2}
+\end{equation}
+\end{multicols}
+
+\textbf{Sizing for arm deflection} \newline
+The deflection of the arm in x direction is given by \autoref{eq:deflx} and in y direction by \autoref{eq:defly}. The deflection is determined using superposition of the forces on the arm adn their respective contribution to the deflection, given by the "forget-me-not" functions \cite{MoM}. For sizing the arms the maximum deflection is chosen, so either $defl_x$ or $defl_y$, while the total deflection for the critical load case is actually a combination of them.
+
+\begin{equation} \label{eq:defly}
+    defl_y = -\frac{Ft\cdot LB\cdot 3}{3EI_{xx}} + \frac{Fp\cdot LB^3}{/3EI_{xx}} + \frac{Ww\cdot LB^4}{8EI_{xx}} + \frac{F_{lg} \cdot L_{lg}^3}{3EI_{xx}}
+\end{equation}
+
+\begin{equation}\label{eq:deflx}
+   defl_x = \frac{Wd\cdot LB^4}{8EI_{xx}}
+\end{equation}
+
+
+\textbf{Sizing for Shear loads} \newline
+To verify whether the arms of the drone will fail due to shear, a shear stress analysis is done in python. First, the position of maximum shear stress needs to be determined. It is not initially obvious where the maximum shear stress will be as $V_y$ decreases along the arm and $V_x$ increases along the arm. The position of maximum shear stress can be determined by plotting the shear flow diagrams, which are presented in \autoref{fig:shear_flow_diagrams}.  In this figure, the internal shear forces in y and x direction, and total magnitude are plotted, respectively. This shows that the total shear force is maximum at the attachment point of the arm to the frame. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width= 0.6\textwidth]{Figures/Structures/Shear_diagrams.png}
+    \caption{Shear flow diagrams}
+    \label{fig:shear_flow_diagrams}
+\end{figure}
+
+Initially it was assumed that the walls of the rod are thin walled. However, this resulted in unreliable results as the minimum thickness was more than 10\% of the calculated outer diameter. Thus for the second and last iteration, the rod was not assumed to be thin-walled. Instead, the maximum shear stress in the rod was calculated by \cite{shear_stress_ref}
+
+\begin{equation}
+    \tau_{max} = \left ( 2 + \frac{t}{r_o}\right ) \frac{V_{max}}{A_c} 
+\end{equation}
+
+Where $t$ is the wall thickness, $r_o$ is the outer radius, $V_{max}$ is the maximum shear force, and $A_c$ is the area of the cross section. 
+The best combination of inner and outer diameter is the one for which the cross sectional area is minimum, but which can still withstand the maximum shear stress of the material the arm will be made off. 
+% PP of $0.25MPa$. 
+
+% This combination was found to be \todo{fill diameter combo here} and resulted in a maximum shear stress of \todo{Insert maximum shear stress in rod here}. Note that a safety factor of \todo{insert SF} was applied to the maximum shear stress of PP. 
+
+% The calculated dimensions for the rod were smaller than the dimensions required for bending. Thus it can be concluded that bending is the dominant load case, and the arms will be designed to withstand the applied bending stresses. 
+
+%To conclude this section, the final dimensions of the arms are as follows. The length of the arms is ..., the inner diameter of the rod is ... and the outer diameter is ... \todo{fill in dimensions}.
+
+\textbf{Sizing for Fatigue} \newline
+As per requirement SR-AP-6, the drone should be able to fly 1000 flight hours. During these flight hours the drone is expected to undergo many loading cycles. Therefore fatigue can not be neglected. To simplify the fatigue analysis a critical assumption is made. It is assumed that one flight show represents one loading cycle. Next to this, it was assumed that the maximum load during a cycle is the load case described in \autoref{critical-loadcase}. 
+
+
+The fatigue analysis was performed by comparing the maximum stress in the arm per cycle, determined by the bending and shear analysis of the arm structure, to the number of cycles to failure. 
+%The fatigue analysis is done by use of existing literature. In the paper "Natural Fiber Polymer Composites Technology Applied to the Recovery and Protection of Tropical Forests Allied to the Recycling of Industrial and Urban Residues" \cite{fatigue_paper}, fatigue of pure polypropylene and other composites are analysed. In the paper, the following S-N curve is presented:
+
+% S-N curve of \autoref{fig:S-N_diagram}\cite{fatigue_paper}.
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width = \textwidth]{Figures/Structures/S-N_diagram.png}
+%     \caption{S-N curves obtained in the fatigue tests, for pure polypropylene (PP), polypropylene/coir fiber composites without compatibilizer (PPFC30) and with compatibilizer (PPFC30C)
+% (Bettini et al., 2011)}
+%     \label{fig:S-N_diagram}
+% \end{figure}
+
+% The calculated maximum stress per cycle of \todo{insert maximum stress in arm here}, it can be seen that failure due to fatigue does not occur at the applied stress levels. Therefore it can be assumed that during the drone's life, it will not fail due to fatigue.
+
+
+
+\textbf{Implementation into sizing tool} \newline
+The aforementioned approach for arm sizing is implemented into a tool to perform quick iterations on the design. 6 iterations were performed in total. The inputs for the tool are the parameters of the aforementioned equations and a list of possible inner and outer diameter with 5 mm steps in the values. The outputs are the inner and outer diameter of the arm needed to ensure the structural integrity together with its respective mass.
+
+For all combinations of inner and outer diameter the program calculations whether the stress or deflection exceeds the maximum allowed specified value. If this is not the case, the program notes it down as a possible combination. Then, for all the possible combinations of diameters, it gives the combination for the minimum arm mass, which becomes the arm size used in the design.
+
+In this sizing tool, the following inputs will be further specified:
+\begin{itemize}[noitemsep,nolistsep]
+    \item $\rho_{air}$, density of the air
+    \item LB, length of the arm
+    \item Cd, Drag coefficient of the arm
+    \item $d_{min}$, minimum inner diameter of the arm
+    \item $k_{s}$, safety factor used in calculations
+    \item $t_{min}$, minimum thickness of the arm
+    \item Maximum deflection of the arm
+    \item Material properties $\rho_s$, $\sigma_{max}$, E-modulus
+    
+\end{itemize}
+
+The density of the air $\rho_{air}$ is determined using the International Standard Atmosphere model \cite{ISA}. The highest drag is experienced for the highest air density, which occurs at the lowest operating temperature. This is 3 degrees Celsius by requirement AD-SYS-6 giving an air density of 1.278 kg/m$^3$.
+
+The length of the arm LB is determined by the size of the propeller and its clearance to the frame body. The propeller is attached to the end of the arm, therefore the half-length of the propeller is the minimum length of the arm. A margin should be included as it is expected that the efficiency of the propeller can decrease due to the aerodynamic interference of the frame body. This effect should be explored in more detail in the post-DSE phase. For now, for the first 3 iterations assumed a propeller clearance of 5 cm, after which it was reduced to 2 cm. For production, the arm should be made longer to be able to fix it inside the frame body, but for the calculations it is assumed the arm is clamped before entering this body.
+
+To determine the drag coefficient, Cd, the arm is seen as a cylinder in a flow field. The drag coefficient is then dependent on the Reynolds number as shown in \autoref{fig:cd}. The Reynolds number is a function of the wind speed and outer diameter of the arm. For the first iteration a Cd of 1.2 was used. for the next iterations it was adjusted to 1.0 using the new outer diameter.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.5\textwidth]{Figures/Structures/cd.png}
+    \caption{The drag coefficient, Cd, for a circular cylinder as a function of Reynolds number, Ud/$\nu$ \cite{cd}}
+    \label{fig:cd}
+\end{figure}
+
+A minimum value is assigned to the inner diameter of the arm as its designed to fit the cables coming from the motors. Brush-less motors need 3 cables, and the wire size is usually 18awg \cite{wiresize}. A margin is included to make make integration easier. Therefore 14awg wires are chosen to size the inner diameter. From geometry, the minimum inner diameter for inclusion of the 3 cables is then given by \autoref{eq:dmin}, where r is the radius of the wires and R the inner radius of the arm.
+
+\begin{equation}\label{dmin}
+    D_{min} = 2\cdot \frac{2r}{\sqrt{3}}+r
+\end{equation}
+
+A safety factor $k_s$ should be implemented in the model for the following reasons:
+\begin{itemize}[noitemsep,nolistsep]
+    \item The material properties could decrease over the lifetime of the drone because of weather conditions and operating temperatures.
+    \item The conditions used in processing the material can have an effect on the properties of the finished product.
+    \item The determination of the characteristic values of the material includes uncertainties.
+    \item In the process of integration it became clear that the operations department requires a hole in the arm for to fit a cable. This hole will weaken the structure and a local stress concentration could be observed. This needs to be accounted for using the safety factor. The need for this hole is further explained in \autoref{ch:finaldesign}.
+    \item In the process of integration it became clearit became clear that the arm requires threading on its ends. This will locally reduce the thickness of the arms and thus make it weaker. This should be accounted for in the safety factor. The need for this threading is further explained in \autoref{ch:finaldesign}.
+\end{itemize}
+
+For the first 3 iterations a safety factor of 3.3 is used in compliance with an existing dji drone frame \cite{ks3.3}. For the next iterations the safety factor is more specific to the design. A safety factor of 1.5 is recommended for the predominant performance characteristics of strength and stiffness of plastics \cite{ks}. The safety factor is increased to 1.8 to incorporate the small hole for the landing gear. 
+
+The minimum thickness of the arm is specified to ensure manufacturability for of the arm. A hollow circular rod is best manufactured using polymer extrusion, as further specified in \autoref{ch:productionplan}. For this method, the minimum thickness of the part is 3.2 mm\cite{ppThickness}.
+
+The maximum deflection is specified to not have the thrust vector deviate thus far that the flight speed can not be met and to mitigate vibrations. the maximum deflection is assumed to be 1mm as requested by the propulsion department.
+
+The last parameters that need further specification are the material properties. For this a suitable material must be chosen which is done in the next section.
+
+\textbf{Choice of material} 
+
+The choice of material is between different types of thermoplastic \cite{midterm}. The characteristics of the plastics is found using the  "ANSYS GRANTA Edupack" tool \cite{materialbible} .
+
+The first important factor is the maximum service temperature of the material. It should be well above the operating temperatures expected from the subsystems. The operating temperature from the motors is given by the propulsion department as 44 \celsius, whereas the battery is given by the power department as 60 \celsius. This ruled out "PLA" plastic. Another important factor is sustainability. As PVC is seen as the "single most environmentally damaging of all plastics" \cite{pvcgreen} it is ruled out as an option as well. 
+
+The remaining material options are presented in \autoref{tab:Materialtradeoff}.
+The trade off is based on the following criteria and weights and follows the approach explained in the midterm phase \cite{midterm}
+\begin{itemize}[noitemsep,nolistsep]
+    \item Cost(5/5): Cost is very important as a small difference in material cost will make a big difference in price in mass production. By requirement COST-AP-1 there is a limit on the cost of the drone.
+    \item Mass(4/5): Mass has become a driver requirement to be able to meet the budget.
+    \item Risk(5/5): Important to ensure safety, fire resistance is given by risk 29. Note that highly flammable materials do not necessarily need to be ruled out as additive flame retardants could be added to the material.
+    \item Sustainability(5/5): Stated in the project objective statement and important to meet requirement SUS-EO-3.
+\end{itemize}
+
+To score the materials on the cost and sustainability it is assumed that the materials are a good representation of the market, and therefore their average may be used. For each criteria a threshold in scoring is set. Cost uses a threshold of 40\% in scoring to account for the range in given cost data and because it is subject to change and unpredictable over time. Sustainability uses a threshold of 22\% for production energy and 10\% for recycling energy in scoring to account for the range in the given data.
+
+The trade-off also specifies the recycle fraction of the material (RF) which is the fraction of current supply that derives from recycling. This is an important indication of the development of the recycling infrastructure of the material.
+
+The trade-off concludes that the most suitable material for the design is Polypropylene (PP). To show the method is robust a trade-off sensitivity and technical sensitivity are performed as shown in \autoref{tab:senstradeoff} and \autoref{tab:tech sens} respectively. This shows that PET is a strong competitor but PP is still the better option.
+
+Polypropylene is highly flammable. To mitigate risk 29 a highly effective flame retardant is added \cite{flame}. The heat release rate of PP with ca. 126 $\mu$m-thick coating was reduced by 71.2\% using this additive. Furthermore the coating is flexible, anti-ultraviolet and water resistant.
+
+The material properties of Polypropylene are:
+\begin{itemize}[noitemsep,nolistsep]
+    \item $\rho_s$ = 902 kg/m$^3$
+    \item $\sigma_{max}$ = 26.25 \cdot $10^6$ N/m$^2$ (Yield stress)
+    \item E = 1.223 \cdot $10^9$ N/m$^2$ 
+    \item $\sigma_{tensile}$ = 38 \cdot $10^6$ N/m$^2$
+\end{itemize}
+
+By requirement SP-EO-2 the drone shall not sink into water. The structure of the drone will indeed float\cite{materialfloat}, but whether the whole integrated system will float is analysed in XX
+
+% \begin{scriptsize}
+% % Please add the following required packages to your document preamble:
+% % \usepackage{longtable}
+% % Note: It may be necessary to compile the document several times to get a multi-page table to line up properly
+% \begin{longtable}{|p{2cm}|p{2cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+% \caption{Material trade-off}
+% \label{tab:Materialtradeoff}\\
+% \hline
+% Criteria \& Weight   & Sub-criteria                              & PET                                                                         & HDPE                                                                      & PP                                                                                                  & PS                                                    & ABS                                                                              & Nylon                                                                                      \\ \hline
+% \endhead
+% %
+% Cost(5/5)            & Material cost(eur/kg)                     &\cellcolor[HTML]{c1ffc1} 1.06 (41\% below avg)                                                       &\cellcolor[HTML]{96FFFB} 1.45 (19\% below avg)                                                     &\cellcolor[HTML]{96FFFB} 1.2 (33\% below avg)                                                                                &\cellcolor[HTML]{96FFFB} 1.5 (16\% below avg)                                                   &\cellcolor[HTML]{96FFFB} 1.89 (5.6\% above avg)                                                           &\cellcolor[HTML]{FFFFC7} 3.66 (104\% above average)                                                                 \\ \hline
+% Mass(4/5)            & Mass frame 1st iteration (kg) vs budget   &\cellcolor[HTML]{FFFFC7} 31\% above budget                                                           & \cellcolor[HTML]{FFFFC7}41\% above budget                                                         &\cellcolor[HTML]{96FFFB} 15\% above budget                                                                                   &\cellcolor[HTML]{96FFFB} 5.1\% above budget                                                     &\cellcolor[HTML]{96FFFB} 16\% above budget                                                                & \cellcolor[HTML]{FFFFC7}37\% above budget                                                                          \\ \hline
+% Risk (5/5)           & Flammability                              &\cellcolor[HTML]{FFFFC7} Highly flammable                                                            & \cellcolor[HTML]{FFFFC7}Highly flammable                                                          &\cellcolor[HTML]{FFFFC7} Highly Flammable                                                                                    & \cellcolor[HTML]{FFFFC7}Highly Flammable                                                       &\cellcolor[HTML]{FFFFC7} highly flammable                                                                 &\cellcolor[HTML]{96FFFB} Slow burning                                                                               \\ \hline
+% Sustainability (5/5) & Material production energy (MJ/kg) (50\%) &\cellcolor[HTML]{96FFFB} 82.4, 10\% below average                                                    &\cellcolor[HTML]{96FFFB} 80, 13\% below average                                                    &\cellcolor[HTML]{c1ffc1} 69.3, 24\% below average                                                                            &\cellcolor[HTML]{96FFFB} 82.2, 10\% below average                                               &\cellcolor[HTML]{96FFFB} 92.2, 0.7\% below average                                                        & \cellcolor[HTML]{FFFFC7}143.5, 57\% above average                                                                  \\ \hline
+%                      & Material recycling energy(MJ/kg) (50\%) &\cellcolor[HTML]{c1ffc1} recyclable: 28.2(7.8\% below avg), recycle fraction 21\%              &\cellcolor[HTML]{c1ffc1} recyclable: 26.75(12.5\%below avg)  RF = 8.44\%         &\cellcolor[HTML]{c1ffc1} recyclable: 23.5(23\% below avg),  RF = 5.5\%   decomposed naturally 20-30 years &\cellcolor[HTML]{96FFFB} recyclable:29.25(4.3\% below avg),  RF 6\%         &\cellcolor[HTML]{96FFFB} Recyclable: 32.35(5.8\% above avg),  RF = 4\% & \cellcolor[HTML]{FFFFC7}recyclable: 43.45(42\% above avg),  RF\textless{}1\% \\ \hline
+%                      Scores && 7.3 & 6.3 & 7.6 & 6.6&6.6&4.8\\ \hline
+% \end{longtable}
+% \end{scriptsize}
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+
+
+\begin{table}[h]
+\centering
+\caption{Material trade-off}
+\label{tab:Materialtradeoff}
+\resizebox{\textwidth}{!}{%
+\begin{scriptsize}
+\begin{tabular}{|p{2cm}|p{2cm}|p{1.5cm}|p{1.4cm}|p{1.4cm}|p{1.7cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+\textbf{Criteria \& Weight} & \textbf{Sub-criteria}                     & \textbf{PET}                                                  & \textbf{HDPE}                                                         & \textbf{PP}                                                                                           & \textbf{Polystyrene (PS)}                                             & \textbf{ABS}                                                         & \textbf{Nylon}                                                                \\ \hline
+Cost (5/5)                  & Material cost (eur/kg)                    & \cellcolor[HTML]{E2EFDA}1.06, 41\% below avg                  & \cellcolor[HTML]{D9E1F2}1.45, 19\% below avg                          & \cellcolor[HTML]{D9E1F2}1.2, 33\% below avg                                                           & \cellcolor[HTML]{D9E1F2}1.5, 16\% below avg                          & \cellcolor[HTML]{D9E1F2}1.89, 5.6\% above avg                        & \cellcolor[HTML]{FFF2CC}3.66, 104\% above avg                                 \\ \hline
+Mass (4/5)                  & Mass frame 1st iteration (kg) vs budget   & \cellcolor[HTML]{FFF2CC}31\% above budget                     & \cellcolor[HTML]{FFF2CC}41\% above budget                             & \cellcolor[HTML]{D9E1F2}15\% above budget                                                             & \cellcolor[HTML]{D9E1F2}5.1\% above budget                           & \cellcolor[HTML]{D9E1F2}16\% above budget                            & \cellcolor[HTML]{FFF2CC}37\% above budget                                     \\ \hline
+Risk (5/5)                  & Flammability                              & \cellcolor[HTML]{FFF2CC}Highly flammable                      & \cellcolor[HTML]{FFF2CC}Highly flammable                              & \cellcolor[HTML]{FFF2CC}Highly flammable                                                              & \cellcolor[HTML]{FFF2CC}Highly flammable                             & \cellcolor[HTML]{FFF2CC}Highly flammable                             & \cellcolor[HTML]{DDEBF7}Slow burning                                          \\ \hline
+Sustainability (5/5)        & Material production energy (MJ/kg) (50\%) & \cellcolor[HTML]{DDEBF7}82.4, 10\% below avg                  & \cellcolor[HTML]{DDEBF7}80, 13\% below avg                            & \cellcolor[HTML]{E2EFDA}69.3, 24\% below avg                                                          & \cellcolor[HTML]{DDEBF7}82.2, 10\% below avg                         & \cellcolor[HTML]{DDEBF7}92.2, 0.7\% below avg                        & \cellcolor[HTML]{FFF2CC}143.5, 57\% above avg                                 \\ \hline
+                            & Material recycling energy (MJ/kg) (50\%)  & \cellcolor[HTML]{E2EFDA}Recyclable: 28.2 (7.8\% avg), RF 21\% & \cellcolor[HTML]{E2EFDA}Recyclable: 26.75 (12.5\%below avg) RF 8.44\% & \cellcolor[HTML]{E2EFDA}Recyclable: 23.5 (23\% below avg),  RF 5.5\% decomposed naturally 20-30 years & \cellcolor[HTML]{DDEBF7}Recyclable: 29.25 (4.3\% below avg),  RF 6\% & \cellcolor[HTML]{DDEBF7}Recyclable: 32.35 (5.8\% above avg),  RF 4\% & \cellcolor[HTML]{FFF2CC}Recyclable: 43.45 (42\% above avg), RF \textless{}1\% \\ \hline
+Scores                      &                                           & 7.3                                                           & 6.3                                                                   & 7.6                                                                                                   & 6.6                                                                  & 6.6                                                                  & 4.8                                                                           \\ \hline
+\end{tabular}%
+
+\end{scriptsize}
+}
+\end{table}
+
+
+\begin{table}[h]
+\centering
+\caption{Sensitivity Analysis of the material trade-off}
+\label{tab:senstradeoff}
+%\resizebox{\textwidth}{!}{%
+\begin{scriptsize}
+\begin{tabular}{|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+\textbf{Cost} & \textbf{Mass} & \textbf{Risk} & \textbf{Sustainability} & \textbf{Winner} \\ \hline
+5    & 4    & 5    & 5              & PP     \\ \hline
+\cellcolor[HTML]{F8CBAD}1    & 4    & 5    & 5              & PP     \\ \hline
+5    &\cellcolor[HTML]{F8CBAD} 1    & 5    & 5              & PET    \\ \hline
+5    & 4    &\cellcolor[HTML]{F8CBAD} 1    & 5              & PP     \\ \hline
+5    & 4    & 5    &\cellcolor[HTML]{F8CBAD} 1              & PET    \\ \hline
+5    & \cellcolor[HTML]{F8CBAD}5    & 5    & 5              & PP     \\ \hline
+
+\end{tabular}%
+
+\end{scriptsize}
+%}
+\end{table}
+
+
+
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[h]
+\centering
+\caption{Technical sensitivity analysis of material trade-off}
+\label{tab:techsens}
+%\resizebox{\textwidth}{!}{%
+\begin{scriptsize}
+
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\hline
+\textbf{Critera}  & \textbf{Change} & \textbf{PET}              & \textbf{HDPE}             & \textbf{PP}               & \textbf{PS}               & \textbf{ABS}              & \textbf{Nylon}            & \textbf{Winner} \\ \hline
+Cost              & 40\% incr       & \cellcolor[HTML]{FCE4D6}2 & 2                         & 2                         & 2                         & \cellcolor[HTML]{FCE4D6}1 & 1                         & PP              \\ \cline{2-9}
+                  & 40\% decr       & \cellcolor[HTML]{FCE4D6}3 & \cellcolor[HTML]{FCE4D6}3 & \cellcolor[HTML]{FCE4D6}3 & \cellcolor[HTML]{FCE4D6}3 & \cellcolor[HTML]{FCE4D6}3 & 1                         & PP              \\ \hline
+Mass              & 30\% incr       & 1                         & 1                         & \cellcolor[HTML]{FCE4D6}1 & \cellcolor[HTML]{FCE4D6}1 & \cellcolor[HTML]{FCE4D6}1 & 1                         & PET             \\ \cline{2-9}
+                  & 30\% decr       & \cellcolor[HTML]{FCE4D6}2 & \cellcolor[HTML]{FCE4D6}2 & 2                         & 2                         & 2                         & \cellcolor[HTML]{FCE4D6}2 & PET             \\ \hline
+Production energy & 22\% incr       & 2                         & 2                         & \cellcolor[HTML]{FCE4D6}2 & 2                         & 2                         & 1                         & PET             \\ \hline
+Production energy & 22\%   decr     & \cellcolor[HTML]{FCE4D6}3 & \cellcolor[HTML]{FCE4D6}3 & 3                         & \cellcolor[HTML]{FCE4D6}3 & \cellcolor[HTML]{FCE4D6}2 & 1                         & PET             \\ \hline
+Recycling energy  & 10\%   incr     & 3                         & \cellcolor[HTML]{FCE4D6}2 & 3                         & 2                         & 2                         & 1                         & PP              \\ \hline
+Recycling energy  & 10\%   decr     & 3                         & 3                         & 3                         & \cellcolor[HTML]{FCE4D6}3 & 2                         & 1                         & PP              \\ \hline
+\end{tabular}%
+
+
+\end{scriptsize}
+%}
+\end{table}
+
+
+
+
+\textbf{Arm size Iterations} \newline
+With the tools in place and the parameters defined iterations are performed.
+
+
+
+The results of the tool that has the bending and deflection calculations integrated are presented in \autoref{tab:arm size iterations}. 6 iterations were performed in total. The first iteration is done for the material Polystyrene(PS). The iterations that follow use Polypropylene (PP) in accordance with the material trade-off. The tool and its output data will be verified in \autoref{sec:strucverificationandvalidation}. 
+
+\begin{table}[h]
+\centering
+\caption{Arm size iterations}
+\label{tab:arm size iterations}
+%\resizebox{\textwidth}{!}{%
+\begin{scriptsize}
+
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+\textbf{Parameter}  & \textbf{It 1} & \textbf{It 2}              & \textbf{It 3}             & \textbf{It 4}               & \textbf{It 5}               & \textbf{It 6}  \\ \hline
+LB{[}m{]}                & 0.25 & 0.22 & 0.23 & 0.20 & 0.17  & 0.17  \\\hline
+D0{[}cm{]}               & 2    & 1.9  & 2.1  & 1.75 & 1.4   & 1.4   \\\hline
+Di{[}cm{]}               & 1.5  & 1.25 & 1.45 & 1.1  & 0.75  & 0.75  \\\hline
+Mass total {[}kg{]} & 0.16 & 0.14 & 0.17 & 0.12 & 0.067 & 0.067 \\ \hline
+
+\end{tabular}%
+
+\end{scriptsize}
+%}
+\end{table}
+
+Regarding the shear force: The calculated dimensions for the rod were smaller than the dimensions required for bending. To withstand the shear forces, an outer diameter of $1.475cm$ and thickness of $1.6mm$ are required. This thickness is less than the minimum wall thickness. Thus it can be concluded that bending is the dominant load case, and the arms will be designed to withstand the applied bending stresses and deflection.
+
+Regarding the fatigue performance: the maximum stress per cycle due to bending is .... \todo{insert max stress} MPa. It can be seen that failure due to fatigue does not occur at the applied stress levels. Therefore it can be assumed that during the drone's life, it will not fail due to fatigue. S-N curve of \autoref{fig:S-N_diagram} \cite{fatigue_paper}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.5 \textwidth]{Figures/Structures/S-N_diagram.png}
+    \caption{S-N curves obtained in the fatigue tests, for pure polypropylene (PP), polypropylene/coir fiber composites without compatibilizer (PPFC30) and with compatibilizer (PPFC30C)
+(Bettini et al., 2011)}
+    \label{fig:S-N_diagram}
+\end{figure}
+
+To determine the production cost the "Granta" tool is used\cite{materialbible}. This tool contains a cost model specific to production processes. The best way to process the rods is by polymer extrusion. Molds can not be used easily as the arms are hollow. The inputs to the cost model are component length, component mass, material cost and load factor. The load factor stated how long the machines are working. It is assumed the machines are on for 8hours a day(working day) so the load factor is 0.33. The capital write-off time and overhead rate are not changed. \autoref{fig:costarms} presents the output of the model. The batch size is 1200, as the 300 drones have 4 arms each. The relative cost per unit is shown on the y-axis. This shows the cost per drone for the arms is \EUR{4-28}. The average of \EUR{12} is taken as the estimated cost per drone regarding the arms.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.8\textwidth]{Figures/Structures/productioncostit6.PNG}
+    \caption{Cost of polymer extrusion for the arms\cite{materialbible}}
+    \label{fig:costarms}
+\end{figure}
+
+By requirement SR-AP-6 the drone is supposed to fly for at least a 1000 flight hours. With the fatigue analysis of the structure it is confirmed that the drone structure is able to meet this requirement. Therefore there is no expected maintenance cost on the drones structure.
+
+\subsection{Sizing of the frame body}
+To estimate the mass and cost of the frame body it should be known how the subsystems will integrate into the frame. A detailed explanation of the integration is presented in \autoref{ch:finaldesign}, but the lay-out used for the iterations is as follows:
+The frame body will consist of a main box into which the arms are (permanently) attached. On top of this box the battery is placed and on top of the battery is a plate with PCBs, called the top plate. A sketch of the frame body is presented in \autoref{fig:framebodyimpr}, where the green plate represents the top plate. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.3\textwidth]{Figures/Structures/body plates.PNG}
+    \caption{Frame body design}
+    \label{fig:framebodyimpr}
+\end{figure}
+
+This frame body design was chosen as it can facilitate the subsystems in a space-efficient way, which is a main driver of the frame design. The arms end in the main box rather than being connected to each other. Therefore the cables that go through the arms are easily accessible without the need of holes in the arm.
+
+The size of the main box of the frame is determined by the battery size throughout all iterations. This was done as the battery is the largest subsystem to be integrated. The dimensions of the top plate are determined according to the size of the PCBs. The thickness of the plates was estimated to be 5mm. Whether this thickness is sufficient to hold the loads must be verified through Finite Element Models in the post DSE phase as described in \autoref{ch:postdseactivities}. Lastly, a 2mm margin for the casing was included in the width, as this casing is to fit onto the main box. A more detailed explanation of the drone casing is given in \autoref{sec:drone casing}.
+
+For the first iteration it is assumed that the main box and top-plate have the same width and length as the size of the PCBs is yet undetermined at that stage. In this iteration the main box only consists of 2 plates, without the walls that make it into a box. A 5mm margin was added to both sides in the width of the plates to provide space for the casing and for walls to support the top plate. In the first iteration the box is made out of Polystyrene(PS). The mass of the frame is calculated by multiplying the volume with the material density. The iterations that follow use polypropylene(PP), in accordance with the material trade-off.
+
+In the second iteration walls with height according to the outer diameter of the to be incorporated arms are added to the front, the back and the sides of the first bottom plate to create the main box. The same is done to the middle plate, with a wall height of 110\% battery thickness to create the battery compartment. This 10\% margin was chosen as by risk 19 the battery tends to swell and might get stuck in the frame as a result. The top plate still has the same width and length as the the main box. For iterations 3 to 6 the length of this top plate was sized to PCB dimensions, the width was kept the same. The PCBs that go on top are the UWB, radio and WiFi PCB. The results of the iterations are shown in \autoref{tab:framesize}. The mass calculations will be verified in \autoref{sec:vervalstruc}
+
+The final dimensions were determined after the integration with all subsystems. A few corrections had to be made to the size of the frame of iteration 6 as described in \autoref{ch:finaldesign}. Because of these alterations the mass of the frame decreased with respect to the model. The model mass is 0.16kg, whereas 0.14kg was measured using  the mass properties tool of "SolidWorks". The "SolidWorks" mass is shown in the final column of \autoref{tab:framesize} as it uses a better shape of the frame than the model.
+
+\begin{table}[H]
+\centering
+\caption{Frame size iterations}
+\label{tab:framesize}
+\resizebox{\textwidth}{!}{%
+\begin{scriptsize}
+
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline
+\textbf{Parameter}  & \textbf{It 1} & \textbf{It 2}              & \textbf{It 3}             & \textbf{It 4}               & \textbf{It 5}               & \textbf{It 6} &\textbf{Final}   \\ \hline
+Battery size{[}LxBxH{]} {[}mm{]}      & 170.9x56.7x43.9 & 163.4x54.2x42 & 157.1x52.1x40.4 & 160x53.1x41.1 & 139x47x48.5 & 152x46x37 &152x46x37  \\ \hline
+Size main box plates{[}LxBxH{]}{[}mm{]}  & 170.9x66.7x5    & 163.4x64.2x5  & 157.1x62.1x5    & 160x63.1x5    & 139x57x5    & 152x56x5 & 160X64X5  \\\hline
+Size top plate {[}LxBxH{]}{[}mm{]}       & 170.9x66.7x5    & 163.4x64.2x5  & 50x62.1x5       & 50x63.1x5     & 50x57x5     & 50x56x5 & 83X50X5   \\\hline
+D0{[}mm{]}                      & -               & 19           & 21            & 17.5         & 14         & 14  & 14     \\\hline
+Height Battery compartment {[}mm{]} & -&46.2 & 44.4 & 45.2 & 53.35 & 40.7 & 40.7 \\ \hline
+Mass frame plates {[}kg{]}      & 0.18            & 0.21          & 0.16            & 0.17          & 0.13        & 0.14 & \cellcolor[HTML]{DAE8FC}0.14    \\\hline
+
+\end{tabular}%
+
+\end{scriptsize}
+}
+\end{table}
+
+To determine the production cost the "Granta" tool is used\cite{materialbible}. The main box parts will be made via injection molding and will cost 90 \EUR{} to produce. The top plate can be made out of a plastic sheet for which the price is negligible \cite{sheetcost}.
+
+\subsection{Sizing of the frame casing}
+% \section{Design for Structures: Casing}
+To protect the internal components of the drone against rain to satisfy requirement AD-AP-2 a casing is incorporated in the frame. Important design considerations are that the case is to be removable and can not let water through. The final shape of this casing is determined in the integration phase and elaborated upon in \autoref{ch:finaldesign}. The mass of the casing is however incorporated in the calculation of the total mass of the structures subsystem from iteration 5 onwards. This case mass was based on the mass of a simple rectangular box casing with body dimensions like the frame dimensions and a 2mm thickness. This box was modelled in "Solidworks" from which a mass of 80 grams was determined. The final casing shape conducted after the integration phase has a mass of 57 grams. The final casing design as presented in \autoref{ch:finaldesign} includes hinges to open and close the casing. The mass of these hinges was not taken into account in the iterations, but they are 4 grams each.  
+% The following assumptions will be made for the case design:
+% \begin{itemize}
+%     \item The case will be removable.
+%     \item The case will not carry any bending, axial or shear loads as there are no loads applied to the case.
+%     \item The case will be made from the same material as the frame, PP.
+%     \item The case will not let water through.
+% \end{itemize}
+
+% The general shape of the case will be a rectangular box with smoothed edges to make it as aerodynamic as possible. The casing should be large enough such that it fits around the battery and electronic components, but also as small as possible to minimise the mass of the case. The case will have a rubber lining on the bottom of the shell to ensure that water cannot touch the internal components. The shell will then be held by a rotating hinge which can be opened and closed to remove or attach the case to the body. Having a hinge allows for easy removal of the case when maintenance needs to be done. 
+
+\section{Design for Structures: Modular Payload} \label{sec:modpayload}
+
+The design for modular payload has been performed to meet several requirements mentioned in \autoref{tab:strucrequirements}. Changeable payload configuration is specified in requirement SP-AP-1. This modular payload requirement is satisfied via an adhesive mount system. This system consists of an adhesive mount, shown in \autoref{fig:adhesive_mount} and a mounting piece on the bottom plate of the drone which is shown in \autoref{fig:mount_plus_payload}.
+
+
+\begin{figure}[h]
+     \centering
+     \begin{subfigure}{0.5\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Figures/Structures/Adhesive mount.jpg}
+         \caption{Adhesive mounts that will be placed on the payload}
+         \label{fig:adhesive_mount}
+     \end{subfigure}
+     \hspace{4cm}
+     \begin{subfigure}{0.5\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Figures/Structures/Mount_split_render.png}
+         \caption{Payload attached to drone via Adhesive mount system}
+         \label{fig:mount_plus_payload}
+     \end{subfigure}
+     \hfill
+     \caption{Adhesive mount system}
+     \label{fig:Adhesive mount system}
+\end{figure}
+
+
+ The  mounting piece is part of the structure on the bottom plate of the drone. This piece will be used as point of attachment for the adhesive mount. The adhesive mount is a cheap and easily acquirable mount which can be placed on any flat or curved surface. The surface also has to be smooth. This is intended to be done for the payload. Once placed on the payload, it can be clicked to the mounting piece. This way different kinds of payload can be carried by the drone. The adhesive mount is advertised to be able to hold up to 2kg but there is no specification for the mounting piece since it is specially designed. SP-AP-1\label{req:SP-AP-1} is verified by testing this system with a payload that does not exceed the weight limit of 0.6 kg as specified in SP-AP-1.4.1. If a payload of 0.6kg with a maximum dimension of 20cm x 20cm x 20xm is held during this test then SP-AP-1.2\label{req:SP-AP-1.2}, SP-AP-1.4.1\label{req:SP-AP-1.2} and SP-AP-1.4.3\label{req:SP-AP-1.4.3} are also verified. The condition of a smooth surface so the adhesive mount can stick has to hold for the (future) payload. Verification of SP-ST-1.2.1\label{req:SP-ST-1.2.1} will be discussed in \autoref{sec:safetyregulations} since it cannot be verified from a payload perspective only.
+ 
+Next we have SP-AP-1.1 and SP-SYS-1.1.1. To satisfy these requirements, it is needed to include a light source that is visible over a distance of 4km and includes a RGB illumination system. To determine which brightness is needed (in lumen) for the light source a candle is taken as a reference. A candle has a brightness of 12.57 lumen over a distance of 1 meter\cite{candlebrightness}. The same candle is visible over a distance of 2576 meter in a low light condition\cite{candledistance}. From the inverse square law, the brightness of the candle decreases with its distance squared. This results in a minimum observable brightness of the human eye by a light source to be $1.894*10^-6$ lumen. This brightness has to be observed from a distance of 4000 meter meaning that the light source requires 2.41 times more brightness from the source to acquire the same visibility over this distance. The light source would therefore require a minimum brightness of 30.3 lumen just to be seen over this distance. This method ignores visibility loss due to light pollution from the city and light absorption in the atmosphere which which will be considered to be outside of the scope of this project. To verify SP-AP-1.1\label{req:SP-SYS-1.1} it is needed to fly the drone over a distance of 4000 meter with the light source turned on and then check whether the light can be seen. SP-SYS-1.1.1\label{req:SP-SYS-1.1.1} is automatically satisfied and verified if the light source includes an RGB illumination system.
+
+\begin{figure}[h]
+     \centering
+     \begin{subfigure}{0.28\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Figures/Structures/1034064205.jpg}
+         \caption{RGB Illumination module}
+         \label{fig:RGB_ModuleA}
+     \end{subfigure}
+     \hspace{3cm}
+     \begin{subfigure}{0.28\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Figures/Structures/1034064225.jpg}
+         \caption{RGB illumination module from the side}
+         \label{fig:mount_plus_payload}
+     \end{subfigure}
+     \hfill
+     \caption{RGB illumination module\cite{RGBlight}}
+     \label{fig:RGB_ModuleB}
+\end{figure}
+
+
+The LED Downlight 6W RGB+CCT 120mm Rond Mi-Light \cite{RGBlight}, as shown in \autoref{fig:RGB_ModuleA} and \autoref{fig:RGB_ModuleB} is used as the illumination system of the drone. This light source has a brightness of 600 lumen, a power consumption of 6W and it includes a RGB system with 16 million colours. This light source is connected via a cable to the flight computer and held via a custom designed case which is attached to the drone via the adhesive mount system described before. \autoref{fig:mount_plus_payload} shows the specially designed casing for the RGB illumination module.
+
+
+
+%mwe need to dsign for a modular payload.
+
+
+%discuss the sticker mount, descibe payload integration method
+%visibility requirement explained based on candle max visibility of 2576meters so any light will do
+% include mass payload mount
+%include cost mount:65 cents
+
+
+%  The light and megaphone are expected to last the 1000 flight hours as well without the need of replacement/repair. For the future payload the maintenance cost is up to the customer to predict, depending on what they choose.
+%how attached/removed, how many payloads, volume, power cable
+
+
+
+
+
+
+
+\section{Risk Analysis Structures}
+\label{sec:strucriskanalysis}
+From the detailed design phase, on top of the preliminary risks presented in \autoref{tab:riskstructures}, several new risks are identified. The description of the risk, their likelihood, consequence and the proposed mitigation response are presented in \autoref{tab:newrisksstructures} and \autoref{tab:mitigationnewstructures}.
+\begin{table}[H]
+\centering
+\caption{Structural risks that were discovered in the detailed design.}
+
+\label{tab:newrisksstructures}
+\begin{scriptsize}
+\begin{tabular}{|p{0.4cm}|p{3cm}|p{0.4cm}|p{4.5cm}|p{0.4cm}|p{4.5cm}|}
+\hline
+\multicolumn{1}{|l|}{\textbf{ID}} & \textbf{Risk}                                               & \multicolumn{1}{l|}{\textbf{LS}} & \textbf{Reason for likelihood}                                                                  & \multicolumn{1}{l|}{\textbf{CS}} & \textbf{Reason for consequence}                                                            \\ \hline
+46 & Arm brakes of at its base & 5 & No calculations nor analysis performed on arm-body integration strength & 4 & When 1 arm brakes of their will be enough thrust for an emergency landing. However emergency landing not guaranteed as additional damage to frame is unforeseen.furthermore the drone must be discarded afterwards \\ \hline
+47 & Battery gets stuck & 4 & The compartment was made to tightly fit the battery so it cant move around in flight. No production margins were included in the design. & 3 & Drone stuck in frame means the frame plate must be discarded. No measures should be taken to remove the battery for risk of perforation of the battery. It means the top of the main box must be replaced \\ \hline 
+48 & Battery gets out of stock & 3 & Could be expected as products get out of stock, however high chance another option is available & 4 & 
+If no alternative can be found the drone is useless, the top of the main box will need to be redesigned around the new battery and replaced \\ \hline
+49 & PCB gets outdated and needs replacement & 4 & Its likely electronics will need an update in 5 years as the technology evolves quickly & 2 & The trend in technology is that it becomes smaller rather than bigger. Therefore the PCBs will still fit the frame \\ \hline
+50 & Arms Misaligned in body & 4 & For 300 drones 1200 arms need to be attached to the frame, likely that a few arms will be misaligned & 3 & Might be less strong, may alter controls and drone performance \\ \hline
+51 & Arms gets loosened from body& 4 & Generally drones deal with vibrations. Vibrations could loosen the arm -body bonding when thread is used & 3 & When 1 arm comes loose their will be enough thrust for an emergency landing. However emergency landing not guaranteed as additional damage to frame is unforeseen \\ \hline
+
+\end{tabular}
+\end{scriptsize}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Mitigation responses for the new structural risks.}
+\label{tab:mitigationnewstructures}
+\begin{scriptsize}
+\begin{tabular}{|p{0.4cm}|p{3cm}|p{9.2cm}|p{0.4cm}|p{0.4cm}|} 
+\hline
+\multicolumn{1}{|l|}{\textbf{ID}} & \textbf{Risk}                                               & \textbf{Mitigation response}                                                                                                                                                               & \multicolumn{1}{l|}{\textbf{LS}} & \multicolumn{1}{l|}{\textbf{CS}} \\ \hline
+46 & Arm brakes of at its base &Perform Finite element analysis and tests& 3&4 \\ \hline
+47 & Battery gets stuck & Incorporate production margins into the design & 2&3\\\hline
+48 & Battery gets out of stock& Order in extra batteries&1&4\\ \hline
+49 & PCB gets outdated and needs replacement & Take the risk& 4&2 \\ \hline
+50 & Arms Misaligned in body & Add  thread to the arms to make assembly easier & 1 & 3 \\ \hline
+51 & Arms gets loosened from body & Add epoxy resin or "locktite" solutions to fasten joint & 2 & 3 \\ \hline
+\end{tabular}
+\end{scriptsize}
+\end{table}
+
+\section{Verification and Validation Structures} \label{sec:vervalstruc}
+Two main tools were used in sizing the frame. Both were used to determine the inner and outer diameter of the arms and its mass. The first one was based on coping with shear loads, the second one was based of coping with bending stress and putting a constraint on maximum deflection. These tools are verified through code verification and calculation verification. 
+
+The mass of the frame body was determined by multiplying the volume by the density of the material. No tool was used for this. Calculation verification will be performed to verify the calculation mass.
+
+The cost estimation was done using a verified model\cite{materialbible}. Calculation verification and validation of cost can only be done by asking production companies for a cost estimation of the product. This is to be done in the post-DSE phase.
+
+Due to how specific the models are to the design it is not possible to perform validation on a subsystems level due to the resources available to the design team. For the post-DSE phase it is proposed that the arm and frame body are validated by prototyping. Using prototypes the mass can be weighed and the structure can be validated on strength characteristics via the use of bending tests.
+
+Furthermore, it is important that all part connections, namely the arm-body integration are designed and verified in more detail using Finite Element Models and tested on structural integrity using prototypes. This should also be considered in the post-DSE phase.
+
+The assumption that the mass of the motor mount can be excluded was verified after the integration of the subsystems. In \autoref{ch:finaldesign} the mass of the designed motor mount is 8 grams. Adding this to the mass of the motors and propellers in the arm sizing tool did not output other required dimensions, so this assumption is verified. 
+
+
+\textbf{Code Verification of Tools}\newline
+
+First the tools are visually checked for errors. It is made sure that all units are consistent. Then the moment and shear force diagrams are plotted to verify that the maximum moment indeed occurs at the clamped side, being the side of the arm were it goes into the frame-body. After this was confirmed, code verification tests are performed as presented in \autoref{tab:shear_verification} and \autoref{tab:bending_verification}. With these tests the code was verified.
+
+\begin{table}[h!]
+\centering
+\caption{Verification tests of arm sizing tool based on shear loads}
+\label{tab:shear_verification}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|p{5cm}|p{6cm}|l|}
+\hline
+\textbf{TAG} & \textbf{Output to test} & \textbf{Input to vary} & \textbf{Test}                                                                    & \textbf{Outcome}                                                                                                               & \textbf{V?}                 \\ \hline
+VT-SP-U.1    & \tau                    & F_i                    & Set all input forces to zero, expect shear stress to be zero with no errors      & For all F = 0, \tau = 0                                                                                                        & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+VT-SP-U.2    & \omega_D                     & v                      & Double velocity, expect distributed drag load to quadruple                       & \begin{tabular}[c]{@{}l@{}}For V_1 = 10m/s, w_D=1.2141\\ For V2 = 20m/s, w_D = 4.8564\end{tabular}                             & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+VT-SP-U.3    & A_{cross}                 & t                      & Increase outer diameter keeping inner diameter the same, expect area to increase & \begin{tabular}[c]{@{}l@{}}For d_i = 0.01 and d_o = 0.02, A = 0.00094\\ For d_i = 0.01 and d_o = 0.03, A = 0.0025\end{tabular} & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+VT-SP-U.4    & \tau                    & V                      & Double shear force, expect shear stress to double                                & \begin{tabular}[c]{@{}l@{}}For V = 15.44, \tau = 224875\\ For V = 30.88, \tau = 449750\end{tabular}                            & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+VT-SP-U.5    & \tau                    & A                      & Double cross section area, expect shear stress to halve                          & \begin{tabular}[c]{@{}l@{}}For A = 0.00016, \tau = 224875\\ For A = 0.00032, \tau = 112437\end{tabular}                        & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+VT-SP-U.6    & V                       & \omega                      & Set distributed loads to zero, expect shear force diagram to be constant         & Shear flow diagrams are straight lines                                                                                         & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\caption{Verification tests of arm sizing tool based on bending loads}
+\label{tab:shear_verification}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|p{5cm}|p{6cm}|l|}
+\hline
+\textbf{TAG} & \textbf{Output to test} & \textbf{Input to vary} & \textbf{Test}                                                                    & \textbf{Outcome}                                                                                                               & \textbf{V?}                 \\ \hline
+
+VT-SP-U.7  & \textbackslash{}sigma & d0,di           & For input d0,di. Expect \textbackslash{}sigma to be below \textbackslash{}sigmamax/ks = 14.58mpa & for d0=1.4cm and di=0.75cm,\textbackslash{}sigma   = 10.4mpa                        &\cellcolor[HTML]{C1FFC1} yes       \\ \hline
+VT-SP-U.8  & Deflection            & d0,di           & For input d0,di. Expect defletion  to be below deflmax/ks = 0.55mm                               & for d0=1.4cm and di=0.75cm,defl =   0.5mm                                           &\cellcolor[HTML]{C1FFC1} yes       \\ \hline
+VT-SP-U.9  & Min thickness         & d0,di           & For output d0,di. Expect t\textgreater{}tmin   = 3.2mm                                           & for d0=1.4cm and di=0.75cm,t =   3.25mm                                             &\cellcolor[HTML]{C1FFC1} yes       \\ \hline
+VT-SP-U.10 & Min diameter          & d0,di           & Expect output di\textgreater{}dmin = 3.5mm                                                       & output di = 7.5mm                                                                   &\cellcolor[HTML]{C1FFC1} yes       \\ \hline
+VT-SP-U.11 & Singularity           & $I_{xx},I_{yy}$ & For Ixx=Iyy, stressfunction has division by 0, expect error                                      & for di=d0=0.014: float division by   zero error                                     &\cellcolor[HTML]{C1FFC1} yes       \\ \hline
+VT-SP-U.12 & Area                  & do              & Double d0, expect area to be 5x  bigger                                                          & For (d0,di)=(4,2), A=3Pi.   For(do,di)=(8,2), A=15pi                                &\cellcolor[HTML]{C1FFC1} yes       \\ \hline
+VT-SP-U.13 & Mass                  & Area            & Double area, expect double mass                                                                  & for (rho,A,lb) = (902,6,0.2) m =   4329.6, for (rho,A,lb) = (902,12,0.2) m = 8659.2 &\cellcolor[HTML]{C1FFC1} yes       \\ \hline
+
+\end{tabular}%
+}
+\end{table}
+
+\textbf{Calculation Verification of Tools} \newline
+Once the code is verified the numerical results of the tool and frame mass calculations need verification. The parameters that can be verified in the tools by the use of an external model are the mass of the arms and the cross sectional properties. The externally verified source used for verifying the mass properties is "SolidWorks". For the cross sectional properties an online inertia calculator \cite{Ixxcalc} is used. 
+
+To compare the results an error margin must be set for the relative error between model solution and external solution. This margin results from small explainable differences in the models. For the inertia calculation a margin of 1\% is used as both models use the same equation as input. Differences could lie in small machine errors. The same margin is used for the mass calculations.
+The results are presented in \autoref{tab:calc_verific} and they show that the calculations are verified.
+
+\begin{table}[h!]
+\centering
+\caption{Calculation verification of Tools}
+\label{tab:calc_verific}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|p{5cm}|p{6cm}|l|}
+\hline
+\textbf{Output to verify} & \textbf{Value} & \textbf{External Value} & \textbf{Error}                                                                    & \textbf{Margin accepted}                                                                                                               & \textbf{V?}                 \\ \hline
+Ixx             & 1.7304e-09 & 1.7385 x10-9   & 0.0081  & \pm 1\%  &\cellcolor[HTML]{C1FFC1} yes       \\ \hline
+Iyy             & 1.7304e-09 & 1.7385 x10-9   & 0.0081  & \pm 1\%  &\cellcolor[HTML]{C1FFC1} yes       \\ \hline
+Mass arms       & 0.01732    & 0.01733          & 0.00001 &\pm 1\% &\cellcolor[HTML]{C1FFC1} yes       \\ \hline
+Mass frame      &0.1638        &  0.16382        & 0.00002   & \pm1\% &\cellcolor[HTML]{C1FFC1} yes       \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+
+
+
+
+
+
+
+
+\section{Compliance Matrix Structures}
+\label{sec:struccompliancematrix}
+\autoref{tab:strucrequirements} presents the compliance matrix for the structures related requirements that were used to design the frame and payload mount. The table is similar to \autoref{tab:strucrequirements} with an additional column on the right stating whether it has been verified or not. Most of the requirements can not be verified on a subsystem level. Instead, they will be verified on a system level. These requirements do not appear in the compliance matrix of this department. Note that all risks identified in \autoref{tab:riskstructures} were mitigated in the design.
+
+From a market perspective, having the capability of a modular payload is an enormous improvment wth respect to other dornes. Not only does it open many possibilities for creations of droneshows, it can also potentially make the drones more durable and therefore more sustainable. As mentioned in \autoref{ch:Marketanalysis} the client Anymotion Productions already discards their full drone after 2-3 years when the payload gets outdated.
+
+Furtermore, the structure of the drone is designed such that it will not require maintenance over in its 1000 hour lifetime. This is a strength discoverd in the market analysis as well.
+
+
+
+\begin{table}[H]
+\centering
+\caption{Compliance matrix for structures subsystem requirements}
+\label{tab:strucrequirements}
+%\resizebox{\textwidth}{!}{%
+\begin{scriptsize}
+\begin{tabular}{|p{1cm}|p{1.5cm}|p{10cm}|p{3cm}|}
+\hline
+\textbf{Sub-department} & \textbf{TAG} & \textbf{Requirement} & \textbf{Verified?}\\ \hline
+\multirow{4}{*}{Payload} & SP-AP-1       & The drones shall be able to carry changeable payloads &\cellcolor[HTML]{C1FFC1}Yes\\ \cline{2-4}                                                                       
+                          & SP-AP-1.1     & The light source shall be visible in urban darkness over a distance of 4km &  \cellcolor[HTML]{C1FFC1}Yes    \\ \cline{2-4}                                               
+                          & SP-SYS-1.1.1 & The drone shall have an RGB Illumination &   \cellcolor[HTML]{C1FFC1}Yes \\ \cline{2-4}   
+                        %  & SP-AP-1.2     & The pyrotechnics shall weigh no more than 0.6kg  &                                                                        \\ \cline{2-3} 
+                         % & SP-ST-1.2.1   & The pyrotechnics shall not reach spectators & \cellcolor[HTML]{FFFFC7} no, done in \autoref{ch:logistics}                                                                                  \\\cline{2-3} 
+                          %& SP-SYS-1.2.2  & The pyrotechnics shall not cause the drone's center of gravity to move outside of the stability and controllabillity margins \\\cline{2-3} 
+                          & SP-AP-1.3     & A megaphone or speaker shall be included in the drones &\cellcolor[HTML]{C1FFC1}Yes                                                                      \\\hline
+                          
+                         % & SP-AP-1.4.1   & Future innovations shall have specifications up to a weight of 0.6kg &                                                    \\\cline{2-3} 
+                          
+                          %& SP-AP 1.4.3   & Future innovations shall have specifications up to dimensions of 20cm x 20cm x 20cm  &\cellcolor[HTML]{FFFFC7}no, done in \autoref{ch:finaldesign}                                     \\ \hline
+\multirow{4}{*}{Frame}   & SP-SYS-1.5    & Structures shall accommodate power unit    &\cellcolor[HTML]{C1FFC1}Yes                                                                                  \\\cline{2-4} 
+                          & SP-SYS -1.6  & Structures shall accommodate electronics  &\cellcolor[HTML]{C1FFC1}Yes                                                                                    \\\cline{2-4} 
+                         % & SP-EO-2       & Drones shall not sink in the water &\cellcolor[HTML]{FFFFC7} no, done in ???                                                                                          \\\cline{2-3} 
+                          & SP-SYS-4.1    & Any structural part of the frame shall not experience plastic deformation under flight conditions & \cellcolor[HTML]{C1FFC1}Yes                             \\\cline{2-4} 
+                        %  & SP-SYS-6      & The drone body should be tolerable to transportation and in-flight vibrations &\cellcolor[HTML]{FFFFC7} No, done in \autoref{ch:finaldesign}                                                  \\\cline{2-3} 
+                        %  & POP-AP-2      & The drone shall be able to achieve a velocity of 20m/s     &\cellcolor[HTML]{FFFFC7}no, done in ???                                                          \\\cline{2-3} 
+                          
+                        %  & AD-AP-1       & The drone shall be able to fly in 6bft wind      &\cellcolor[HTML]{FFFFC7} no,done in ????                                                                               \\\cline{2-3} 
+                          %& AD-AP-2       & The drone shall be able to fly in rainfall up to 10mm/hour & no, done in ??                                                                    \\\cline{2-3} 
+                         % & AD-SYS-6      & The drone shall be operable in a temperature range between 3deg and 40deg   &\cellcolor[HTML]{FFFFC7} no, done in ???                                            \\\cline{2-3} 
+                         % & OP-AP-2.2     & The volume of the drones shall not exceed 0.5m\textasciicircum{}3 &  \cellcolor[HTML]{FFFFC7} no, done in \autoref{ch:finaldesign}                                                        \\\cline{2-3} 
+                         % & OP-AP-6       & The area off the take-off zone shall be at most 1m2 per drone &  \cellcolor[HTML]{FFFFC7} no, done in \autoref{ch:finaldesign}                                                             \\\cline{2-3} 
+                         % & SUS-EO-3      & At least 80\% of drone mass shall be recyclable & \cellcolor[HTML]{FFFFC7} no, done in ???                                                                          \\\cline{2-3} 
+                          & SUS-EO-4      & The drone shall not break down into small parts & \cellcolor[HTML]{C1FFC1}Yes                                                                              \\\hline
+                         % & OP-AP-3       & The drones shall be available in the year 2025& \cellcolor[HTML]{FFFFC7} no, done in ?? \\ \cline{2-3}
+                        %  & SR-AP-6 & Each drone shall have a lifetime of at least a 1000 flight hours &\cellcolor[HTML]{FFFFC7} no, done in ?? \\ \cline{2-3}
+                        %  & COST-AP-1 & The drones shall cost no more than 1000\EUR{} per piece &\cellcolor[HTML]{FFFFC7} no, done in ??\\ \hline
+\end{tabular}%
+
+\end{scriptsize}
+\end{table}

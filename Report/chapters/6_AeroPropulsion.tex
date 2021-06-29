@@ -1,0 +1,458 @@
+\chapter{Aerodynamics and Propulsion Subsystem Design}
+\label{ch:propulsion}
+
+Aerodynamics and propulsion is an important aspect of a drone as it affects other subsystems such as the structure and the power. The functions and the identified risks of this subsystem are discussed in \autoref{sec:propfuncrecap}. \autoref{sec:proplistofrequirements} contains a list of requirements that will drive the design. The methods used for the subsystem design for aerodynamics and propulsion discussed in \autoref{sec:aerocalc} and \autoref{sec:propcalc}, respectively. The results obtained during the iteration process is presented in \autoref{sec:propiteration}. A risk analysis with newly found risks is performed in \autoref{sec:propriskanalysis}. Then, the procedure is verified and validated in \autoref{sec:propverificationandvalidation} and finally a compliance matrix is presented in \autoref{sec:propcompliancematrix}.
+
+% Content:
+% Select motor/propeller
+% Mass and Cost analysis
+% Verification and Validation
+
+% 12 pages: NOTICE EDITORS WHEN YOU ARE GOING OVER OR UNDER THIS LIMIT!
+
+% Deliverables:
+%     -Aerodynamic Characteristics
+%     -Mass & Cost Analysis
+%     -Verification & Validation
+    
+% 
+
+\section{Functional and Risk Overview of Aerodynamics and Propulsion}
+\label{sec:propfuncrecap}
+
+The goal of the propulsion subsystem is to make sure enough thrust is provided for the drone to perform the mission. Because the propulsion system is very intertwined with the aerodynamic performance of the propeller, the decision was made that these parts of the system will be analysed and designed together. The system will be active in all the flying phases of the mission, which were presented in \autoref{ch:functionalanalysis}. These include the take-off, landing and flying phase for both the practice run as well as the show itself. The main functions of the propulsion system are:
+
+\begin{itemize}[noitemsep,nolistsep]
+    \item To provide enough thrust to:
+    \begin{itemize}[noitemsep,nolistsep]
+        \item Reach the maximum speed
+        \item Be able to perform maneuvers during flight with a thrust over weight ratio of at least 3
+        \item Perform the mission in windy and rainy conditions
+
+    \end{itemize}
+    \item To perform the mission without causing too much disturbance due to noise
+    \item To perform the mission without influencing other drones during the flight
+\end{itemize}
+
+These functions are translated into requirements which are presented in \autoref{sec:proplistofrequirements}. The propulsion system can be divided into two parts, which will be designed together as mentioned before. These two parts are:
+\begin{itemize}[noitemsep,nolistsep]
+    \item The propellers
+    \item The motors
+\end{itemize}
+
+\autoref{tab:aeroproprisks} presents the risks identified in the preliminary design phase regarding the aerodynamics of the drone and the propulsion subsystem. It also shows their likelihood and consequence and the mitigation response that should be implemented in the design. Note that the reasoning behind the scores have been explained in the midterm report \cite{midterm}. Some of these risks translated into requirements which will be shown in \autoref{sec:proplistofrequirements}.
+
+\begin{table}[H]
+\centering
+\caption{Risks related to propulsion and aerodynamics}
+\label{tab:aeroproprisks}
+\begin{tabular}{|p{0,55cm}|p{4cm}|p{1,6cm}|p{1,985cm}|p{6cm}|}
+\hline
+\textbf{ID} & \textbf{Risk}                       & \textbf{Likelihood} & \textbf{Consequence} & \textbf{Mitigation response}                                      \\ \hline
+2           & Unpredictable movement due to wind  & High                & Moderate             & Implement safety margin for maximum horizontal speed              \\ \hline
+14          & One motor malfunctioning            & Moderate            & Critical             & Make sure three motors provide enough thrust for safe landing     \\ \hline
+\end{tabular}
+\end{table}
+
+
+
+\section{List of Requirements Aerodynamics and Propulsion}
+\label{sec:proplistofrequirements}
+
+\autoref{tab:aeropropreq} presents the requirements related to the Aerodynamics of the drone and the Propulsion subsystem. On the left column the sub-department they relate to is stated. These requirements will be used as guide to design the subsystems in \autoref{sec:aerocalc} and \autoref{sec:propcalc}. Note that some of these requirements will be verified at subsystem level in \autoref{sec:propverificationandvalidation}, while the rest will only be verified at a system level in \autoref{ch:systemverificationandvalidation}.
+
+\begin{table}[H]
+\centering
+\caption{Requirements related to the propulsion subsystem}
+\label{tab:aeropropreq}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|p{2.5cm}|p{2cm}|p{10cm}|}
+\hline
+\textbf{Sub-department} & \textbf{TAG} & \textbf{Requirement} \\ \hline
+\multirow{7}{*}{Aerodynamics} & AD-AP-1 & The drones shall be able to fly in 6BFT wind conditions. \\ \cline{2-3} & AD-AP-2 & The drones shall be able to fly in rainfall up to 10mm/hour \\ \cline{2-3} & AD-NR-4 & Noise level shall be less than 80decibels at 1 meter from the drone \\ \cline{2-3} & AD-ATC-5 & Operations shall continue up to a height of 1000 m \\ \cline{2-3} & AD-SYS-5.1 & The drone shall be operable in a pressure range between 101325 Pa and 89401 Pa \\ \cline{2-3}   & AD-SYS-8 & The drones shall not affect other drone performance \\ \cline{2-3} & AD-SYS-9 & The drones shall be able to fly in formation at 2m distance from each other \\ \hline
+\multirow{6}{*}{Propulsion} & POP-AP-2 & The drones shall be able to achieve 
+a velocity of 20m/s. \\ \cline{2-3} & POP-SYS-2.2 & The drones shall have a minimum thrust over weight ratio of 3. \\ \cline{2-3} & POP-SYS-4 & Partial failure of the propulsion unit shall not prevent the drone 
+from being able to perform an emergency landing. \\ \cline{2-3} & AD-SYS-6 & The drone shall be operable in a temperature range between 3 deg and 40 deg \\ \cline{2-3} & OP-AP-6 & The area off the take-off zone shall be at most 1m2 per drone \\ \cline{2-3} & SUS-EO-3 & At least 80\% of the drone mass shall be recyclable \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+
+
+\section{Design for Aerodynamics}
+\label{sec:aerocalc}
+% Make subsections for different subjects within subsystem
+
+Aerodynamics is important for any flying object, thus also for a drone. It affects other subsystems such as structures and control, but mainly propulsion as it has considerable influence on the thrust and power required. This section discusses the aerodynamic characteristics, which is focused on the drag coefficient, the propeller spacing, noise generation and the influence of rain.
+
+\subsection{Aerodynamic Characteristics}
+\label{subsec:aerocharact}
+
+It is important for the drone to have an optimal shape in terms of aerodynamic design as it improves its performance. A more aerodynamically shape has a lower drag coefficient which makes it easier to fly at high speeds. This results in less thrust required to meet the maximum velocity required and in turn the power consumption of the propulsion system would decrease as well. It is important to decide on the optimal shape at an early stage because it influences other subsystems as well. For example, the structure of the drone obviously depends on the drone's shape. Besides, the shape is an important factor when it comes to stackability of the drones as well, which affects the operational side. In this section a preliminary analysis will be conducted to see which shape is the most efficient from an aerodynamic point of view. From this a drag coefficient can be obtained, which is used later in the subsystem design of the propulsion system. 
+
+First, some shapes that could be used for the design will be analysed. To do this an estimation of the Reynolds number has to be made, because this influences the drag coefficient. The Reynolds number is determined to be in the order of magnitude of $10^5$ by using \autoref{eq:reynolds}, in the extreme conditions the drone will experience. 
+
+\begin{equation}
+\label{eq:reynolds}
+    Re = \frac{\rho*V*L}{\mu}
+\end{equation}
+
+For this Reynolds number, different shapes can be analysed by comparing the drag coefficients. Then it will be decided upon which shapes will be the most optimal for the design. For the core of the drone, a cube and a sphere will be compared. For the arms, the difference between a square rod and a round cylinder will be analysed. The values for the drag coefficients can be found in \autoref{tab:dragcoefficients} \cite{dragcoefficients}. As can be seen it is beneficial to use round shapes from an aerodynamic perspective. For the core of the drone it will thus be beneficial to have a spherical shape. For the arms it will also be preferred to have a circular shape. This will improve the aerodynamic performance of the drone on all sides. Therefore, a spherical shape will be used for the core of the drone and the arms will take the shape of a round cylinder.   
+
+
+\begin{table}[H]
+\centering
+\caption{Drag coefficients for different shapes}
+\label{tab:dragcoefficients}
+\begin{tabular}{|l|l|}
+\hline
+Re \approx $10^5$ & \textbf{Drag coefficient} \\ \hline
+Cube                       & 1.05                      \\ \hline
+Sphere                     & 0.2                       \\ \hline
+Square rod                 & 2                         \\ \hline
+Round cylinder             & 0.51                      \\ \hline
+\end{tabular}
+\end{table}
+
+Before going into the subsystem design a first estimation for the drag coefficient of the whole drone was made. This was done by then comparing it to the drag coefficient of an existing model. Experiments done by C. Russell et al. show that the DJI Phantom 3, a quadcopter which is around the same size and shape as we expect our drone to become, has a ratio for drag over dynamic pressure of around 0.3 \cite{DJIphantom}. Multiplying this by its cross-sectional area, it turns out that the drag coefficient is approximately 1.21. Comparing this with the drag coefficient of a cube, it is clear that they are both in the same order of magnitude. However, the drag coefficient of the DJI seems to be a more reliable approximation for the drag coefficient of our design. That value will thus be used for the propulsion subsystem design. 
+
+\subsection{Propeller Spacing}
+\label{subsec:propspacing}
+Due to current technology, drones tend to become smaller and smaller which is a good thing considering accessibility for recreational users as it makes the drones easier to use. In terms of aerodynamic efficiency, however, down scaling of drones turns out to be not beneficial at all as it generally means that the space between the propellers becomes smaller. Besides the aerodynamic effect between propellers on the same drone, there can also occur some influence of one drone on the other. These two phenomena will be discussed briefly.
+
+% propellers on one drone
+The influence on aerodynamic efficiency of propeller placed closely together is known to be disadvantageous for its performance. However, it is difficult to quantify the efficiency loss by means of numerical computations. Instead, in order to investigate this, physical experiments would have to be conducted. Unfortunately, experimenting is not possible due to limited resources. Therefore, experiments performed by others will be used to analyse the influence between propellers quantitatively. Research done by D. Shukla et al. shows that there is more interaction between propellers when they are placed close together \cite{wakeinteraction}. Higher wake interaction was observed for propellers that are closer together. \autoref{fig:propspacing} visualises the effect on interaction between propellers depending on the distance between propellers. Besides propeller spacing, the Reynolds number plays a major role on the wake interaction as well. For a constant propeller spacing, it was observed that the aerodynamic efficiency was affected more at a low Reynolds number. From this it can be concluded that larger propeller spacing and operating at higher Reynolds numbers is beneficial in terms of aerodynamic efficiency. This knowledge can be used when placing the propellers on the arms of the drone. From an aerodynamic point of view, it is desired to place the propellers at the tip of the arms, as far away from each other as possible.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{Figures/RotorWake.png}
+    \caption{Visual of wake interaction between propellers depending on the spacing. Small spacing in the right figure, larger spacing in the left figure.}
+    \label{fig:propspacing}
+\end{figure}
+
+% Between two drones
+Because the drones have to perform the show in swarms, the aerodynamic influence between drones has been looked at as well. There has not been conducted a lot of research regarding this, specifically not for drones. A look was taken at how this issue is tackled by other rotorcraft such as helicopters. From the AC 90-23G regulations of the FAA it becomes clear that for helicopters other flying vehicles should stay at least three propeller diameters away to not get influenced by the propeller wake \cite{FAAwake}. Assuming this regulation also holds for drones it can be considered whether the propellers will influence the other drones at a certain distance and for a certain propeller size. The requirements AD-SYS-8 and AD-SYS-9 concern the distance between drones during the show and influence on performance by other drones. These requirements can be achieved by making sure the distance between drones during the show is at least three times its propeller diameter. Preliminary research in the midterm report has shown that the diameter of the propeller will not exceed 40 cm, so in the most extreme case the distance between drones has to be at least 120 cm \cite{midterm}. This is well below the required distance of 2 m for formation flight. For smaller propellers the minimum distance between drones will be even smaller. Therefore, these requirements can be considered achieved.
+
+
+\subsection{Noise}
+\label{subsec:noise}
+During the drone show, the surrounding environment at the location should have as little nuisance as possible. In addition to that, also for the audience of the performance, it will be a far more enjoyable experience when the noise levels are as low as possible, especially for indoor shows. Therefore, a maximum amount of noise generated by one drone of 80 dB is aimed for, see requirement AD-NR-4.
+
+Previous studies have shown that noise of multicopters is primarily generated by aerodynamic noise from the propellers. The amount of noise is related to RPM, which also affects the thrust efficiency. Experiments performed by D. Han et al. show that the noise of propellers in decibel is more or less linearly related to RPM \cite{noiseVSrpm}. The higher the RPM, the higher the noise level. This is caused by the rotational speed at which the propeller blade moves through the air. The faster the movement of the blade, the more friction and turbulence occurs which in turn generates noise \cite{aerodynamicnoise}. Therefore, it is preferred to have lower rotational speed. This can be obtained by selecting the propulsion system that achieves the highest thrust efficiency as thrust efficiency is negatively related to RPM, i.e. the higher the thrust efficiency, the lower the RPM. When designing for the optimal propulsion system in \autoref{ch:propulsion}, thrust efficiency will thus be a determining factor to reduce generation of noise.
+
+In order to quantify the amount of noise of propellers, a previous study will be used as a starting point. Experiments performed by D. Han et al. show that the noise of propellers in decibel is more or less linearly related to RPM \cite{noiseVSrpm}. The propeller used in their experiment has a diameter of 23.9 cm. The noise level is measured for RPM ranging from 2000 to 9000, which increases more or less linearly from 45 to 75 dB depending on the pitch angle. As a consequence, the noise estimation may be slightly less accurate for different pitch angles as a higher pitch angle tends to produce more noise. For these results, a pitch angle of around 20 degrees was used. For the noise estimation of our drone it will be assumed that the pitch angle does not affect the noise level. The results from their experiments can be used to estimate the noise of other propeller types as well. First, RPM can be converted to rotational speed of the tip of the propeller. The tip of a propeller with a diameter of 23.9 cm rotating at 2000 RPM has a rotational velocity of 25 m/s. At 9000 RPM the rotational velocity is 113 m/s. This means the gradient of the linear regression equals 0.341 dB per m/s. It is now possible to plot RPM against noise for different propeller sizes by starting at 2000 RPM and multiplying the velocity with the gradient, see \autoref{fig:RPMvsNoise}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/RPMvsNoise.jpg}
+    \caption{RPM plotted against noise (dB) for different propeller sizes ranging from 8 to 14 inch}
+    \label{fig:RPMvsNoise}
+\end{figure}
+
+Looking at this figure, it is possible to estimate the amount of noise generated by a propeller of a certain size rotating at a certain RPM. For example, a 14 inch propeller produces approximately 85 dB at 5000 RPM. Requirement AD-NR-4 specifies that the noise level may not exceed 80 dB. Using the figure, the maximum RPM for each propeller size can be determined for which this requirement is met. For example, for a 14 inch propeller the maximum RPM would be approximately 4000 in order to generate 80 dB of noise at most. This can be used later when the propeller size is determined and the RPM is calculated for different thrust settings. If the RPM of the chosen propulsion system stays below the value specified using this plot, then the noise requirement has been met. Note that this is the noise generated by only one propeller. When adding a similar source of noise to the one that is already there, the noise level increases by 3 dB \cite{addupnoise}. Thus for four propellers there will be an additional 6 dB of noise compared to the value in the figure.
+
+\subsection{Rainfall}
+\label{sub:rain}
+The drone should be able to perform the show during rainy conditions. Requirement AD-AP-2 states that the drone should be able to fly in rainfall up to 10 mm per hour. To confirm this an estimation was made on how much more thrust the drone should provide in the most extreme conditions. For this first an estimation of the amount of droplets has been made. The requirement of 10 mm/hour can be rewritten as 10*10$^6$ mm$^3$/m$^2$h. It was assumed that the raindrops have a size of 2mm, which is the average size of raindrops \cite{raindropsize}. Together with the assumption that the water drop is a sphere, it becomes clear that a good estimation is around 3*10$^5$ raindrops per m$^2$ per hour. By using the first rough estimation of the full surface area of the drone of 0.05 m$^2$, there will be around three drops of rain per second on the drone. It will be assumed that these drops hit the drone at the same moment. To compute in how much thrust this will result an estimation was made on how much force one drop of rain will cause. For this the formula for impulse of force is used which can be found in \autoref{eq:impulseofforce}. It was found that an average rain drops moves at 9 m/s and weighs around 0.000034 kg \cite{raindropspeed}. Together with the assumption that the stopping time of the rain drop is the time that the drop would move its own dimension of 2mm, a force of around 1.4 N per raindrop is expected to be exerted on the drone. To reach requirement AD-AP-2, in \autoref{sec:propcalc} an extra force of three times 1.4 N, which equals 4.2 N will be added when selecting the propulsion system.
+
+\begin{equation}
+\label{eq:impulseofforce}
+    F_{average} = m*\frac{\Delta V}{\Delta t}
+\end{equation}
+
+The motors are all delivered in a protective foam around all sides, which will make the motors waterproof. The given weight and dimensions of the motors were assumed to be included in the given properties.
+    
+When considering the rainfall, a problem that arose was that due to the fast rotational speed of the propellers the rain droplets could cause damage to the propellers. This problem was recognised to be a risk, which will be analysed in \autoref{sec:propriskanalysis}.   
+
+
+
+
+
+\section{Design for Propulsion}
+\label{sec:propcalc}
+% Make subsections for different subjects within subsystem
+
+The most important parameter for the propulsion system is the required thrust. This is then used to determine the power usage and propeller size which are decisive factors for the power subsystem and the drone structure. During the propulsion design other useful parameters came to light and several assumptions were made in order to complete the process. This will all be discussed in this section along with the method used to design the propulsion system.
+
+\subsection{Thrust}
+\label{subsec:Thrust}
+The two parameters that influence the required thrust of the propulsion system the most are weight and velocity. The requirements related to these parameters are POP-SYS-2.2, POP-SYS-2, AD-AP-1, AD-ATC-5 and AD-SYS-5.1. To meet these requirements the drone has to have a minimum thrust-over-weight ratio (T/W) of 3 and it has to be able to reach a maximum speed of 20 m/s in 6BFT wind conditions. This has to be possible up to a height of 1000 m while enduring the pressure differences. 
+
+A wind condition of 6BFT is equivalent to a maximum of 13.8 m/s wind speed \cite{windscale}. If the drone flies 20 m/s against 6BFT the drone experiences an airflow of 33.8 m/s. Therefore, it can be assumed that the drone can withstand 6BFT wind conditions while moving with 20 m/s if the drone is designed for an absolute maximum speed of 33.8 m/s. This is on the high side when comparing it to the market analysis in \autoref{ch:Marketanalysis}, which will probably result in a less agile drone. This value of 33.8 m/s is used to calculate the minimum thrust required and therefore requirement AD-AP-1 and POP-AP-2 concerning the maximum speed for certain wind conditions will be met. The risk mentioning unpredictable movement due to wind (ID: 2) is hereby mitigated as well as the horizontal velocity of the drone will be high enough to resist wind gusts up to 6BFT.
+
+Forward velocity of a multicopter is highly dependent on the pitch angle. The pitch angle is the angle of the drone with respect to horizontal. Velocity at a certain pitch angle can be calculated using \autoref{eq:forwardvelocity}. The pitch angle can be solved for after substitution of the required velocity. Then the related thrust can be calculated by rewriting \autoref{eq:thetathrust} \cite{Vovasmulticopterdesign}.
+
+\begin{equation}
+\label{eq:forwardvelocity}
+V(\theta) = \sqrt{\frac{2 W \tan \theta}{\rho S\left[C_{\mathrm{D}_{1}}\left(1-\sin ^{3} \theta\right)+C_{\mathrm{D}_{2}}\left(1-\cos ^{3} \theta\right)\right]}}
+\end{equation}
+
+\begin{equation}
+\label{eq:thetathrust}
+\theta =\arccos \frac{W}{n_{\mathrm{r}} T}
+\end{equation}
+
+Here, W is the weight of the complete drone, $\theta$ is the pitch angle, $\rho$ is the air density, S is the cross-sectional area of the front of the drone, the term inside the square brackets is a computation for the drag coefficient and $n_r$ is the number of propellers. The density can be set to 0.9998 which is the most extreme condition of 40 degrees Celsius at an altitude of 1000 m. By doing so, requirements AD-ATC-5, AD-SYS-5.1 and AD-SYS-6 concerning the operational altitude, pressure and temperature are automatically taken care of. For the cross-sectional area it is assumed that the area of the propellers and the motors is negligible compared to the area of the structure. To account for inaccuracies a margin of around 20\% has been added.
+
+Next to the thrust required to reach a velocity of 33.8 m/s, there is also requirement POP-SYS-2.2 to have a T/W of at least 3. Therefore, the thrust that achieves this T/W is computed as well. To make sure the thrust is high enough such that both of these requirements are met, the highest thrust value of these two is used to select the propulsion system. By designing for a thrust-to-weight ratio of at least three, the propulsion system will automatically be able to provide enough thrust for an emergency landing in case one motor fails. Failure of one engine results in 25\% less thrust available which means T/W decreases to 2.25. This would be more than enough thrust to perform a safe emergency landing and therefore requirement POP-SYS-4 can be checked off and the risk concerning failure of one motor (ID: 14) is mitigated as well. Besides engine failure, a propeller can break during flight as well. This will be added to the risk analysis in \autoref{sec:propriskanalysis}.
+
+\subsection{Propulsion System Selection}
+\label{subsec:propselection}
+The propulsion system is a combination of the motors and propellers. A database was made containing different motors that all have multiple suitable propellers resulting in unique performance characteristics. While collecting data for the database, the motors having too much thrust (more than 2 kg per motor) and propellers bigger than 40 cm were already filtered out as explained in the midterm report \cite{midterm}. This means even more data has been considered in the process of creating the database. By only selecting propellers smaller than 40 cm, requirement OP-AP-6 concerning the maximum take-off area of 1 m$^2$ is taken care of from the propulsion side of things. This requirement will also be analysed in subsequent chapters and it will be confirmed whether this requirement is met for the whole drone in \autoref{ch:systemverificationandvalidation}. In the end, the database contained over 60 different motors which resulted in almost 500 combinations to select from. For each option the following parameters were known: propeller size and pitch, maximum thrust together with the RPM, thrust efficiency, input voltage, ampere and power and the mass and cost of both the motor and the propeller \cite{propdatabase1} \cite{propdatabase2} \cite{propdatabase3} \cite{propdatabase4}.
+
+Selection of the most optimal motor and propeller combination was based on the required thrust obtained in \autoref{subsec:Thrust} and on thrust efficiency. First a range of thrust values was determined by adding 5\% to the required thrust, which was determined to be an acceptable margin without over-designing too much. From this range the motor and propeller combination having the highest thrust efficiency was chosen for the final design. The reason for selecting the propulsion system based on thrust efficiency instead of other parameters such as propeller size or RPM is that the efficiency of the propulsion system is indirectly driving the battery size of the drone. The more efficient the propulsion system, the lower the power consumption and therefore a smaller battery is required. This turned out to be a very important factor of the design which is why thrust efficiency is deemed more important than other parameters. Of course the size of the propellers is important as well, mainly for transportation. Big propellers bring risks because they are more likely to break, which will be added to the risk analysis is \autoref{sec:propriskanalysis}.
+
+\subsection{Power Consumption}
+\label{subsec:powerreq}
+The power consumption of the propulsion system is an important factor for the size of the battery. Therefore, the required power under different circumstances is computed. The varying parameters are velocity and wind speed which can be combined into one parameter; absolute speed. The circumstances considered are as follows: 
+
+\begin{itemize}[noitemsep,nolistsep]
+    \item Hovering without wind
+    \item Hovering with 6BFT wind
+    \item Flying at maximum speed without wind
+    \item Flying at maximum speed with 6BFT tailwind
+    \item Flying at maximum speed with 6BFT headwind
+\end{itemize}
+
+First, the power input was plotted against thrust for the selected propulsion system and a regression line was drawn through the data points. Then, for all flight circumstances listed before the required thrust was calculated using the method explained in \autoref{subsec:Thrust}. Finally, the different power values were obtained by using the required thrust as input. In \autoref{fig:powerconsumption} the power is plotted against velocity for the final iteration.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Figures/Powerconsumption.png}
+    \caption{Power consumption of drone with heavy or light payload for different flight speeds}
+    \label{fig:powerconsumption}
+\end{figure}
+
+\subsection{Recyclability}
+\label{sub:recyclability}
+
+It is also important to consider the recyclability of the propulsion subsystem, which improves the sustainability of the design. Requirement SUS-EO-3 is focused on this fact. This requirement will also be analysed for the other subsystems and in \autoref{ch:systemverificationandvalidation} there will be checked whether the requirement is reached for the whole drone. The propulsion design is split into the propellers and the motor. The expectation was that the propeller would turn out to be plastic. These propellers are the cheapest while, still having a good performance. They are also very sustainable, because they can be recycled really well. The other option would be that the propellers would turn out to be made of carbon-fibre. These propellers are far more expensive and less good for the recyclability. The recycling of carbon fibre is upcoming. Because carbon fiber is more and more used in the aerospace and automotive industries, also the recycling of carbon fiber is more and more common and efficient. For example Airbus has set the target of recycling 95\% of its carbon fiber used in 2025 \cite{carbonfiberrecycle}. So even if the propellers turned out to be carbon fiber the propellers will be fairly recyclable.
+
+The brushless motor is also recyclable, because it basically only consists of metal parts. In the small brushless motor there is not as much expensive material, such as copper and aluminium, as in bigger electric motors. This does not result in very profitable recycling, but because the casing is also made of metal the whole motor can be recycled. This is always better than throwing valuable material away and adds to the sustainability of the entire drone design. Specialised companies in recycling electric motor exist, which also makes the recycling easier for the customer \cite{motorrecycle}.  
+
+\section{Iterations for Propulsion Design}
+\label{sec:propiteration}
+
+Six iterations were performed to get to the final design of the propulsion system. The most important parameters that changed during the iteration process are presented in \autoref{tab:propiterationuno} and \autoref{tab:propiterationdeux}.
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[H]
+\centering
+\caption{Iteration table 1 of the propulsion system design}
+\label{tab:propiterationuno}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{Iteration} & \textbf{Drone mass [kg]} & \textbf{Surface area [m$^2$]} & \textbf{Thrust req [g]} & \textbf{Motor type}            & \textbf{Propeller type} & \textbf{Thrust eff. [g/W]} \\ \hline
+1                  & 2.00                     & 0.025                       & 6000                    & T-Motor Navigator MN3510 630KV & T-Motor 13x4.4       & 7.24                      \\ \hline
+2                  & 2.25                     & 0.025                       & 6750                    & T-Motor Navigator MN3510 360KV & T-Motor 14x4.8       & 7.22                      \\ \hline
+3                  & 2.25                     & 0.031                       & 6750                    & T-Motor Navigator MN3510 360KV & T-Motor 14x4.8       & 7.22                      \\ \hline
+4                  & 2.19                     & 0.020                       & 6570                    & Cobra CM-4006/36               & Gemfan 12x4.5-ABS           & 6.02                      \\ \hline
+5                  & 2.11                     & 0.018                       & 6330                    & Cobra CM-4006/36               & Gemfan 12x4.5-ABS           & 6.02                      \\ \hline
+Final              & 2.11                     & 0.014                       & 6330                    & Cobra CM-4006/36               & Gemfan 12x4.5-ABS           & 6.02                      \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+
+
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[H]
+\centering
+\caption{Iteration table 2 of the propulsion system design}
+\label{tab:propiterationdeux}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{Iteration} & \textbf{Power req Vmax [W]} & \textbf{Noise [dB]} & \textbf{Motor mass [g]} & \textbf{Propeller mass [g]} & \textbf{Motor price [EU]} & \textbf{Propeller price [EU]} \\ \hline
+1                  & 536                          & 88.4                & 97                      & 14.2                        & 75                        & 17.39                         \\ \hline
+2                  & 290                          & 79.4                & 97                      & 19.2                        & 64                        & 25.07                         \\ \hline
+3                  & 342                          & 82.0                & 97                      & 19.2                        & 64                        & 25.07                         \\ \hline
+4                  & 272                          & 66.7                & 93                      & 10.0                        & 46                        & 4.36                          \\ \hline
+5                  & 251                          & 66.1                & 93                      & 10.0                        & 46                        & 4.36                          \\ \hline
+Final              & 234                          & 65.6                & 93                      & 10.0                        & 46                        & 4.36                          \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+
+\section{Risk Analysis Aerodynamics and Propulsion}
+\label{sec:propriskanalysis}
+
+New risk have been detected during the design phase which are presented in \autoref{tab:newriskspropulsion} together with their likelihood and consequences. The risk mitigation response for every risk is stated in \autoref{tab:newriskspropulsionmitigation}. The risks for the propulsion system are mainly concerning damage or complete failure of the propellers. They could break upon collision during flight of while transporting the drones. There is also the possibility of getting damaged during extreme weather conditions by raindrops.
+
+\begin{table}[H]
+\centering
+\caption{Aerodynamics and propulsion related risks that were discovered in the detailed design.}
+\label{tab:newriskspropulsion}
+\begin{scriptsize}
+\begin{tabular}{|p{0.4cm}|p{3cm}|p{0.4cm}|p{4.5cm}|p{0.4cm}|p{4.5cm}|}
+\hline
+\textbf{ID} & \textbf{Risk} & \textbf{LS} & \textbf{Reason for likelihood} & \textbf{CS} & \textbf{Reason for Consequence} \\ 
+\hline
+34 & Propeller breaking during flight & 1 & Chances of collision are very low & 4 & If a propeller breaks the drone will not be able to continue its choreography, but there will be enough thrust left for an emergency landing \\ \hline
+35 & Propeller breaking during transport & 4 & Because there are a lot of propellers the likelihood is high that one propeller breaks during the transportation phase & 2 & Propellers can be changed before operating, so it does not endanger the show \\ \hline
+36 & Damage to propeller due to rain & 2 & The force of raindrops is very small & 3 & Damaging during the show will affect the performance. However, the show can still continue and propellers can be changed afterwards \\ \hline
+\end{tabular}
+\end{scriptsize}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Aerodynamics and propulsion related risks that were discovered in the detailed design.}
+\label{tab:newriskspropulsionmitigation}
+\begin{scriptsize}
+\begin{tabular}{|p{0.4cm}|p{3cm}|p{9.2cm}|p{0.4cm}|p{0.4cm}|} 
+\hline
+\textbf{ID} & \textbf{Risk} & \textbf{Mitigation Response} & \textbf{LS} & \textbf{CS} \\ \hline
+34 & Propeller breaking during flight & It is difficult to lower the likelihood of collisions, but the consequence score can be reduced by designing the propulsion system such that the drone is able to fly with only three propellers operative & 1 & 3 \\ \hline
+35 & Propeller breaking during transport & The likelihood of propellers breaking during transport can be reduced by using safe boxes. The consequence of a propeller breaking will always be replacement. & 3 & 2 \\ \hline
+36 & Damage to propeller due to rain & The likelihood of damage due to rain can be reduced by selecting a strong material. As a consequence a damaged propeller always have to be replaced. & 1 & 3 \\ \hline
+\end{tabular}
+\end{scriptsize}
+\end{table}
+
+Risk 34 concerning propellers breaking due to a collision can not be prevented easily. A collision, however, is not very likely to occur anyway, so it will not form a major problem. In order to reduce the consequence of the risk, the drone has to be able to fly with only three motors operating. This is already incorporated in the design as the drone has been for a T/W ratio of at least three, see \autoref{subsec:Thrust}. 
+
+A propeller breaking during transport is more likely to happen, which is risk 35. When it happens, the consequence will always be to replace the propeller completely. This is not considered a big problem, since the cost to replace a propellers is minimal. In order to reduce the likelihood of it happening the propellers can be protected, for example by wrapping it in foam. This will be further discussed in \autoref{ch:operations}.
+
+For risk number 36 an estimation can be made to confirm whether the propeller will be damaged when flying through rain. The chosen propeller is made of carbon fibre, which is a really brittle material.  This means that if the propeller is getting noticeably damaged, it is very probable that it will break. Therefore the ultimate tensile strength will be used, because carbon fibre will not permanently deform before that. A calculation will be done to see if the propeller will break during the rainfall requirement. For this again a few assumptions have been made. The propeller is modeled as a beam clamped on one end, Then it is assumed that the raindrop falls on the tip of the propeller, because the rotational speed of the propeller is the highest there and the bending moment will be the largest. It is then analysed whether the bending force of three different raindrops, which was determined in \autoref{sub:rain}, stays underneath the maximum tensile stress of carbon fibre. The force was determined by adding the speed of the raindrop and the speed of the propeller and then assuming the raindrop is brought to standstill in the time it covers its own diameter as distance. This force is then converted into the moment by multiplying it with the propeller radius. Then the maximum stress could be determined by using \autoref{eq:sigma}. It turned out that the maximum stress was 4.7*10$^8$. The maximum tensile strength of carbon fibre is 3.5*10$^9$. This means that as expected the raindrops will not generate enough force to break the carbon fibre. The propeller will thus not get damaged during rainfall and this risk has been mitigated by picking a carbon fiber propeller. 
+ 
+\begin{equation}
+\label{eq:sigma}
+    \sigma_{max} = \frac{M*c}{I}
+\end{equation}
+
+
+\section{Verification and Validation Aerodynamics and  Propulsion}
+\label{sec:propverificationandvalidation}
+
+To confirm all the conclusions made in the previous sections the tools which were made, have been verified and validated. This is done first by verifying the code of the tools, then by verifying the calculations of the tools and in the end by validating the tools.
+
+\subsection{Code Verification of Tools}
+\label{sub:codeverifciationprop}
+Unit tests are applied to verify the tools used during the subsystem design. Three tools were made: one for noise calculations, one for rain calculations and one for calculations related to the propulsion system. Code verification was done on these tools separately by means of unit tests, which can be found in \autoref{tab:noiseverification}, \autoref{tab:rainverification} and \autoref{tab:propverification}. Each test has been assigned a tag where VT stands for ’Verification’, AE for ’Aerodynamics’, PROP for 'Propulsion' and U for ’Unit test’.
+
+% Stuff to verify:
+% - Drag coefficient of the phantom
+% - Noise computations
+% - Rainfall computations
+
+% - Thrust
+% - Velocity
+% - Pitch Angle
+% - Power
+
+\todo[]{Maybe the three tables can be combined into one to safe space? Since all have the same columns}
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[H]
+\centering
+\caption{Unit verification tests for noise}
+\label{tab:noiseverification}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+\textbf{TAG} & \textbf{Output to test} & \textbf{Input to vary} & \textbf{Test}                         & \textbf{Outcome}                                                                                     & \textbf{V?} \\ \hline
+VT-AE-U.1    & V                       & RPM                    & Double RPM, expect V to double        & \begin{tabular}[c]{@{}l@{}}RPM = 2000 gives V = 25 m/s, \\ RPM = 4000 gives V = 50 m/s\end{tabular}  & \cellcolor[HTML]{C1FFC1}Yes         \\ \hline
+VT-AE-U.2    & V                       & Diameter               & Double diameter, expect V to double   & \begin{tabular}[c]{@{}l@{}}D = 9 inch gives V = 24 m/s, \\ D = 18 inch gives V = 48 m/s\end{tabular} & \cellcolor[HTML]{C1FFC1}Yes         \\ \hline
+VT-AE-U.3    & dB                      & RPM                    & Set RPM to zero, expect dB to be zero & RPM = 0 gives dB = 0                                                                                 & \cellcolor[HTML]{C1FFC1}Yes         \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+
+
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[H]
+\centering
+\caption{Unit verification tests for rain}
+\label{tab:rainverification}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|p{6cm}|l|l|}
+\hline
+\textbf{TAG} & \textbf{Output to test} & \textbf{Input to vary}        & \textbf{Test}                                                           & \textbf{Outcome}                                                                                                               & \textbf{V?} \\ \hline
+VT-AE-U.4    & Sigma_{max}               & No. of raindrops on propeller & Double the raindrops, expect the stress to also double                  & \begin{tabular}[c]{@{}l@{}}N_{drops} = 1.5 gives sigma =  4.7*10^8, \\ N_{drops} = 3 gives sigma = 9.4*10^8\end{tabular}           & \cellcolor[HTML]{C1FFC1}Yes         \\ \hline
+VT-AE-U.5    & Sigma_{max}               & Propeller width               & Double the propeller width, expect the stress to decrease to become 1/4 & \begin{tabular}[c]{@{}l@{}}w_{prop} = 0.03048 gives sigma = 4.7*10^8, \\ w_{prop} = 0.06096 gives sigma = 1.18*10^8\end{tabular}   & \cellcolor[HTML]{C1FFC1}Yes         \\ \hline
+VT-AE-U.6    & Sigma_{max}               & Propeller thickness           & Double the propeller thickness, expect the stress to halve              & \begin{tabular}[c]{@{}l@{}}t_{prop} = 0.0009144 gives sigma = 4.7*10^8, \\ t_{prop} = 0.001828 gives sigma= 2.35*10^8\end{tabular} & \cellcolor[HTML]{C1FFC1}Yes         \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[H]
+\centering
+\caption{Unit verification tests for the propulsion system}
+\label{tab:propverification}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|p{6cm}|l|l|}
+\hline
+\textbf{TAG} & \textbf{Output to test} & \textbf{Input to vary} & \textbf{Test}                                                                      & \textbf{Outcome}                                                                                                                & \textbf{V?} \\ \hline
+VT-PROP-U.1  & V                       & W                      & Double W, expect V to scale with sqrt(2)                                           & \begin{tabular}[c]{@{}l@{}}W = 2 kg gives V = 32.91 m/s, \\ W  = 4 kg gives V = 46.54 m/s\end{tabular}                          & \cellcolor[HTML]{C1FFC1}Yes         \\ \hline
+VT-PROP-U.2  & Theta                   & W                      & Increase W to infinity, expect theta to converge to zero                           & \begin{tabular}[c]{@{}l@{}}W = 100000 kg gives theta = 1.015E-05 rad, \\ W = 500000 kg gives theta = 2.092E-06 rad\end{tabular} & \cellcolor[HTML]{C1FFC1}Yes         \\ \hline
+VT-PROP-U.3  & T                       & W                      & For a high W, theta approaches zero such that T per propeller is exactly 25\% of W & \begin{tabular}[c]{@{}l@{}}W = 100000 kg gives T = 25000 kg, \\ W = 200000 kg gives T = 50000 kg\end{tabular}                   & \cellcolor[HTML]{C1FFC1}Yes         \\ \hline
+VT-PROP-U.4  & T                       & Theta                  & T is expected to stay constant when adding 2pi to theta                            & \begin{tabular}[c]{@{}l@{}}Theta = 0.1 gives T = 0.53 kg,   \\ Theta = 0.1+2pi gives T = 0.53 kg\end{tabular}                   & \cellcolor[HTML]{C1FFC1}Yes         \\ \hline
+VT-PROP-U.5  & P                       & W                      & Let W approach zero, expect P to converge to zero                                  & \begin{tabular}[c]{@{}l@{}}W = 1 kg gives P = 119 W, \\ W = 0.001 kg gives P = 0 W\end{tabular}                                 & \cellcolor[HTML]{C1FFC1}Yes         \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Calculation Verification of Tools}
+\label{sub:calverprop}
+
+To verify if the results of the calculations make sense, they were compared to an external tool. The tool that was used for the comparison is a flight evaluation tool based on the paper "Introduction to Multicopter Design and Control" \cite{Vovasmulticopterdesign}. A drone which has similar requirements is put into this tool and then compared to the results obtained in \autoref{sec:propiteration}. Because of all the assumptions made in the tool that was made, the margin for the difference between the external tool is set to be 20\%. In \autoref{tab:calcverfprop} it can be seen that every property falls within that 20\% so the calculations can be assumed to be verified. 
+
+\begin{table}[h]
+\centering
+\caption{Calculation verification of the tools}
+\label{tab:calcverfprop}
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+\textbf{Output   to validate} & \textbf{Value} & \textbf{External value} & \textbf{Error} & \textbf{Margin accepted} & \textbf{V?}                 \\ \hline
+V {[}m/s{]}                   & 33.3           & 26.9                    & -19.2\%        & 20\%                     & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+Max RPM {[}-{]}               & 7643           & 6700                    & -12.3\%        & 20\%                     & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+Power required Vmax {[}W{]}   & 234            & 191.2                   & -18.3\%        & 20\%                     & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Validation of tools}
+
+Method validation can be used to judge the quality of the analytical results. Unfortunately, this is difficult to to do because of the unique characteristics of the design. Besides, physical experiments will not be possible because the drone will not actually be built. Therefore, only a validation procedure will be discussed in case the drone would have been built or will be built in the future. Once the drone is built, the surface area can be measured accurately. Then the drone can be attached to a device that measures the force applied by the propellers. This setup can be placed in a wind tunnel to simulate different wind conditions. While performing this experiment, the current flowing to the motors can be measured at any point in time. Finally, to compute the power required this current can be multiplied by the voltage. The results of this experiment can be compared to the analytical outcomes which completes the validation procedure.
+
+\section{Compliance Matrix Aerodynamics and Propulsion}
+\label{sec:propcompliancematrix}
+
+Now that all the characteristics of the aerodynamics and propulsion subsystem of the drone are known, it can be checked if these meet the requirements set in the beginning of the chapter. For this a compliance matrix is setup which can be found in \autoref{tab:complianceaeroprop}. From this table it can be seen that every requirement is met. Requirements OP-AP-6 and SUS-EO-3 will be further analysed in subsequent chapter and in \autoref{ch:systemverificationandvalidation} there will be confirmed whether these requirements are met for the entire drone. 
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[H]
+\centering
+\caption{Compliance matrix for the aerodynamics and propulsion subsystem}
+\label{tab:complianceaeroprop}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|p{12cm}|c|}
+\hline
+\textbf{TAG} & \textbf{Requirement}                                                                                                & \textbf{Compliance} \\ \hline
+AD-AP-1      & The drones shall be able to fly in 6BFT wind conditions.                                                            & \cellcolor[HTML]{C1FFC1}Yes                 \\ \hline
+AD-AP-2      & The drones shall be able to fly in rainfall up to 10mm/hour                                                         & \cellcolor[HTML]{C1FFC1}Yes                 \\ \hline
+AD-NR-4      & Noise level shall be less than 80decibels at 1 meter from the drone                                                 & \cellcolor[HTML]{C1FFC1}Yes, 65.6 dB                 \\ \hline
+AD-ATC-5     & Operations shall continue up to a height of 1000 m                                                                  & \cellcolor[HTML]{C1FFC1}Yes                 \\ \hline
+AD-SYS-5.1   & The drone shall be operable in a pressure range between 101325 Pa and 89401 Pa                                      & \cellcolor[HTML]{C1FFC1}Yes                 \\ \hline
+AD-SYS-6     & The drone shall be operable in a temperature range between 3 deg and 40 deg                                         & \cellcolor[HTML]{C1FFC1}Yes                 \\ \hline
+AD-SYS-8     & The drones shall not affect other drone performance                                                                 & \cellcolor[HTML]{C1FFC1}Yes                 \\ \hline
+AD-SYS-9     & The drones shall be able to fly in formation at 2m distance from each other                                         & \cellcolor[HTML]{C1FFC1}Yes                 \\ \hline
+POP-AP-2     & The drones shall be able to achieve a velocity of 20m/s.                                                            & \cellcolor[HTML]{C1FFC1}Yes, 33.8 m/s                 \\ \hline
+POP-SYS-2.2  & The drones shall have a minimum thrust over weight ratio of 3.                                                      & \cellcolor[HTML]{C1FFC1}Yes, 3                 \\ \hline
+POP-SYS-4    & Partial failure of the propulsion unit shall not prevent the drone from being able to perform an emergency landing. & \cellcolor[HTML]{C1FFC1}Yes                 \\ \hline
+\end{tabular}%
+}
+\end{table}

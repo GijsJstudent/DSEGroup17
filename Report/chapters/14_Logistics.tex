@@ -1,0 +1,320 @@
+\chapter{Logistics and Safety}
+\label{ch:logistics}
+
+% Can I have 8?
+% 3 pages: NOTICE EDITORS WHEN YOU ARE GOING OVER OR UNDER THIS LIMIT!
+This chapter presents the logistics and safety analysis of the droneshow. \autoref{sec:logisticsreq} presents the requirements that influence the logistics and operations of droneshows.\autoref{sec:logisticssim} presents a logistics analysis of droneshows focusing on the deployment of drones on their landing pads. \autoref{sec:logdiagram} presents an overview of the logistics and operations of droneshows and \autoref{sec:safetyregulations} presents an overview of the safety measures needed for the different aspects of the operations.
+
+\section{Logistics and Operations Requirements} \label{sec:logisticsreq}
+
+In the drone show market it is key that a design is easy to operate which simplifies the logistics of the shows. \autoref{tab:logisticsrequirements} presents the requirements related to logistics that the design must fulfill.
+
+\begin{table}[H]
+\centering
+\caption{Requirements related to logistics}
+\label{tab:logisticsrequirements}
+\begin{small}
+\begin{tabular}{|p{1.5cm}|p{13cm}|}
+\hline
+ \textbf{TAG} & \textbf{Requirement} \\ \hline
+ OP-AP-1 & An employee who has followed a one-day training should be able to replace parts of a drone. \\ \hline
+ OP-AP-4 & The drones shall be operated from a central location. \\ \hline 
+ OP-AP-5 & The drones shall be controlled by a ground station. \\ \hline 
+  OP-AP-6 & The area off the take-off zone shall be at most 1m$^2$ per drone. \\ \hline
+  OP-AP-7 & The minimum amount of drones in one show shall be 300 for outdoor shows. \\ \hline
+  OP-AP-8 & The minimum amount of drones in one show shall be 20 for indoor  shows, where ’indoors’ means venues such as concert halls or stadiums. \\ \hline
+  CCE-AP-2 & The show location shall be at most 1000m apart from the ground station \\ \hline
+ \end{tabular}
+ \end{small}
+ 
+\end{table}
+
+Requirements OP-AP-4 and OP-AP-5, from a logistics perspective,  state that a ground station must be deployed on location and close to the grid of drones. From here, the drones are controlled, therefore it includes equipment such as computers and antennas, and it's where the pilots will work from. The maximum distance between the ground station and the drones is 1000m (requirement CCE-AP-2), so that poses a logistical limit to the location of the ground station with respect to the drone grid.
+
+% Many different scenarios could happen during drone shows, this section will analyse three representative ones:
+% \begin{enumerate}
+%     \item Outdoors show with 100 drones, no pyrotechnique loads which is the current average size of AP drones. 
+%     \item Outdoors show with 300 drones, of which 20 carry pyrotechnic payloads and the rest light payloads
+%     \item Outdoors show with 500 drones, of which 
+%     \item Indoors show with 20 drones with light payloads
+% \end{enumerate}
+
+\section{Deployment of Drones Time Estimation} \label{sec:logisticssim}
+
+As presented in \autoref{ch:operations}, six drones drone can be stacked in carrying structures with a total weight of 12.46kg and a height of 85.5cm, which can be safely carried by one worker by hand. This hand-carrying method will be assumed to simulate the logistics of a drone show, since it can be used in any terrain and it is a common method used in some current drone show companies as mentioned in \autoref{ch:Marketanalysis}. However, note that more efficient carrying methods such as carts with wheels or vehicles could be used.
+
+\textbf{Outdoor Show Deployment}
+
+The simulation focuses on the time required to deploy the drones on a field. Other actions such as the calibration of drones or deployment of ground station can be found in the logistics diagram in \autoref{sec:logdiagram}. The drone deployment time is dependant on many factors, such as the amount and type of drones, the number of drones per stack, the amount of workers that can deploy the drones simultaneously and the distance between the drones in the field. The following assumptions have been made to give an estimation of the time needed to deploy the drones on a grid:
+
+\begin{itemize} [noitemsep, nolistsep]
+    \item Drones are placed in a rectangular grid with a spacing of 2m. Since their maximum take-off area by requirement OP-AP-6 is 1$m^2$. It takes 30s to walk between landing pads.
+    
+    \item The stacks of drones transported to the event are initially located at the ground station, which is at one of the corners of the rectangular grid. On average, for each stack, the worker will walk to the middle of the field and come back.
+    
+    \item The size (rows x columns) of the grid is assumed to be optimal, which gives the minimum average walking time for the workers. The workers can walk at a constant speed of 5km/h \cite{walkspeed}.
+
+    % \item The location of the deployment of the first and last drone of a stack are the same. 
+
+    \item Deploying the light payload (lights or megaphone) drones takes 3min at the landing pad. This consists of:
+    \begin{itemize}[noitemsep,nolistsep]
+        \item Taking the drone out of the carrying structure
+        \item Opening the case, inserting the battery and closing the case
+        \item Checking payload is correctly connected
+        \item Powering on the drone \footnote{This step will depend on the size of the show and time needed for calibration procedures. It might be that to save battery the drones will only be powered up once the entire grid is deployed.}
+    \end{itemize}
+    \item Drones with heavy payload (pyrotechnics or future payload) need to be prepared at the ground station and walked one by one to their location. The preparation is assumed to take 10min per drone. These drones are placed last on the grid. Note that in \autoref{sec:safetyregulations} it is recommended that pyrotechnic drones are located in a safe area of the grid, so this estimation assumes that these drones are placed on the grid as far as possible from the ground station.
+
+    \item For each 5 hours of work, each worker gets a break of 30min \cite{waterbreaks}. In addition, weather conditions are assumed to be favorable, which doesn't require any extra safety measures. Refer to \autoref{sec:safetyregulations} for some considerations on raining conditions.
+    
+    \item Note that the model assumes that first light payloads are places and then the pyrotechnic or future payload ones. In reality with enough workers some activities can run in parallel making the process more efficient. 
+\end{itemize}
+
+\autoref{tab:estimatetime} presents the time estimations (in hours) that the crew of Anymotion Productions, which usually consists of 4 workers\footnote{Personal communication with N. Cornelissen (Creative Manager at Anymotion Productions),  11/06/2021. \label{APemailJune}}, would take in order to deploy different amounts of drones with different percentage of pyrotechnic payload drones. 
+
+These quantities go from 100 drones (typical Anymotion Production size \footref{APemailJune}) to 3052 drones, which would beat the current Guinness World Record \cite{worldrecords}. In addition, note 300 drones is the minimum number of drones in an outdoors show by requirement OP-AP-7 and 303 pyrotechnic drones is the current Guinness World Record for a fully pyrotechnic drone show \cite{guinnesspyro}. Therefore, any drone show with more than 303 pyrotechnic drones or more than 3052 drones in total would beat a Guinness World record, this is indicated in blue.
+
+Currently Anymotion Productions takes about 2 hours to deploy 100 drones with 4 people. Then, they need about 6 hours to perform calibration tests before starting the show \footref{APemailJune}. Therefore it's important that the deployment of the drones on their landing pads gets done as quickly as possible. In \autoref{tab:estimatetime}, green indicates the deployment times below 3 hours. Note that with the carrying structures Anymotion Productions could deploy the drones in 1.7 hours, quicker than their current method. Yellow shows the timings lower than 4 hours are indicated which could potentially be archived with the four-worker crew with some logistics adjustments.
+
+\begin{table}[h]
+\centering
+\caption{Estimated time (in hours) of deployment of drones on grid for a crew of 4 workers for different amount and types of drones showing the optimized grid size and maximum distance from ground station}
+\label{tab:estimatetime}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllllllll}
+\hline
+\multicolumn{1}{|l|}{} & \multicolumn{8}{c|}{\textbf{Total number of drones}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Pyrotechnique drones}} & \multicolumn{1}{l|}{\textbf{100}} & \multicolumn{1}{l|}{\textbf{150}} & \multicolumn{1}{l|}{\textbf{200}} & \multicolumn{1}{l|}{\textbf{300}} & \multicolumn{1}{l|}{\textbf{500}} & \multicolumn{1}{l|}{\textbf{1000}} & \multicolumn{1}{l|}{\textbf{2000}} & \multicolumn{1}{l|}{\textbf{3052.00}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{0\%}} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}1.71} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}2.53} & \multicolumn{1}{l|}{\cellcolor[HTML]{FFF2CC}3.45} & \multicolumn{1}{l|}{5.11} & \multicolumn{1}{l|}{8.68} & \multicolumn{1}{l|}{17.6} & \multicolumn{1}{l|}{36.17} & \multicolumn{1}{l|}{\cellcolor[HTML]{D9E1F2}56.29} \\ \hline
+\multicolumn{1}{|l|}{\textbf{25\%}} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}2.56} & \multicolumn{1}{l|}{\cellcolor[HTML]{FFF2CC}3.87} & \multicolumn{1}{l|}{5.15} & \multicolumn{1}{l|}{7.98} & \multicolumn{1}{l|}{13.88} & \multicolumn{1}{l|}{30.64} & \multicolumn{1}{l|}{\cellcolor[HTML]{D9E1F2}72.9} & \multicolumn{1}{l|}{\cellcolor[HTML]{D9E1F2}129.7} \\ \hline
+\multicolumn{1}{|l|}{\textbf{50\%}} & \multicolumn{1}{l|}{\cellcolor[HTML]{FFF2CC}3.41} & \multicolumn{1}{l|}{5.16} & \multicolumn{1}{l|}{6.96} & \multicolumn{1}{l|}{10.74} & \multicolumn{1}{l|}{19.07} & \multicolumn{1}{l|}{\cellcolor[HTML]{D9E1F2}43.77} & \multicolumn{1}{l|}{\cellcolor[HTML]{D9E1F2}109.75} & \multicolumn{1}{l|}{\cellcolor[HTML]{D9E1F2}203.12} \\ \hline
+\multicolumn{1}{|l|}{\textbf{75\%}} & \multicolumn{1}{l|}{4.26} & \multicolumn{1}{l|}{6.5} & \multicolumn{1}{l|}{8.77} & \multicolumn{1}{l|}{13.6} & \multicolumn{1}{l|}{\cellcolor[HTML]{D9E1F2}24.27} & \multicolumn{1}{l|}{\cellcolor[HTML]{D9E1F2}56.81} & \multicolumn{1}{l|}{\cellcolor[HTML]{D9E1F2}146.59} & \multicolumn{1}{l|}{\cellcolor[HTML]{D9E1F2}276.53} \\ \hline
+\multicolumn{1}{|l|}{\textbf{100\%}} & \multicolumn{1}{l|}{5.02} & \multicolumn{1}{l|}{7.69} & \multicolumn{1}{l|}{10.47} & \multicolumn{1}{l|}{16.36} & \multicolumn{1}{l|}{\cellcolor[HTML]{D9E1F2}29.46} & \multicolumn{1}{l|}{\cellcolor[HTML]{D9E1F2}69.84} & \multicolumn{1}{l|}{\cellcolor[HTML]{D9E1F2}183.33} & \multicolumn{1}{l|}{\cellcolor[HTML]{D9E1F2}349.84} \\ \hline
+\textbf{} &  &  &  &  &  &  &  &  \\ \hline
+\multicolumn{1}{|l|}{\textbf{Grid with 2m spacing}} & \multicolumn{1}{l|}{10x10} & \multicolumn{1}{l|}{10x15} & \multicolumn{1}{l|}{20x10} & \multicolumn{1}{l|}{20x15} & \multicolumn{1}{l|}{20x25} & \multicolumn{1}{l|}{32x32} & \multicolumn{1}{l|}{50x40} & \multicolumn{1}{l|}{56x55} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Max distance to ground station}} & \multicolumn{1}{l|}{33.936} & \multicolumn{1}{l|}{43.272} & \multicolumn{1}{l|}{53.664} & \multicolumn{1}{l|}{60} & \multicolumn{1}{l|}{76.8} & \multicolumn{1}{l|}{129.24} & \multicolumn{1}{l|}{153.6} & \multicolumn{1}{l|}{187.56} \\ \hline
+\textbf{} &  &  &  &  &  &  &  &  \\ \hline
+\multicolumn{1}{|l|}{\textbf{Legend}} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}} & \multicolumn{1}{l|}{Less 3hrs} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{\cellcolor[HTML]{FFF2CC}} & \multicolumn{1}{l|}{Less 4hr} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{\cellcolor[HTML]{D6DCE4}} & \multicolumn{1}{l|}{Record} \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+On \autoref{tab:estimatetime}, below the time estimates, the optimal grid size is shown as well as the maximum distance between the drones and the ground station (which has been computed with a 20\% safety margin due to the assumptions of the model). It can be noted how this ground distance is well below the 1000m requirement (CCE-AP-2), so, at least on the ground, the requirement can be met. 
+
+However, it is clear from \autoref{tab:estimatetime} that even with the carrying structures most types of shows are not logistically possible with a working crew of 4 people. Therefore, \autoref{tab:estimationworkers} shows how many workers would be needed to keep the deployment time of the drones under 3 hours.  Green indicates less than 20 workers, yellow between 21 and 75 and red more than 76.
+
+\begin{table}[h]
+\centering
+\caption{Estimation of number of workers needed to deploy different amounts and types of drones on the optimized grid in less than 3hours }
+\label{tab:estimationworkers}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllllllp{2cm}p{2cm}}
+\hline
+\multicolumn{1}{|l|}{} & \multicolumn{8}{c|}{\textbf{Total number of drones}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{Pyrotechnique drones}} & \multicolumn{1}{l|}{\textbf{100}} & \multicolumn{1}{l|}{\textbf{150}} & \multicolumn{1}{l|}{\textbf{200}} & \multicolumn{1}{l|}{\textbf{300}} & \multicolumn{1}{l|}{\textbf{500}} & \multicolumn{1}{l|}{\textbf{1000}} & \multicolumn{1}{l|}{\textbf{2000}} & \multicolumn{1}{l|}{\textbf{3052.00}} \\ \hline
+\multicolumn{1}{|l|}{\textbf{0\%}} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}4} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}4} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}5} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}7} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}12} & \multicolumn{1}{l|}{\cellcolor[HTML]{FFF2CC}23} & \multicolumn{1}{l|}{\cellcolor[HTML]{FFF2CC}47} & \multicolumn{1}{l|}{\cellcolor[HTML]{FFF2CC}75} \\ \hline
+\multicolumn{1}{|l|}{\textbf{25\%}} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}4} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}6} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}7} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}11} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}18} & \multicolumn{1}{l|}{\cellcolor[HTML]{FFF2CC}40} & \multicolumn{1}{l|}{\cellcolor[HTML]{FCE4D6}89} & \multicolumn{1}{l|}{\cellcolor[HTML]{FCE4D6}175} \\ \hline
+\multicolumn{1}{|l|}{\textbf{50\%}} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}5} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}7} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}9} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}14} & \multicolumn{1}{l|}{\cellcolor[HTML]{FFF2CC}25} & \multicolumn{1}{l|}{\cellcolor[HTML]{FFF2CC}58} & \multicolumn{1}{l|}{\cellcolor[HTML]{FCE4D6}148} & \multicolumn{1}{l|}{\cellcolor[HTML]{FCE4D6}270} \\ \hline
+\multicolumn{1}{|l|}{\textbf{75\%}} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}6} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}9} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}12} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}18} & \multicolumn{1}{l|}{\cellcolor[HTML]{FFF2CC}32} & \multicolumn{1}{l|}{\cellcolor[HTML]{FFF2CC}75} & \multicolumn{1}{l|}{\cellcolor[HTML]{FCE4D6}200} & \multicolumn{1}{l|}{\cellcolor[HTML]{FCE4D6}363} \\ \hline
+\multicolumn{1}{|l|}{\textbf{100\%}} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}7} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}10} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}14} & \multicolumn{1}{l|}{\cellcolor[HTML]{FFF2CC}{\color[HTML]{000000} 22}} & \multicolumn{1}{l|}{\cellcolor[HTML]{FFF2CC}39} & \multicolumn{1}{l|}{\cellcolor[HTML]{FCE4D6}93} & \multicolumn{1}{l|}{\cellcolor[HTML]{FCE4D6}250} & \multicolumn{1}{l|}{\cellcolor[HTML]{FCE4D6}470} \\ \hline
+\textbf{} &  &  &  &  &  &  &  &  \\ \hline
+\multicolumn{1}{|l|}{\textbf{Legend}} & \multicolumn{1}{l|}{\cellcolor[HTML]{E2EFDA}} & \multicolumn{1}{l|}{0-20 workers} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{\cellcolor[HTML]{FFF2CC}} & \multicolumn{1}{l|}{21-75 workers} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{\cellcolor[HTML]{FCE4D6}} & \multicolumn{1}{l|}{76+ workers} \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+Note that deploying the drones does not require specific capabilities, just an in-house training according to Anymotion Productions \footref{APemailJune}, therefore it is possible to reinforce the main crew with an additional crew of part-time workers only during the most demanding parts of the event such as the deployment of drones and their recovery from the landing pads. It depends on the financial capabilities of the company how many workers they can hire for the deployment of drones. However note that improving the deployment method, for instance with the help or electric carts to move the drone stacks faster to position, would also reduce the deployment time.
+
+\autoref{tab:estimationworkers} is based on the 3 hour limit which is the higher margin of the current Anymotion Production operations. If the time needed for calibration were to be reduced and more time allocated to the deployment of drones, larger droneshows would be achievable with the same crew. 
+
+\textbf{Indoor Show Deployment}
+
+While the main logistics of deploying and preparing the drones remains the same, indoors drone shows have additional aspects to consider:
+\begin{itemize}[noitemsep,nolistsep]
+    \item Amount of drones is lower, by requirement OP-AP-8, these shall be at least 20 drones, while the maximum number depends on the size of the venue.
+    
+    \item As an indication, 20 light-payload drones could be deployed by Anymotion Production's crew (four workers) in about 25min and 20 pyro-drones in about 1 hour and 15min. So an indoor show would be doable with their current crew.
+    
+    \item Safety becomes a major factor, drones need to keep enough distance with the public, which can limit their amount and manoeuvres. Possibly safety cages can be added to mitigate the risk of injuring the public, this is proposed as a consideration for more detailed phases of the design in \autoref{ch:postdseactivities}. 
+    
+    \item Weather has less influence since the site will be more protected from winds and likely covered. This allows for easy deployment of drones and operation of electric components.
+\end{itemize}
+
+\section{Operations and Logistics Diagram} \label{sec:logdiagram}
+
+\autoref{sec:logisticssim} presented an analysis on the estimated time to deploy the drones for different types of droneshows. However, the logistics of these shows involve many other phases. \autoref{fig:opsdiag} presents the operations and logistics diagram of the drone show, which covers the majority of the actions that are performed during the lifetime of a drone focusing on the general lay-out of performing drone shows. It is based on an outdoor drone show of 300 drones. Note the following:
+
+\begin{itemize} [noitemsep,nolistsep]
+
+    \item The blue background corresponds to logistics stages, which mainly contain transport, packing and security. While the red background corresponds to operations regarding flights. Yellow boxes are performed by external parties, while white boxes by the drone show company themselves.
+    
+    \item All actions show the working-hours and number of people necessary to successfully execute them. These values are rough estimates based on answers from Anymotion Productions\footnote{Personal communications with N. Cornelissen (Creative Manager at Anymotion Productions),  21/05/2021 and 11/06/2021. \label{APemail2}}, the analysis in \autoref{sec:logisticssim} and other companies studied in the market analysis \autoref{ch:Marketanalysis}.
+    
+    \item There are three different flight operations, executed after each other:
+    \begin{itemize}[noitemsep, nolistsep]
+        \item Test flight: flight at own testing site to test the choreography or part of it.
+        \item Practice flight: flight at drone show location usually a day prior to the actual show.
+        \item Show flight: drone show at location.
+    \end{itemize}
+    The difference between the practice run and the show flight lies on the logistics involved before the flight, since for the show flight some steps are not necessary like the preparation of the ground station which was done for the practice flight the day before. In the practice flight, the pyrotechnic payload or any consumable future payload is not attached, instead a mock payload is used, in order to not waste resources.  
+
+    \item During the show the operations don't stop since the pilots must monitor the drones from the control station and the rest of the crew is monitoring the area for safety. After the show flight, the drones will be transported back to their storage, maintenance is performed and the whole cycle can run again. 
+    
+    \item In addition, the step "Check battery 'age'" before each flight is key to ensure that the batteries used are the right ones to not waste resources. This mitigates risk 52 for which a 'too old' battery cannot perform the entire show. For instance, newer batteries should be used to run through entire choreography in the show, while older batteries can be used for testing manoeuvres and practicing. The technical limitations of the batteries were presented in \autoref{ch:power}.
+    
+    \item  The time of some operations is influenced by external parties, such as the manufacturing, maintenance and product disposal. Other operations' time is not possible to determine as they differ every time, such as transport. In addition, there are tasks whose length is independent of the number of drones, these are indicated with a turquoise color. 
+    
+    \item Finally, maintenance is shown to be achievable by one worker in one working day, this is due to requirement OP-AP-1 which establishes is the maximum training time.
+
+\end{itemize}
+
+\clearpage
+\newpage
+{\pdfpagewidth=2\pdfpagewidth
+    \vspace*{0cm}
+    \hspace{5.5cm}
+    \noindent\kern.5\pdfpagewidth\rlap{\parbox{\textwidth}{%
+    \noindent\kern.25\pdfpagewidth
+        \llap{\includegraphics[height=227mm,page=1]{Figures/Operation and logistics diagram - Operations and logistics diagram.pdf}}\endgraf
+        
+    \vspace{2ex}%
+    }}\kern-.5\pdfpagewidth
+     \par
+     \textit{\Large{\textbf{Figure 14.1:} Operations and Logistics Diagram}} \label{fig:opsdiag}
+     \vspace*{-5cm}
+\clearpage
+
+}
+
+\textbf{Typical Drone Show Day Schedule}
+
+Based on \autoref{fig:opsdiag} and the time estimations of \autoref{sec:logisticssim}, a possible day schedule for a drone show can be presented. This schedule is for an outdoor show of 300 drones carrying light payload and a crew of 7 workers available for the deployment of the drones. The show needs to start at 9pm. 
+
+\begin{table}[h]
+\centering
+\caption{Indicative drone show schedule for a show of 300 drones}
+\label{tab:schedule}
+
+\begin{tabular}{p{2cm}|p{8cm}}
+\textbf{Time} & \textbf{Action} \\ \hline
+9:00 & Arrive at location \\
+9:00-9:30 & Unpack drones from storage facility \\
+9:30-10:30 & Perform battery checks \\
+10:30-13:30 & Landing pad deployment \\
+11:00-14:00 & Drone deployment \\
+11:15-11:45 & Weather check \\
+14:00-20:00 & Calibration and load choreography \\
+20:00-21:00 & Pre-flight checks \\
+21:00-21:30 & Perform show \\
+21:30-00:00 & Recover drones, pack up ground station \\
+22:00-00:30 & Recover landing pads
+\\
+00:30-1:00 & Finalise packing and leave site
+\end{tabular}%
+
+\end{table}
+
+It can be seen how some actions overlap such as the deployment of landing pads and drones and the weather check. Note that the ground station doesn't need to be deployed sine that was done the day before for the practice show. Other logistics actions such as breakfast, lunch and dinner of the crew are not considered. Note that this is just indicative since schedules depend on so many variables, the main five questions that influence the schedule are:
+
+\begin{itemize} [noitemsep,nolistsep]
+    \item Workforce available
+    \item Time of start of drones show
+    \item Number of drones and types of payloads
+    \item Location characteristics
+    \item Time needed for calibration procedures and pre-flight checks
+\end{itemize}
+
+The time needed for calibration is based on the time needed by Anymotion Productions\footnote{Personal communications with N. Cornelissen (Creative Manager at Anymotion Productions), 11/06/2021.}. However, this value might vary depending on the capabilities of the drone show company and the software of the drones, which can alter the schedule significantly.
+
+\textbf{Logistics Costs}
+
+It is not the aim of this project to go into detail on the costs of organizing a drone show, since these depend on so many factors such us personnel, facilities or country. However, here is an overview of the main factors that influence the costs of operations and logistics:
+\begin{itemize}[noitemsep,nolistsep]
+    \item \uline{Transportation} of the crew and the equipment to the event site. This could include renting vans or trucks and depends on the size of the show or other transportation if the show is abroad.
+    
+    \item \uline{Workforce}: As suggested in \autoref{sec:logisticssim} large drone shows require a large crew to deploy the drones in their landing pads quickly enough, which could be made up of part-time workers that only help in the most-demanded operations. The training for these workers should also be considered.
+    
+    \item \uline{Accommodation and food}: usually shows span over several days so the crew must stay over night in hotels or other types of accommodation. Their expenses during this stay, such as food, should also be covered.
+    
+    \item \uline{Security}: both during the show to make sure no one walks into the safety area and outside of the show, when the expensive equipment stays overnight at the show site.
+    
+    \item \uline{Event site}: The renting of a large enough field and access to their facilities such as electricity. In particular the powering of the landing pads if conductive charging is used can be a key logistical challenge as mentioned in Risk 31. The drone show company must ensure that this electricity is available or provided by a third party. 
+    
+    \item \uline{Permits}: Depending on the country and type of show different permits might be necessary to be allow to fly a swarm of drones.
+\end{itemize}
+
+\section{Safety Recommendations} \label{sec:safetyregulations}
+
+There are many safety considerations involved in the organization of a drone show. This section presents some of the main ones. In addition \autoref{tab:safetyreq} presents the requirements that bring safety considerations with them:
+
+\begin{table}[h]
+\centering
+\caption{Requirements that influence safety}
+\label{tab:safetyreq}
+%\resizebox{\textwidth}{!}{%
+\begin{tabular}{|p{2cm}|p{10cm}|}
+\hline
+\textbf{TAG} & \textbf{Requirement} \\ \hline
+SR-SYS-5.2 & The operator shall have an emergency stop button \\ \hline
+SP-ST-1.2.1 & The pyrotechnics shall not reach spectators\\ \hline
+\end{tabular}%
+%}
+\end{table}
+
+\textbf{Indoor show} 
+
+Indoor shows imply a smaller field as well as closer public to the drones. If the performance it's within certain limits of the audience or above them, the use of safety cages around the drone's propellers should be studied. This is a further recommendation presented in \autoref{ch:postdseactivities}. Also the effects of different types of pyrotechnics on possibly closed environments should be taken into account.
+
+
+\textbf{Ground Station}
+
+The ground station is a key element of the shown. It must maintain communication with the drones at all time and allow the pilots to take control of them in emergencies. It should also contain an emergency stop bottom according to requirement SR-SYS-5.2. In order to always fulfill these functions the ground station should be independent of the power grid (so it should ran for instance on batteries or have an emergency power generator), in case the grid goes down, the drones can still be controlled. If communications are lost the drones will autonomously perform and emergency landing on their landing pads (requirement SR-ST-4.1 in \autoref{ch:cce}).
+
+
+\textbf{Heavy loads}
+
+When carrying the drones stacks and possibly the landing pads some safety measures must be taken. Workers should wear safety shoes and not carry, on their own, above the maximum recommended weight in order to avoid possible injuries. Relatively heavy loads must be carried by more than one worker.
+
+\textbf{Safety Area}
+
+It is essential that a safety area around the location of the show is established and that no one is allowed to enter for their own safety in the unlikely case a drone suffers a malfunction. To ensure that no one enters the safety area, clear signs must be put in place and the public must be warned. In case of really crowded events the aid of security guards or local authorities could be used. The workers inside the safety area should wear a hard helmet. In addition, the drones are able to receive and execute the command of terminating the show at any moment in case this safety area is compromised.
+
+\textbf{Raining Conditions}
+
+In the case that the droneshow is performed outdoors under raining conditions, further safety measures must be taken. Opening the waterproof drone casing should be avoided, this means that operations that require the opening of the case, such as battery insertion or electronics checks, must be performed under a tent or inside a building. Therefore, the drones should be taken out of the stacks, prepared for flight, place again on the carrying structures and brought to the landing pads. 
+
+\textbf{Li-Po Battery}
+
+There are specific safety regulations regarding the handling and transport of Li-Po batteries that the droneshow company should adhere to. In terms of handling, the batteries should be hold by their body and not by their charging cables, which could damage soldered joints for instance. Before usage, as part of the safety checks, it should checked that the batteries are not swollen or present visual damage, if they do then they should be discarded or repaired at a later stage. They should be charged in a fireproof location, such as a dedicated box or a Li-Po-safe bag. Finally, the Li-Po batteries should not be stored at high temperatures, this can be concerning for instance if they are stored or transported for a long period of time inside a truck or van in a hot climate. This should be taken into account to ensure enough refrigeration during storage \cite{liposafety}.
+
+Note that these safety considerations should also be taken into account in case of charging multiple batteries together in a column-like structure, which can have logistical advantages but more safety concerns. In addition, safety considerations of conductive charging through the landing pads as well as the safe handling of the charging pins when the battery is connected should also be looked into in detail once the system is developed further.
+
+\textbf{Pyrotechnic Payload Drones}
+
+In case of pyrotechnic payloads, they need to be safely loaded into the drone. This must be done one drone at a time and the drone cannot be placed back on the carrying structure once loaded. Therefore, pyrotechnic drones will be prepared under a safety tent by trained personnel and walked individually to their landing pads once loaded. They should be placed only after all other drones are ready on their pads to limit the amount of time the pyrotechnic loads stay on the grid. Depending on the amount and types of pyrotechnics, these drones shall also be located on landing pads away from the main grid of drones and the public or workers, to avoid possible damage if they were to explode or catch fire either before take-off or during landing (this is risk 41 on \autoref{tab:newrisksoperations}). 
+
+Pyrotechnic loads must be handle by certified personnel and pyrotechnic equipment must be labeled according and transported in a safe manner according to local regulations. Extra safety measures such as fire extinguishers shall be placed near the landing pads of these drones and, if applicable, emergency services such as the fire department must be made aware of the exact location of these drones. This might also apply for the use of 'future payloads', if they involve any danger to the workers, public or objects around them.
+
+Not that requirement SR-SYS-5.1, which ensures spectators are not hit by pyrotechnics, cannot be fulfill yet with with the information available for the pyrotechnic payload module. A more detailed design will be needed to comply with this requirement which might add more safety measures to this section.
+
+\section{Compliance Matrix for Logistics and Safety Requirements}
+% \todo[]{Maybe this is just in RAMS}
+
+\autoref{tab:compliancelog} presents the compliance matrix for the requirements that can be verified from a logistics perspective, therefore if they are feasible logistically, not necessarily technically. Note that not all requirements of Tables \autoref{tab:logisticsrequirements} and \autoref{tab:safetyreq} are verified here, since those tables presented the relevant requirements for developing the method, however some of them have been verified in other sections. 
+
+\begin{table}[h]
+\centering
+\caption{Compliance matrix of logistics and safety}
+\label{tab:compliancelog}
+
+\begin{tabular}{|p{2cm}|p{10cm}|p{1.8cm}|}
+\hline
+Tag & Requirement & Verified? \\ \hline
+OP-AP-5 & The drones shall be controlled by a ground station & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+OP-AP-7 & The minimum amount of drones in one show shall be 300 for outdoor shows & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+OP-AP-8 & The minimum amount of drones in one show shall be 20 for indoor  shows, where ’indoors’ means venues such as concert halls or stadiums & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+SP-ST-1.2.1 & The pyrotechnics shall not reach spectators & \cellcolor[HTML]{DDEBF7}Post DSE \\ \hline
+SR-SYS-5.2 & The operator shall have an emergency stop button & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+\end{tabular}%
+
+\end{table}

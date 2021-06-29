@@ -1,0 +1,804 @@
+\chapter{Operations Subsystem}
+\label{ch:operations}
+
+% Deliverables:
+%     -Market Analysis
+%     -Financials (Return on Investment)
+%     -Operations and Logistic Concept Description / Diagram
+%     -Mass & Cost Analysis
+%     -Verification & Validation
+    
+%     12 pages: NOTICE EDITORS WHEN YOU ARE GOING OVER OR UNDER THIS LIMIT!
+
+The organisation of a drone show faces many operational and logistical challenges. Besides being able to have 300 drones or more flying their choreography safely at the same time, two important challenges are the safe transport of the drones and the conductive charging of the batteries. Operations however also involves safety and maintenance. \autoref{sec:opsfuncrecap} presents the main functions and risks that the operations department must cover, \autoref{sec:opslistofrequirements} presents the design requirements. Then \autoref{sec:landingpad} and \autoref{sec:stackability} present the methods used to design the required systems as well as the results of the design iterations. \autoref{sec:opsriskanalysis} covers the new risks identified and mitigated in the detailed design phase. Finally, \autoref{sec:opsverificationandvalidation} and \autoref{sec:opscompliancematrix} present the verification and validation processes of both the tools and the design. 
+
+
+\section{Functional and Risk Overview of Operations} \label{sec:opsfuncrecap}
+The goal of the operations department is to decrease the time needed to set up a drone show. This ranges from time spent on charging to maintenance or packing. The more efficient a process is, the less the operational costs will be. As presented in the functional flow diagram and functional breakdown structure in \autoref{ch:functionalanalysis}, the main functions to be performed by the operations subsystem are the following:
+\begin{itemize}[noitemsep, nolistsep]
+    \item Enable wireless charging through the landing pad
+    \item Be stackable to be transported in mass
+    \item Fit in a carrying structure
+    \item Ensure easy maintenance with little training
+\end{itemize}
+%, e.g. salary and transport costs.
+%Functions of landing gear, stackability, landing pad, transport (summary of FFD)
+%<Paragraph about the functions of the subsystems that fall under 'Operations' (landing gear, landing pad, logistics....)
+These functions were translated into requirements which are presented in \autoref{sec:opslistofrequirements}. Note that for this design phase, operations has been divided into five sections:
+\begin{itemize}[noitemsep, nolistsep]
+    \item Landing pad design
+    \item Landing gear design for stacking
+    \item Logistics
+    \item Maintenance
+    \item Safety procedures
+\end{itemize}
+
+The landing pad and stackability will be treated in this chapter while, maintenance will be covered as part of the RAMS characteristics in \autoref{sec:RAMS} and logistics and safety procedures will be covered after the subsystems are integrated in \autoref{ch:logistics}.
+
+\autoref{tab:risksoperations} presents the risks identified in the preliminary design phase regarding the Operations subsystem. It shows their likelihood and consequence score and the mitigation response which should be implemented in the design. Note that the scoring metrics have been explained in \autoref{}. Some of these risks translated into requirements which will be shown in \autoref{sec:opslistofrequirements}. Note that more detailed risks regarding the detailed design will be identified and mitigated in the subsystem design phase and are presented in \autoref{tab:newrisksoperations}.
+
+\begin{small}
+\begin{longtable}[c]{|p{0,55cm}|p{4cm}|p{1,6cm}|p{1,985cm}|p{6cm}|}
+\caption{Risks related to operations and their mitigation responses}
+\label{tab:risksoperations}
+\\
+\hline
+\textbf{ID} & \textbf{Risk} & \textbf{Likelihood} & \textbf{Consequence} & \textbf{Mitigation response} \\ \hline
+\endfirsthead
+%
+\endhead
+%
+8 & Drones get damaged during transport & Very low & Catastrophic & Have some spare back-up drones, avoid damage at large scale by proper carrying structures and rigid compartments \\ \hline
+25 & Corrosion on charging surfaces & Moderate & Moderate & Use rust free metals or apply protection coating on contact surfaces \\ \hline
+27 & Landing pads flooded & Moderate & Moderate & Design landing pad with water draining system \\ \hline
+28 & Stacking legs are misaligned or get stuck & Very low & Negligible & Design landing legs with draft angles and tolerances to prevent being stuck. \\ \hline
+31 & Event site can't power landing pads/ground station & Moderate & Moderate & Transfer risk to customer/ 3rd party company. Give estimation to them of power needed for operation. \\ \hline
+\end{longtable}
+\end{small}
+
+
+
+
+\section{List of Requirements Operations} \label{sec:opslistofrequirements}
+%<Present requirements on operations>
+
+\autoref{tab:opsrequirements} presents the requirements related to the operations subsystem. On the left column the sub-department they relate to is stated. These requirements will be used as guide to design the subsystems in \autoref{sec:landingpad} and \autoref{sec:stackability}. Note that some of these requirements will be verified at subsystem level in \autoref{sec:opsverificationandvalidation} while the rest will only be verified at a system level in \autoref{ch:systemverificationandvalidation}.
+
+%Req on landing pad / stackability / logistics
+\begin{table}[H]
+\centering
+\caption{Requirements related to operations subsystem.}
+\label{tab:opsrequirements}
+\begin{small}
+\begin{tabular}{|p{2cm}|p{2cm}|p{10cm}|}
+\hline
+\textbf{Sub-department} & \textbf{TAG} & \textbf{Requirement} \\ \hline
+\multirow{5}{*}{Landing pad} & CCE-AP-3 & The drones shall be recharged wirelessly through their landing pads. \\ \cline{2-3} 
+ & CCE-SYS-3.1 & The drone shall be able to charge during rain. \\ \cline{2-3} 
+ & CCE-SYS-3.2 & The drone shall be able to recharge autonomously on the landing pad between preparation and show. \\ \cline{2-3} 
+ & OP-AP-6 & The area off the take-off zone shall be at most 1m$^2$ per drone. \\ \cline{2-3} 
+ & POP-SYS-3.7 & \begin{tabular}[c]{@{}l@{}}The energy storage shall be fully \\    charged within 60 minutes. \end{tabular} \\ \hline
+\multirow{5}{*}{Stackability} & OP-AP-2 & The drones shall be suitable for mass transport. \\ \cline{2-3} 
+ & OP-AP-2.1 & The drones shall safely be stacked on each other. \\ \cline{2-3} 
+ & OP-AP-2.2 & The volume of the drones shall not exceed 0.5m$^3$. \\ \cline{2-3} 
+ & OP-AP-2.3 & The drone shall be stored rigidly in a shock-free container. \\ \cline{2-3} 
+ & SP-AP-1.4.3 & Future innovations shall have specifications up to dimensions of 20cm x 20cm x 20cm. \\ \hline
+
+\end{tabular}%
+\end{small}
+\end{table}
+
+The following can be noted by comparing Tables \ref{tab:risksoperations} and \ref{tab:opsrequirements}: 
+\begin{itemize} [noitemsep, nolistsep]
+    \item Risk 8 is mitigated by requirement OP-AP-2.3
+    \item Risk 28 is mitigated by requirement OP-AP-2.1
+    \item Risks 25 and 27 are mitigated by requirements CCE-SYS-3.2
+    \item Risk 31 does not have a specific requirement, however it will be assessed during the logistics analysis in \autoref{ch:logistics}.
+\end{itemize}
+  
+
+
+% \begin{longtable}[h]{|p{2cm}|p{2cm}|p{10cm}|}
+% \caption{Requirements related to operations subsystem}
+% \label{tab:opsrequirements}\\
+% \hline
+% \textbf{Sub-department} & \textbf{TAG} & \textbf{Requirement} \\ \hline
+% \endfirsthead
+% %
+% \endhead
+% %
+% \multirow{5}{*}{Landing pad} & CCE-AP-3 & The drones shall be recharged wirelessly through their landing pads \\ \cline{2-3} 
+%  & CCE-SYS-3.1 & The drone shall be able to charge during rain \\ \cline{2-3} 
+%  & CCE-SYS-3.2 & The drone shall be able to recharge autonomously on the landing pad between preparation and show \\ \cline{2-3} 
+%  & OP-AP-6 & The area off the take-off zone shall be at most 1m2 per drone \\ \cline{2-3} 
+%  & POP-SYS-3.7 & \begin{tabular}[c]{@{}l@{}}The energy storage should be fully \\    charged within 60min.\end{tabular} \\ \hline
+% \multirow{5}{*}{Stackability} & OP-AP-2 & The drones shall be suitable for mass transport \\ \cline{2-3} 
+%  & OP-AP-2.1 & The drones shall safely be stacked on each other \\ \cline{2-3} 
+%  & OP-AP-2.2 & The volume of the drones shall not exceed 0.5m\textasciicircum{}3 \\ \cline{2-3} 
+%  & OP-AP-2.3 & The drone shall be stored rigidly in a shock-free container \\ \cline{2-3} 
+%  & SP-AP 1.4.3 & Future innovations shall have specifications up to dimensions of 20cm x 20cm x 20cm \\ \hline
+% \multirow{4}{*}{Logistics} & OP-AP-4 & The drones shall be operated from a central location \\ \cline{2-3} 
+%  & OP-AP-5 & The drones shall be controlled by a ground station \\ \cline{2-3} 
+%  & OP-AP-7 & The minimum amount of drones in one show shall be 300 for outdoor shows \\ \cline{2-3} 
+%  & OP-AP-8 & The minimum amount of drones in one show shall be 20 for indoor  shows, where ’indoors’ means venues such as concert halls or stadiums \\ \hline
+% \end{longtable}
+
+
+
+
+% \section{Design for Operations} \label{sec:opscalc}
+% Make subsections for different subjects within subsystem
+
+The two main subsystems to be design are the landing pad and the stackability method. These are presented respectively in \autoref{sec:landingpad} and \autoref{sec:stackability}.
+
+\section{Design for Operations: Landing Pad}\label{sec:landingpad}
+
+As written in requirements CCE-AP-3, CCE-SYS-3.1 and CCE-SYS-3.2 in \autoref{tab:opsrequirements}, the drones shall have the possibility to wirelessly charge via the landing pad without human interference during both dry weather and rain. Autonomous charging provides several opportunities for drone shows:
+\begin{itemize}[noitemsep,nolistsep]
+    \item Shows can be performed quickly after each other, without replacing the battery.
+    \item Not replacing the battery in between shows reduces the chance of human errors during assembly and disassembly of the battery.
+    \item Show duration can be longer by using multiple shifts of swarms that alternate flying and charging on their own landing pads.
+\end{itemize}
+
+The autonomous charging is also something that current drone shows do not provide, hence this is a good opportunity for the drone Starling as it can provide versatility in the organisation of a drone show. 
+In the preliminary design phase \cite{midterm}, it was determined that the best method for autonomous charging would be \textbf{conductive charging}. This method was especially beneficial due to its lower required positioning precision, which eliminates the use of mechanical arms to place the drone at the correct location after landing. The lack of mechanical arms also makes maintenance and transport easier. 
+
+This section will go into the design of the landing pad. Please note that designing an functioning conductive charging landing pad is outside the scope of this project, hence it will not be designed in full detail. Starling will be equipped with the possibility to conductively charge, in addition to the usual charging method via a cable battery charger. However the landing pad will not be provided along side this drone's design. These kind of landing pads are already available on the market, but are very expensive (>€4,000) \cite{skycharge}, but it is expected that as the technique will be more common, the price will decrease as well. 
+
+% The focus lies on the general technique of the method, estimation of size and mass of the landing pad. 
+The general technique of conductive charging will be discussed in \autoref{sub:conductivecharging} and the method of sizing the pads  in \autoref{sub:landingpad}.
+
+\subsection{Technique of Conductive Charging}\label{sub:conductivecharging}
+In this section, conductive charging of the drone will be briefly discussed. Besides that, the electronic connectors will be discussed.
+
+Conductive charging works by metal-to-metal contact, in this case between the drone and the landing pad. The metal contact will create an electrical circuit through both the landing pad and the drone as well as the drone's battery. Through this circuit, a current can flow and charge the battery. The landing pad consists of several conductive tiles, which are connected to a charge monitoring system. The distinction between the tiles makes a circuit possible. The charge monitoring system determines which 'side' of the circuit the tile has to be \cite{energysquare}. The pad can be equipped with detection sensors that detect whether there is water, a person's hand or an electronic device touching the surface. The sensors can improve the safety of the design. The concept of conductive charging is already in use for laptop charging as well as drone charging, by the companies Energysquare and Skycharge respectively. These can be seen in \autoref{fig:energysquare} and \autoref{fig:skycharge}.
+
+For designing the tiles, gutters should be implemented in between the different tiles. This is to mitigate risk 27 and fulfill requirement CCE-SYS-3.1  of the landing pad to work during rain. These gutters shall drain the water from the pad. The size of the gutters is however not yet defined.
+
+
+\begin{figure}[h]
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/Operations/Energysquare.png}
+        \caption{Power by Contact concept from Energysquare \cite{energysquare}}
+        \label{fig:energysquare}
+    \end{subfigure}
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figures/Operations/Skycharge.png}
+        \caption{Autonomously charging pad by Skycharge \cite{skycharge}}
+        \label{fig:skycharge}
+    \end{subfigure}
+    \caption{Applications of conductive charging.}
+    \label{fig:conductivecharging}
+\end{figure}
+
+To create the circuit, the metal contact should be implemented into the drone's structure. It was decided that this will be incorporated in the landing gear by using Pogo pins. Pogo pins are very frequently used connectors in electronic devices, due to their high durability and stable electric connection \cite{pogopin}. This last characteristic is especially useful for the application of autonomous charging, as the connection must be reliable and also work if the drone's legs or landing pad are not perfectly flat or if vibrations or shocks occur. If insufficient contact occurs, this means that autonomous charging is not possible. Pogo pins mitigate this risk as they are spring-loaded. The risk of insufficient contact is added as Risk 39 to the new risk table for Operations in \autoref{sec:opsriskanalysis}, including the mitigation by using a Pogo pin.
+Besides that, this makes it possible to make the tiles of the landing pad slightly curved so the rain can flow in the direction of the gutters. This makes the draining of rainwater more efficient and makes sure that CCE-SYS-3.1\label{req:CCE-SYS-3.1} is fulfilled. However, the steepness of the slope has not been determined yet and is left as a recommendation for the detailed design of the landing pad, as stated in \autoref{ch:postdseactivities}.
+
+A Pogo pin consists usually of three parts: a plunger, a barrel and a spring. An example can be seen in \autoref{fig:pogostructure}. Pogo pins are spring-loaded and can thus provide a stable connection. They are widely available in all shapes and sizes and there are high-current pins available as well, which is useful for the application of charging a battery which can decrease the charging time. Three different designs are shown in \autoref{fig:pogodesigns}. The ball design is the best option for a high current (>3 A) application. This is because the ball design has more contact points inside the pin than the back drill and bias tail and guarantees a smooth slide of the plunger. \cite{pogopin}
+
+The drone has four legs, which are all equipped with a pin. This could make it possible to make two charging circuits and decrease charging time more. However, how this system would work in detail is recommended to be investigated in a more detail design phase as mentioned in \autoref{ch:postdseactivities}.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+    \includegraphics[width=0.9\textwidth]{Figures/Operations/Pogo_Pin_Connector_Structure_Compressed.jpg}
+    \caption{Structure of a Pogo pin.}
+    \label{fig:pogostructure}
+
+    \end{subfigure}
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Figures/Operations/Pogo_Pin_Inner_Structure_Compraison_CCP_Contact_Probes.png}
+    \caption{Different designs of Pogo pins. }
+    \label{fig:pogodesigns}
+    \end{subfigure}
+    \caption{The design of Pogo pins.\cite{pogopin}}
+\end{figure}
+
+The characteristics of the selected Pogo pin are stated in \autoref{tab:pogopincharacteristics}. The pin is not available on the market in these exact sizes, but since over 1000 pins are needed it is possible to make custom-sized pins \cite{pogopin}.
+The characteristics have been determined by looking at high-current Pogo pins that are available to buy \cite{millmaxpogo}. A Pogo pin with a current of 9A was chosen and this was only modified to be a bit longer to better fit into the landing gear. This is because when the drone lands on the four pins, it should not be compressed until most of the weight is taken by the plastic leg, as the electrical connection must be firm for charging. The pin has a gold layer as that improves conductivity and is good in terms of corrosion. \cite{pogopin}
+
+\begin{table}[h]
+\centering
+\caption{Characteristics of chosen Pogo pin.}
+\label{tab:pogopincharacteristics}
+\begin{small}
+\begin{tabular}{|l|l|}
+\hline
+\multicolumn{2}{|c|}{\textbf{Pogo pin characteristics}}         \\ \hline
+Height (mm)                    & 31.5                  \\ \hline
+Working height (mm)            & 27.0                    \\ \hline
+Compressed height (mm)         & 25.5                  \\ \hline
+Current (A)                    & 9                     \\ \hline
+Diameter of plunger (mm)       & 5.0                     \\ \hline
+Diameter of spring (mm)        & 2.76                \\ \hline
+Diameter of barrel (mm)        & 7.24                \\ \hline
+Diameter of reinforcement (mm) & 9.47                \\ \hline
+Material                       & Brass with gold layer \\ \hline
+Mass (g)                       & 5.31                \\ \hline
+\end{tabular}
+\end{small}
+\end{table}
+
+
+
+\subsection{Sizing of the Landing Pad}\label{sub:landingpad}
+In this section, the model to determine the size and mass of the landing pad is discussed, which can be used to estimate how much time, volume and man hours will take to deploy and transport all landing pads. The size of the landing pad is dependent on the largest distance between the legs of the drone, in order for the drone land in any possible orientation. This implies that the closer the legs are to each other, the smaller the landing pad can be. This is desired in terms of logistics, as the pad will then take up less volume and weigh less. The smallest possible distance is thus desired. The model uses the following:
+\begin{itemize}[nolistsep,noitemsep]
+    \item The electronics inside the landing pad are not designed hence they are assumed to have a mass of 3 kg. This consists of among others: transformer, fan, cables etc.
+    This is an indicative number based on an existing landing pad \cite{skycharge}, but it is still preliminary and should thus be investigated and verified after this DSE.
+    \item A safety factor of 1.25 has been applied to the loads and landing precision in order to account for an increase in mass of the electronics and to avoid that the drone misses the pad during landing. The risk of missing the landing pad has been added as Risk 37 in the risk register in \autoref{tab:newrisksoperations}, as well as the mitigation response of increasing the size of the landing pad.
+    \item The surface plate of the landing pad will be made from stainless steel type 304, similar to \cite{skycharge}. This is because it should function outside in bad weather conditions. Type 304 was chosen, because it is the most dominant grade used and easy to shape. The material properties for stainless steel 304 are: $\rho$ = 8,000 kg/m$^3$ and E = 193 GPa. \cite{stainlesssteel304}
+    \item The mass of the landing pad is determined by adding the mass of the electronics, steel surface and plastic structure together.
+    \item The material of the rest of the landing pad case is Polypropylene (PP). Similar to the frame of the drone, this material was chosen, following the same conclusions as in \autoref{tab:Materialtradeoff}. PP is the most sustainable material on the list. Depending on the final design, it should be re-evaluated whether this is indeed the best material for a conductively charging landing pad.
+    \item Besides the distance between the legs, the size of the landing pad is determined by the positioning accuracy of 20 cm.  
+    \item The loads on the pad are limited to the mass itself and the drone during landing, which is assumed to land with a vertical impact of 2g's. This is explained in more detail in \autoref{sub:LG}.
+\end{itemize}
+
+From the last bullet point, it was determined that the loads on the entire landing pad itself are really small: namely 177.5 N. When the normal stress per side plate was calculated, the maximum stress was lower than 0.05MPa for both Euler buckling and normal compression and thus the thickness of the side plates is mainly determined by the possibilities of manufacturing and not by the loads. This thickness will be explained in more detail in \autoref{sub:LG}.
+
+The size of the tiles is based on the \textbf{smallest} distance between the legs and the size of the landing pad to make sure that in every possible orientation and position, all four landing legs will be positioned on a different tile and an electrical circuit is possible.
+
+\textbf{Iteration Results: Landing Pad Size}\newline
+\autoref{tab:iterationslandingpad} presents the results of the sizing iteration of the landing pad. Six iterations were performed initially, but the distance between the legs changed at a later stage so another iteration was executed.
+
+\begin{table}[h]
+\centering
+\caption{Preliminary design iterations of landing pad}
+\label{tab:iterationslandingpad}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Iteration}} & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Drone \\ mass \\ (kg)\end{tabular}}} & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Mass of \\ electronics \\ (kg)\end{tabular}}} & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Distance\\  between \\ landing legs (m)\end{tabular}}} & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Thickness \\ steel surface\\ (mm)\end{tabular}}} & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Thickness \\ plastic (mm)\end{tabular}}} & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Area landing \\ pad ($m^2$)\end{tabular}}} & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Mass \\ landing \\ pad (kg)\end{tabular}}} & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}\# of \\ tiles\end{tabular}}} & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Size \\ tile ($m^2$)\end{tabular}}} \\ \hline
+\textbf{1}                               & 2.25                                                                                     & 5                                                                                                    & 0.490                                                                                                    & 1.11125                                                                                                 & 1.016                                                                                           & 0.9801                                                                                            & 15.2374                                                                                           & 9                                                                                    & 0.1082                                                                                     \\ \hline
+\textbf{2}                               & 2.25                                                                                     & 5                                                                                                    & 0.364                                                                                                    & 1.11125                                                                                                 & 3.200                                                                                           & 0.7465                                                                                            & 14.3466                                                                                           & 16                                                                                    & 0.0462
+\\ \hline
+\textbf{3}                               & 2.19                                                                                     & 5                                                                                                    & 0.333                                                                                                    & 1.11125                                                                                                 & 2.400                                                                                           & 0.6939                                                                                            & 13.0884                                                                                           & 16                                                                                    & 0.0430                                                                                     \\ \hline
+\textbf{4}                               & 2.11                                                                                     & 5                                                                                                    & 0.356                                                                                                    & 1.11125                                                                                                 & 2.400                                                                                           & 0.7329                                                                                            & 13.5293                                                                                           & 16                                                                                    & 0.0454                                                                                     \\ \hline
+\textbf{5}                               & 2.11                                                                                     & 5                                                                                                    & 0.364                                                                                                    & 1.11125                                                                                                 & 2.400                                                                                           & 0.7465                                                                                            & 13.6832                                                                                       & 16                                                                                    & 0.0462                                                                                     \\ \hline
+\textbf{6}                               & 2.11                                                                                     & 3                                                                                                    & 0.364                                                                                                    & {\color[HTML]{444444} 1.786}                                                                            & 2.400                                                                                           & 0.7465                                                                                            & 16.0866                                                                                          & 16                                                                                    & 0.0462                                                                                     \\ \hline
+\rowcolor[HTML]{DAE8FC} 
+\textbf{Final}                           & 2.11                                                                                     & 3                                                                                                    & 0.373                                                                                                    & {\color[HTML]{444444} 1.786}                                                                            & 2.400                                                                                           & 0.7613                                                                                            & 16.3372                                                                                      & 25                                                                                    & 0.0301                                                                                     \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+During the iterations, several aspects changed. Between iteration 1 and 2, the material of the sides and bottom of the landing pad changed from ABS to PP as the structures department had determined that this was a better material regarding cost, mass and sustainability. That is also the reason why the thickness of the plastic has changed, as ABS can be produced with a smaller thickness than PP. The thickness of the steel sheet is determined from standard gauges from literature \cite{steelthickness} and changed between iteration 5 and 6, as the firstly chosen thickness appeared to be less common.
+
+The size and mass on the landing pad and the number and size of the tiles changed dependent on the given distances by the structures department. In the last iteration the distance was just too small so an extra tile per row and column needed to be added.
+After seven iterations, this gave the final result for the preliminary mass and size for the landing pad that is visible in the last row of \autoref{tab:iterationslandingpad}. 
+
+As the landing pad is not fully designed, it is not possible to determine the amount of power it would require since efficiency is not determined nor how fast the landing pad can charge the battery. This is also left as a recommendation for further design as mentioned in \autoref{ch:postdseactivities}.  
+
+
+\section{Design for Operations: Stackability} \label{sec:stackability}
+
+%Batteries aside, charged on specific lipo charger safe
+
+According to the sub-requirements of OP-AP-2 presented in \autoref{tab:opsrequirements}, the drones shall be suitable for mass transport, which involves being stackable and stored in rigid containers. In the preliminary design phase \cite{midterm}, it was decided that the drones would be stackable by means of placing their landing gear on notches of the drone below. In addition, the stacks of drones should be transported in carrying structures which should conveniently fit into transport containers. This section will cover the landing gear design in \autoref{sub:LG} and the carrying structures in \autoref{sub:carryingstruc}.
+
+\subsection{Landing Gear Design}
+\label{sub:LG}
+%LG dimentions, loads, decisions, how it fits in one below
+
+Instead of landing on its payload, Starling will carry a landing gear for the following reasons:
+
+% Not all drones carry a landing gear, however for this design it was decided to do so for the following reasons: %yes this needs better english
+
+\begin{enumerate}[noitemsep, nolistsep]
+    \item To allow for \textbf{stackability} by fitting the landing legs on notches on the drone below.
+    \item To allow for \textbf{conductive recharging of batteries} through the landing pads (as explained in \autoref{sec:landingpad}): this will require a charging device on the landing legs. 
+    \item To allow for \textbf{autonomous take-off and landing}, which combined with the autonomous recharging will allow for multiple flights of a large group of drones with no human intervention between flights. 
+    \item To \textbf{prevent damage to the payload} during landing. The possibility of a protective case around the payload, strong enough to support landing was rejected, since it would hinder the payload modularity and the ability of carrying widely different future payloads. Damage on the payload during landing is identified as Risk 40 (described in \autoref{sec:opsriskanalysis}) and is mitigated with the use of landing gear.
+    \item For \textbf{safety}, in particular when carrying pyrotechnic payloads, landing on landing legs reduces the risk for the drone itself, the landing pad and the environment. 
+\end{enumerate}
+
+It was decided that each drone will have two types of interchangeable landing legs as presented in \autoref{tab:setsLG}. The main reason for this decision is the two main types of payload that the drone must accommodate: a light payload (lights or megaphone) and a heavy payload (pyrotechnics or any future payload).  These require different lengths since the heavy payload module is significantly larger than the light payload one \footnote{note that the size of the pyrotechnics is not yet known, however it is desired that the clearance with the landing gear should be as large as possible}. As discussed in \autoref{ch:Marketanalysis}, the design should aim for ease of operations therefore stackability is a key aspect. Since stackability aims to store drones optimizing the space, this feature will be designed for the short landing gear. The long landing gear will only be used during shows.
+
+% Overall, the landing gear turned out to be cheap and relatively light allowing for two sets per drone to fit within budgets.
+\begin{table}[h]
+\centering
+\caption{Sets of landing gears and their general characteristics}
+\label{tab:setsLG}
+% \resizebox{\textwidth}{!}{%
+\begin{tabular}{|p{1.5cm}|p{4cm}|p{6.2cm}|p{1.8cm}|}
+\hline
+\textbf{Landing gear set} & \textbf{Payload} & \textbf{Transport} & \textbf{Conductive charging?} \\ \hline
+Short & Light or megaphone & Yes, it accommodates light payload while stacking & Yes \\ \hline
+Long & Pyrotechnics or future payloads & No, for transport remove heavy payload and replace by short landing gear & Yes \\ \hline
+\end{tabular}%
+% }
+\end{table}
+
+The exact lengths will depend on the size of the other subsystems of the drone and therefore they will be established only after the iteration process. 
+
+\textbf{Landing gear model} \newline
+The model developed to size the landing gear assumes the following:
+
+\begin{itemize}[noitemsep, nolistsep]
+    \item The landing gear is a vertical hollow circular beam loaded in pure compression. The cross section is circular to allow for the cylindrical pin at the foot of the leg and hollow to save weight and accommodate the charging cable. It is made out of PP, like the frame, in order to reduce the amount of materials used, which contributes to recyclability.
+    
+    % \item The main material of the beam is PP, which has a E = 1.223 GPa, a density of 902 kg/m$^3$, an ultimate tensile strength of 38 MPa and a yield strength of 26.25 MPa. This is the same material as the frame, this choice was made .
+    
+    %  \item Polymer extrusion was chosen as main production method  due to its low required production energy. Therefore this method set a minimum PP tube thickness of 2.4mm. Note that this decision was made during the design phase therefore some early iterations assumed a lower possible thickness.
+    
+    \item There will be four independent legs. They will be located on the arms of the drone to allow for large payload (requirement SP-AP-1.4.3 \label{req:SP-AP-1.4.3}) but placed as closed to the body to minimize the size of the landing pad as explained in \autoref{sub:landingpad}. 
+    
+    % This position also offers more stability which prevents tilting in case of a cross landing or lateral wind.
+    
+    % \item The legs should be long enough to ensure the payload is safe on landing. This is about 9 cm for the nominal payloads (light, megaphone and pyrotechnics) and more than 20cm for future payloads. This means that possibly two sets of landing legs will be needed, a 'nominal' set that will allow for stackability, and a 'long' set that will allow for future payloads but not for transportation, as 20cm is unnecessarily large for stacking.
+    
+    \item As explained in \autoref{sub:landingpad}, the foot of the landing leg will be formed by a Pogo pin connector, which will allow for conductive charging. This pin is cylindrical and made out of brass with a maximum diameter of 9.47mm (\autoref{tab:pogopincharacteristics}), which corresponds to the inner diameter of the tube plus a tolerance. The effect of the springs of the pins on the loads has been neglected due to the limited size of the spring with respect to the system.
+    
+    % placed at the foot of the landing gear substituting the bottom 1/4 of the leg.
+    % \item The pogo pin is spring loaded to ensure that all legs make contact with the landing pad, however the effect of t
+    
+    % \item The PP tube is designed to carry the full loads on the landing legs, while it is ensured that the brass pins can survive the loads but are not tailored to them since they are off-the-shelf items. Stackability has been designed for in such a way that the PP tube carries the loads and not the pin. 
+    
+    \item A safety factor of 1.5 has been applied to the loads to account for possible uneven loading of the legs and effects of simplifications in the model.
+    
+    % \item The landing legs will contain a thread at the top which will be screwed to the frame. The Pogo pin will be glued to the PP tube.
+    \item  The Pogo pin will be bonded to the PP tube while the landing legs will fit into an attachment piece bonded to the frame and hold by spring pins. The integration will be explained more in detail in \autoref{ch:finaldesign}.
+   
+    
+\end{itemize}
+
+    % \item The landing loads were modeled with a worse case scenario of XXgs of impact, effect of external forces such as wind, during landing is neglected.
+    % \item The stackability loads were modeled by assuming the drone is at the bottom of a column of XX drones, the amount of drones has been adapted to limit the weight of the column of drones as will be explained in \autoref{sub:carryingstruc}.
+
+
+In order to size the landing legs two main sizing situations were taking into account: the loads due to landing and due to stackability.
+
+\textbf{Sizing for Landing Loads} \newline
+First, the landing gear should be able to ensure a safe landing during nominal landing conditions. The control software should make sure that the landing is controlled, to both not damage the drone or the landing pad. Therefore, it is assumed that all landing legs take the same load.
+
+In absence of detailed control software information or trajectories, the total force on the drone upon landing was assumed to correspond to a vertical impact of 2g's. This would also account for possible unequal distributions of load between legs due to the payload distribution or crosswinds during landing. Note that both the short and long sets of landing gears should be able to resist the landing loads.
+
+\textbf{Sizing for Stackability Loads} \newline
+When loaded into the carrying structure, the landing gear of the drones is used to stack them one on top of each other. This means that the landing legs must carry the weight of the drones above. The number of drones that fit in a carrying structure depends on the size and weight of one drone (as will be explained in \autoref{sub:carryingstruc}).
+
+Therefore the stackability loads vary each iteration depending on the mass of the drones and how many fit in a stack. Note that only the short landing gear needs to carry the stackability loads as mentioned in \autoref{tab:setsLG}.
+
+\textbf{Inputs and Outputs of Model} \newline
+The main input for the sizing of the landing gears is the total mass of the drone, as this is needed to compute the force on each of the four legs for both landing and stackability. Another input is the height of the landing gear, which depends mostly on the height of the payload and of the body of the drone (which includes the frame, electronics and battery). 
+
+% The position and size of propellers and motors are also importantIt is also important the position and size of the motors and propellers.
+
+The landing gear will be located as close as possible to the body while allowing for the heavy payload to be carried. This is in order to minimise the landing pad area needed. Final location is therefore set by the structures department and it does not affect the loads on the landing gear model since it assumes pure compression forces.
+
+% The final location of the landing legs will strongly depend on the integration of subsystems in the frame, therefore iterations are key.
+
+Once the landing loads are computed, the PP tube is sized based on a set inner diameter defined by the Pogo pin determined in \autoref{sub:landingpad} and a variable outer diameter. Polymer extrusion was chosen as main production method due to its low required production energy. Therefore this method set a minimum PP tube thickness of 2.4mm \cite{ppThickness}. Note that this decision was made during the design phase therefore some early iterations assumed a lower possible thickness. Then, the outer diameter is set such that the normal stress on the leg does not surpass three key structural stresses: the ultimate tensile stress, the yield stress and the Euler buckling critical stress ($\sigma$), computed with by $\sigma = P_{cr}/A$ and with \autoref{Eq:Eulerbuck} \cite{SAD}:
+
+% 2.4 - 3.2mm (for large product) https://www.spark-mould.com/design-wall-thickness-of-plastic-parts/
+
+%8mm https://www.plasticstoday.com/materials/design-polypropylene-part-design-part-1
+
+%12mm https://www.ineos.com/globalassets/ineos-group/businesses/ineos-olefins-and-polymers-usa/products/technical-information--patents/ineos_polypropylene_processing_guide.pdf
+
+%injection molding: https://jayconsystems.com/blog/what-is-the-minimum-wall-thickness-for-my-injection-molded-parts
+
+\begin{equation} \label{Eq:Eulerbuck}
+    P_{cr} = C\cdot \frac{\pi^2 \cdot E \cdot I_{xx}}{L^2} 
+\end{equation}
+
+where $P_{cr}$ is the buckling critical load, A is the cross-sectional area, E is the E-modulus, L the length and $I_{xx}$ is the cross-section moment of inertia. Finally, C is a scaling factor based on the clamping modes of the column. The landing leg has been modeled as a beam with one end fixed and one pinned which corresponds to a $C = 0.6992$ \cite{SAD}.
+
+Note that the number of drones stacked on each other also makes part of this model and can vary between iterations. This is because this number depends on the size and mass of the drone to meet weight and size requirements for transport. The carrying structure iteration will be explained in \autoref{sub:carryingstruc}. 
+
+% The cost of the pins was added to the cost of the extrusion of the PP tubes which was computed using the batch size and length of legs similarly to \autoref{ch:structures}.
+
+\textbf{Iteration Results: Landing Gear Design} \newline
+\autoref{tab:LGsizingresults} presents the results of the design iteration of the landing gear. Six full iterations were computed for both the long and short landing gears.
+
+\begin{longtable}[h]{|p{1cm}|p{1cm}|p{1cm}|p{2cm}|p{1cm}|p{1cm}|p{1cm}|p{1.5cm}|p{1.8cm}|}
+\caption{Design iterations of landing gear design}
+\label{tab:LGsizingresults}\\
+\hline
+\textbf{Iter -ation} & \textbf{Set} & \textbf{Drone mass (kg)} & \textbf{Outer diameter(cm)} & \textbf{Thick- ness tube (mm)} & \textbf{Height LG (cm)} & \textbf{Stress on leg (MPa)} & \textbf{Buckling stress (MPa)} & \textbf{Mass of LG set (kg)} \\ \hline
+\endfirsthead
+%
+\endhead
+%
+ & Short & 2.00 & 0.700 & 1.0 & 13.40 & 1.952 & 7.800 & 0.024 \\ \cline{2-9} 
+\multirow{-2}{*}{\textbf{1}} & Long & 2.00 & 0.700 & 1.0 & 24.40 & 0.651 & 2.352 & 0.044 \\ \hline
+ & Short & 2.25 & 1.452 & 3.2 & 13.39 & 0.364 & 23.797 & 0.071 \\ \cline{2-9} 
+\multirow{-2}{*}{\textbf{2}} & Long & 2.25 & 1.452 & 3.2 & 24.39 & 0.121 & 7.174 & 0.116 \\ \hline
+ & Short & 2.25 & 1.292 & 2.4 & 15.40 & 0.435 & 15.145 & 0.060 \\ \cline{2-9} 
+\multirow{-2}{*}{\textbf{3}} & Long & 2.25 & 1.292 & 2.4 & 26.40 & 0.174 & 5.154 & 0.091 \\ \hline
+ & Short & 2.19 & 1.292 & 2.4 & 11.90 & 0.508 & 25.364 & 0.050 \\ \cline{2-9} 
+\multirow{-2}{*}{\textbf{4}} & Long & 2.19 & 1.292 & 2.4 & 26.10 & 0.169 & 5.273 & 0.091 \\ \hline
+ & Short & 2.11 & 1.404 & 2.4 & 10.94 & 0.531 & 36.395 & 0.056 \\ \cline{2-9} 
+\multirow{-2}{*}{\textbf{5}} & Long & 2.11 & 1.404 & 2.4 & 25.94 & 0.177 & 6.473 & 0.103 \\ \hline
+\rowcolor[HTML]{DDEBF7} 
+\cellcolor[HTML]{DDEBF7} & Short & 2.11 & 1.404 & 2.4 & 15.80 & 0.531 & 17.449 & 0.071 \\ \cline{2-9} 
+\rowcolor[HTML]{DDEBF7} 
+\multirow{-2}{*}{\cellcolor[HTML]{DDEBF7}\textbf{Final}} & Long & 2.11 & 1.404 & 2.4 & 23.00 & 0.177 & 8.234 & 0.094 \\ \hline
+\end{longtable}
+
+It was determined that for all iterations the stackability loads significantly exceeded the landing loads and that the buckling stress was the limiting factor. However, the minimum thickness due to manufacturability was actually setting the thickness of the tube in all iterations, for both the long and short landing legs. In addition note that the cost of production is not reported in \autoref{tab:LGsizingresults}, this is because through the iterations it does not vary much: the cost of each charging pin is about 1€ and of the production of the extruded tubes is estimated to be about 14€ per set of landing legs considering a batch size of 1200 tubes (300 drones) using the same method as explained in  \autoref{subsec:armsizing} \cite{materialbible}.
+
+Also note the significant increase in length of the sort landing leg set in the last iteration, this is due to some miscalculations on the height of electronics and payload that were only spotted during integration.
+
+Therefore, from \autoref{tab:LGsizingresults} it can be seen how both sets will be extruded PP tubes of 1.4cm in diameter and 2.4mm of thickness. The short set will be 15.8cm long while the long set, 23.0cm long. Both sets with pins will have a cost of around 18€, making the total cost of both sets for one drone about 36€. Each drone will be sold with the two sets of landing gears.
+
+\textbf{Attachment of Landing Gear to Frame} 
+
+An attachment part bonded to the bottom of the arm will be used to attach the removable landing legs to the frame. This part is made out of PP and has a hole which aligns with a small hole on the arm to allow for the charging cables from the charging pin to enter the inside of the arm frame. On the bottom side, it contains a hollow cylinder, 1cm long and 3mm thick, with two lateral holes to which the landing gear fits tightly. The landing gear will contain two spring loaded pins perpendicular to the axis of the tube which compress to fit on the attachment part and expand once the pins reach the holes locking the gear into place. The PP body of the leg lies on the attachment part therefore it takes the compressive forces. The integration will be explained in detail in \autoref{ch:finaldesign}.
+
+The total mass was computed to be 2.94gr by a simple model of the part which will be verified in \autoref{sec:opsverificationandvalidation}. The spring pin was not chosen in detail and it's left for a more detail design phase in \autoref{sec:postdseactivities}. 
+
+Note that a risk raises from this new attachment method, which consists of an unwanted loose attachment that can cause the landing leg to wiggle under vibrations causing misalignment or the stacks to be unstable. This corresponds to risk 42 on \autoref{sec:opsriskanalysis}. The mitigation response would be to ensure that the lock is tight by means of small tolerances or with an O-ring type of seal between the leg and the attachment piece.
+
+
+% Initially, the landing gear was going to be screwed into the arm, however this raised a structural integrity concern with the large size of the hole required on the arm. For this reason, an extra part to facilitate the attachment was designed. This part is made out of PP as the rest of the frame, and it is bonded to the lower part of the arm. It has a hole which aligns with a small hole of 3mm in diameter on the arm to allow for the charging cables from the charging pin to enter the inside of the arm frame. On the other side. On the bottom side, it contains a hollow cylinder, 1cm long and 3mm thick, with two lateral holes to which the landing gear fits tightly. The landing gear will contain two spring loaded pins perpendicular to the axis of the tube which compress to fit on the attachment part and expand once the pins reach the holes locking the gear into place. This attachment is removable by pressing the pins into the tube and sliding it out. The pin still allows for the cable to fit around it. The PP body of the leg lies on the attachment part therefore it takes the compressive forces. The integration will be explained in detail in \autoref{ch:finaldesign}.
+
+% This part was design later in the design phase to tackle the concern of failure of the original thread attachment, therefore no iterations were made. Note that, thanks to the margins in the iterations, adding the small mass and cost of this part does not put the subsystem out of budget. The total mass was computed to be 2.94gr by a simple model of the part which will be verified in \autoref{sec:opsverificationandvalidation}. The spring pin was not chosen in detail and it's left for a more detail design phase in \autoref{sec:postdseactivities}. 
+
+% Note that a risk raises from this new attachment method, which consists of an unwanted loose attachment that can cause the landing leg to wiggle under vibrations causing misalignment or the stacks to be unstable. This corresponds to risk 42 on \autoref{sec:opsriskanalysis}. The mitigation response would be to ensure that the lock is tight by means of small tolerances or with an O-ring type of seal between the leg and the attachment piece.
+
+\textbf{Design of Notch on Drone's Arm} \newline
+In order to fit the landing gear foot on the drone below for stackability, the arm of the drone much contain a notch. For structural integrity reasons, it was decided that the structure should not be weakened further by making a hole. Instead, a piece would fit to the top of the arm and contain a notch where the pin of the landing gear can fit into. This piece has been named 'crater'. 
+
+The crater is made of PP, like the frame and the landing gear, and is glued to the top of the arm as shown in \autoref{fig:cratertopview}. The main dimensions that influence the crater are the outer radius of the frame's arm and the dimensions of the pin to size the notch. Four craters are needed per drone, located on the vertical axis of the landing gears. Note that one of the risks identified (Risk 40 in \autoref{tab:newrisksoperations}) is that the charging pins get damaged by excessive compression during stacking. To prevent this, the crater is designed such that the pin only prevents lateral movements but does not carry any vertical loads (it does not touch the bottom of the notch), which are carried by the PP body of the landing gear in contact with the crater, this is shown in \autoref{fig:craterinside}. 
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{Figures/Operations/Crater_Render.png}
+  \captionof{figure}{Top view of crater attached to top of drone's arm}
+  \label{fig:cratertopview}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{Figures/Operations/inside_crater_render.png}
+  \captionof{figure}{View of inside of crater with landing leg of drone above inserted. Note that the leg lies on the crater while the Pogo pin does not touch the bottom.}
+  \label{fig:craterinside}
+\end{minipage}
+\end{figure}
+
+
+\autoref{tab:itercrater} presents the design iterations of the crater. Note that the craters were not introduced until the second iteration.
+
+\begin{longtable}[c]{|p{1cm}|p{3cm}|p{2cm}|p{3cm}|p{2cm}|}
+\caption{Iterations of crater design (mass and price are of 4 craters)}
+\label{tab:itercrater}\\
+\hline
+\textbf{Iter- ation} & \textbf{Outer radius of arm (cm)} & \textbf{Height of notch (mm)} & \textbf{Width and depth of notch (mm)} & \textbf{Mass craters (g)} \\ \hline
+\endfirsthead
+%
+\endhead
+%
+\textbf{1} & / & / & / & / \\ \hline
+\textbf{2} & 1.00 & 5 & 3 & 9.943 \\ \hline
+\textbf{3} & 0.95 & 5 & 3 & 8.284 \\ \hline
+\textbf{4} & 1.05 & 5 & 4 & 6.872 \\ \hline
+\textbf{5} & 0.88 & 7 & 5.5 & 7.267 \\ \hline
+\rowcolor[HTML]{DDEBF7} 
+\textbf{Final} & 0.70 & 7 & 6 & 7.297 \\ \hline
+\end{longtable}
+
+Therefore as can be seen in the last row of \autoref{tab:itercrater} the final craters will have a mass of 1.1gr each (4.439gr per drone) and a production cost of about €4 per drone, which was estimated using \cite{materialbible}.
+
+\subsection{Carrying Structure Design} \label{sub:carryingstruc}
+% Size of transport boxes
+% Shape of transport column
+% How many drones fit (based on total heigh)
+%How heavy column will be (drones + Structure)
+
+The aim of stacking the drones on each other and and moving them around in carrying structures is to facilitate their storage as well as the their deployment at large scale. Time and money are key: the fastest the drones can be deployed and the least amount of work needed, the better the design and logistics. This is also beneficial from a market perspective, as described in \autoref{ch:Marketanalysis}.
+
+The carrying structure should facilitate the deployment of the drones by allowing one worker to place a group of drones at their landing pads without having to come back to the ground station to pick up the drones one by one. Due to the uncertainty of the outdoors terrain, wheels might not always work, so the carrying structure must be raised by hand. Therefore there are two main limitations to the carrying structures: their weight and height. If the stack of drones is too heavy or the structure is too high, it is difficult for an employee to carry the drones to the deployment location. Repeatedly carrying these structures for a couple hundred meters can cause injuries to the worker. This is a risk, which has also been added as Risk 38 to the risk register in \autoref{sec:opsriskanalysis}. The following paragraph discusses the mitigation response for this risk.
+
+\textbf{Maximum Weight and Height of Carrying Structure} \newline
+%https://osha.europa.eu/en/legislation/directives/6
+Regulations from the European Union are in place to prevent workers from getting injured when carrying loads by hand frequently \cite{EUloads}. They set guidelines to employers to limit the physical works that can cause back injuries. The maximum load recommended to be carried depends on how and where the load can be hold as well as the physical characteristics of the worker. For this design, the lifting equation method from NIOSH (US National Institute for Occupational Safety and Health) will be used to estimate the maximum load of the carrying structure based on its size and holding method. In particular, the online calculator provided by the Canadian Center for Occupational Health and Safety has been used \cite{NIOSH}. 
+
+The NIOSH method assumes a starting maximum load of 23 kg which, under ideal conditions, is safe for 75\% of females and 90\% of males. Then it applies reducing factors based on the position of the hands on the load, the type of displacement and frequency of displacement. The following assumptions were made to estimate the effort to deploy the drones outdoors:
+%https://www.ccohs.ca/oshanswers/ergonomics/niosh/calculating_rwl.html
+%https://www.cdc.gov/niosh/topics/ergonomics/nlecalc.html
+
+\begin{itemize}[noitemsep, nolistsep]
+    \item The horizontal distance between the hands of the worker and his/her feet is about 40cm, this is due to the large size of the drones.
+    \item The vertical location of the hold with respect to the ground is of about 100cm. This also places a limitation to the maximum height of the stacks, which has been set to be 125cm. 
+    \item The vertical displacement of the loads while transporting them is of 40cm. This is considered enough height to walk around the field while safely carrying the structure.
+    \item The lifting will be done several times within the same hour for about 5 min each time. 
+    \item The structure allows for a good grip with two hands, no twist of the upper body is needed and the movement is done while standing up. 
+\end{itemize}
+
+With this method, it was determined that the maximum weight of the stacks must be 12.53kg while their height cannot be larger than 1.25m, of which the secure grip should be at around 1m from the ground. The carrying structure will be optimized for the maximum possible drones in a stack while respecting these limitations.
+
+\textbf{Carrying Structure Model} \newline
+The drones will be stacked on each other by fitting the feet of landing legs in the arms of the drone below. Therefore the stack of drones will be put in a carrying structure formed by a bottom plate, a top plate and vertical rods that prevent the column from tilting and safeguard the drones during transport. The rods can contain handles to allow for easy grip by either one person or several people at the same time. 
+
+Due to the size of the propellers and location of landing gear, the landing gear does not allow for the free rotation of propellers when stack. To avoid damage a foam protection on the propellers or around the landing leg is recommended.
+
+Note that it is not the scope of this design project to design in detail this carrying structure. Therefore it has been assumed that the structure will weight 10\% of the weight of the drones and add 5\% of height to the height of the stack. 
+
+%Donatella said we don't have to design it since it's not the scope
+
+The main inputs for the design of the carrying structures are the total mass of the drone, the height of the landing gear and the dimensions of the drone including the propellers. 
+% These inputs allow to compute the maximum amount of drones that can be stack on each other while not surpassing the maximum height and weight of the structure. 
+
+\textbf{Iteration Results: Carrying Structure Dimensions} \newline
+The design iterations are shown in \autoref{tab:itercarrying}. 
+
+\begin{longtable}[h]{|p{1cm}|p{1.5cm}|p{1.9cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\caption{Design iterations of carrying structure dimensions}
+\label{tab:itercarrying}\\
+\hline
+\textbf{Iter -ation} & \textbf{Drone mass (kg)} & \textbf{Height drone (cm)} & \textbf{Drones per stack} & \textbf{Height stack (m)} & \textbf{Weight stack (kg)} & \textbf{Stack area (mxm)} \\ \hline
+\endfirsthead
+%
+\endhead
+%
+\textbf{1} & 2.00 & 18.76 & 7 & 1.031 & 11.74 & 0.96 x 0.96 \\ \hline
+\textbf{2} & 2.25 & 18.75 & 6 & 0.890 & 12.02 & 0.8 x 0.89 \\ \hline
+\textbf{3} & 2.25 & 23.70 & 5 & 0.896 & 10.50 & 0.73 x 0.8 \\ \hline
+\textbf{4} & 2.19 & 20.10 & 6 & 0.836 & 12.47 & 0.78 x 0.85 \\ \hline
+\textbf{5} & 2.11 & 18.63 & 6 & 0.770 & 12.33 & 0.735 x 0.8 \\ \hline
+\rowcolor[HTML]{DDEBF7} 
+\textbf{Final} & 2.11 & 25.05 & 6 & 1.17 & 12.53 & 0.63 x 0.72 \\ \hline
+\end{longtable}
+% 0,63x0,69
+
+So, as shown in \autoref{tab:itercarrying} the carrying structure will hold six drones stacked on each other which will weight 12.53kg and be 1.17m tall. This fulfills requirements OP-AP-2 \label{req:OP-AP-2} and OP-AP-2.1 \label{req:OP-AP-2.1}. \autoref{fig:stack3} shows a indicative stack of 3 drones. A trend that can be observed in the iterations is the decrease in area of the stack, which shows how the drone has become smaller which simplifies the logistical operations. Note that the limiting factor in the size of the carrying structures turned out to be the weight rather than the height, this means that they are smaller than their maximum height which can simplify their operations.
+
+% Integration deals with this one
+% Finally, with the long landing legs the final volume of the drone is 0.1134$m^3$, which complies with requirement OP-AP-2.2 to be less than 0.5m$^3$.
+
+The carrying structures then can be put into big transport boxes which will provide a rigid-case protection for transport which fulfills requirement OP-AP-2.3 \label{req:OP-AP-2.3}. For instance fitting 4 carrying structures in a square configuration would require a box of 1.44x1.26x1.17m, the drones would weight 50kg to which the weight of the box needs to be added. Many different off-the-shelf transportation boxes are available, like for instance in \cite{Transportbox}, however it is also possible to personalize these boxes, this is left as a further consideration of the design in \autoref{ch:postdseactivities}.
+
+\begin{figure} \centering
+  \includegraphics[width=0.5\linewidth]{Figures/Operations/Stacked_drones_render_3.png}
+  \caption{Render of three Starling drones stack on top of each other via their landing legs}
+  \label{fig:stack3}
+\end{figure}
+
+% - structure around drones
+% - how many drones on top of each other, based on size of standard box
+% - how many drones per box, how heavy is the box
+
+\section{Risk Analysis of Operations} \label{sec:opsriskanalysis}
+
+During the detailed design, on top of the preliminary risks presented in \autoref{tab:risksoperations}, several new risks were identified and mitigated. \autoref{tab:newrisksoperations} presents an overview of these risks, their likelihood and consequence scores. \autoref{tab:mitigationnewoperations} shows how these risks were mitigated and provides their new scores.
+
+\begin{table}[h]
+\centering
+\caption{Operational risks that were discovered in the detailed design.}
+\label{tab:newrisksoperations}
+\begin{scriptsize}
+\begin{tabular}{|p{0.4cm}|p{3cm}|p{0.4cm}|p{4.5cm}|p{0.4cm}|p{4.5cm}|}
+\hline
+\multicolumn{1}{|l|}{\textbf{ID}} & \textbf{Risk}                                               & \multicolumn{1}{l|}{\textbf{LS}} & \textbf{Reason for likelihood}                                                                  & \multicolumn{1}{l|}{\textbf{CS}} & \textbf{Reason for consequence}                                                            \\ \hline
+37                                & Drone misses landing pad during landing.                    & 2                                & Risk occurrence reasonably low, drone can land with wind.                                        & 2                                & It can still land on the field, but autonomously charging is not possible.                 \\ \hline
+38                                & Worker gets injuries due to heavy loads.                    & 4                                & Stacks of drones are quite heavy and tall, which need to be carried for several hundred meters. & 4                                & Less employees and possibility of more costs for the company.                             \\ \hline
+39                                & Insufficient contact between charging pins and landing pad. & 3                                & Manufacturing processes might not make the landing pad or drone flat enough.                    & 2                                & Autonomously charging is not possible.                                                     \\ \hline
+40                                & Charging pin damaged due to stacking.                       & 3                                & Stacking loads are much higher than landing loads, which might cause the pin to damage.         & 3                                & Autonomously charging is not possible anymore.                                             \\ \hline
+41                                & Payload gets damaged during landing.                        & 3                                & Drone is relatively heavy and lands with a higher G-force than 1.                               & 5                                & Can lead to explosion if payload consists of pyrotechnics that did not fire during flight. \\ \hline
+42 & Loosen attachment of landing gear & 3 & Tolerances can lead to a non tight attachment & 2 & Misalignment can hinder stackability  \\ \hline
+\end{tabular}
+\end{scriptsize}
+\end{table}
+% If drone is unstable, cannot land on the landing pad \\
+%this is already a risk
+% If it's raining, landing pad can be flooded (need gutters), no charging
+
+% If pins do not touch the landing pad due to curvature, no charging -> spring loaded\\
+% Power not sufficient to charge all landing pads. \\
+
+% Normal charging battery is outside drone, for autonomous charging it is not. What if battery does BOOM? \\
+
+% Pin breaks
+% What if with 1 leg down, is it stable
+% If one leg gets damaged (bended) it might not fit into slot so no stackability
+
+% If leg fails during landing with pyrotechnics -> boom
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[h]
+\centering
+\caption{Mitigation responses for the new operational risks.}
+\label{tab:mitigationnewoperations}
+\begin{scriptsize}
+\begin{tabular}{|p{0.4cm}|p{3cm}|p{9.2cm}|p{0.4cm}|p{0.4cm}|} 
+\hline
+\multicolumn{1}{|l|}{\textbf{ID}} & \textbf{Risk}                                               & \textbf{Mitigation response}                                                                                                                                                               & \multicolumn{1}{l|}{\textbf{LS}} & \multicolumn{1}{l|}{\textbf{CS}} \\ \hline
+37                                & Drone misses landing pad during landing.                    & The landing legs should prevent damage to the payload and allow landing on the field. Size of landing pad should be determined with a safety factor to account for less landing precision. & 1                                & 2                                \\ \hline
+38                                & Worker gets injuries due to heavy loads.                    & Determine maximum weight and height of drone stacks and comply with government regulations to ensure safe load handling.                                                                   & 2                                & 3                                \\ \hline
+39                                & Insufficient contact between charging pins and landing pad. & Use spring loaded pins and have multiple points points of contact.                                                                                                                          & 2                                & 2                                \\ \hline
+40                                & Charging pin damaged due to stacking.                       & The polypropylene landing gear body should carry the stackability loads instead of the pin.                                                                                                & 1                                & 3                                \\ \hline
+41                                & Payload gets damaged during landing.                        & Design landing legs that take up all the loads instead of the pyrotechnics.                                                                                                                & 2                                & 4                                \\ \hline
+42                                & Loosen attachment of landing gear                       & Ensure tight lock by right size pins or an O-ring type seal between the legs and attachment piece                                                                                                                & 1                                & 2                                \\ \hline
+\end{tabular}
+\end{scriptsize}
+\end{table}
+
+\section{Verification and Validation Operations} \label{sec:opsverificationandvalidation}
+
+Two major tools were used in the sizing of the subsystems related to operations: one for the landing legs and one for the landing pad. The verification and validation of these tools is presented in this section.
+
+\textbf{Code Verification of Tools}
+
+First, the tools were checked for spelling mistakes and consistency of units and orders of magnitude. Then, unit tests were performed, after which they were scaled to module and system tests. These are presented in \autoref{tab:unitVerifLG} and \autoref{tab:unitverifpad}, where the columns state the output tested, the input varied, the test performed and the numerical outcome that supports the verification. Each test has been assigned a tag where VT stands for 'Verification', OP for 'Operations', U for 'Unit test' and S for 'System test'.
+
+In addition to the numerical tests note that in the landing gear tool, the Euler buckling method assumes that the material stays within its elastic limits. Indeed, this has been verified by noting that the stress on the leg is always lower than the critical buckling stress that is lower than the yield stress. Meaning that no inelastic buckling needs to be considered \cite{SAD}.
+
+% green = c1ffc1
+
+\begin{longtable}[c]{|p{1.25cm}|p{1.25cm}|p{1.25cm}|p{4.5cm}|p{5.5cm}|p{0.5cm}|}
+\caption{Verification tests of landing gear and attachment part sizing tool}
+\label{tab:unitVerifLG}\\
+\hline
+\textbf{TAG} & \textbf{Output to test} & \textbf{Input to vary} & \textbf{Test} & \textbf{Outcome} & \textbf{V?} \\ \hline
+\endfirsthead
+%
+\endhead
+%
+VT-OP-U.1 & $\sigma$ & $m_{drone}$ & Double $m_{drone}$, expect stress to double & For m = 2kg, $\sigma$ = 0.46MPa, for m = 4kg,$\sigma$ = 0.92MPa & \cellcolor[HTML]{C1FFC1} yes \\ \hline
+VT-OP-U.2 & $A_{tube}$ & t & Double t, expect $A_{tube}$ to increase & For t = 2.4mm, $A_{tube}$ = 7,9E-5m2. For t = 4.8mm, $A_{tube}$= 1,9E-4 m2 & \cellcolor[HTML]{C1FFC1} yes \\ \hline
+VT-OP-U.3 & $\sigma_{buck}$ & E & Halve E, expect $\sigma_{buck}$ to halve & E = 1.22GPa gives $\sigma_{buck}$ = 29.15MPa,  E = 0.61GPa gives $\sigma_{buck}$ = 14.57MPa & \cellcolor[HTML]{C1FFC1}yes \\ \hline
+VT-OP-U.4 & $\sigma_{buck}$ & L & Double L, expect $\sigma_{buck}$ to become 1/4 & For L = 0.111m, $\sigma_{buck}$ = 29.15MPa. For L= 0.222m, $\sigma_{buck}$ = 7.28MPa & \cellcolor[HTML]{C1FFC1}yes \\ \hline
+VT-OP-U.5 & $m_{stack}$ & $m_{drone}$ & For set $\#$ drones, double the $m_{drone}$, expect $m_{stack}$ to about double & For 6 drones, m= 2kg, $m_{stack}$ = 10.76kg, for m=4kg, $m_{stack}$ = 22,76kg & \cellcolor[HTML]{C1FFC1}yes \\ \hline
+VT-OP-U.6 & $A_{drone}$ & $w_{drone}$ & Double the $w_{drone}$, expect $A_{drone}$ to double & For $w_{drone}$= 0.73m, $A_{drone}$= 0.584m2.  For their $w_{drone}$ = 1.46m , $A_{drone}$= 1.168m2 which is double & \cellcolor[HTML]{C1FFC1}yes \\ \hline
+VT-OP-U.7 & $\sigma$ & $A_{tube}$ & Double $A_{tube}$, expect $\sigma$  /2 & For $A_{tube}$= 79.3 mm2, $\sigma$  = 0.5 MPa, for $A_{tube}$= 158.6 mm2, $\sigma$  =0.25MPa which is halved & \cellcolor[HTML]{C1FFC1}yes \\ \hline
+VT-OP-S.1 & $\sigma$ & Number drones & Double #drone, expect stress to double & For 3 drones, $\sigma$ = 0.254 MPa. For 6 drones, $\sigma$ =  0.507 MPa & yes\cellcolor[HTML]{C1FFC1} \\ \hline
+VT-OP-S.2 & Failure of leg & F_{leg} & Increase load on leg by 100 and expect leg to fail under buckling & For F*100, $\sigma$ = 50.8MPa which is above critical 
+$\sigma_{buckling}$ = 25.6MPa, so it would fail & yes\cellcolor[HTML]{C1FFC1} \\ \hline
+VT-OP-S.3 & $h_{stack}$ & Number drones & Double number of drones, expect $h_{stack}$ to about double & For 4 drones, h = 0.56m, for 8 drones h = 1.12m & yes\cellcolor[HTML]{C1FFC1} \\ \hline
+VT-OP-S.4 & $m_{attach}$ & $r_{LG}$ & Increase the $r_{LG}$, expect $m_{attach}$ to increase & For r = 7mm, m = 2.94gr, for r = 14mm, m = 4.13gr & yes\cellcolor[HTML]{C1FFC1} \\ \hline
+
+\end{longtable}
+
+\begin{longtable}[h]{|p{1.25cm}|p{1.25cm}|p{1.25cm}|p{5cm}|p{5cm}|p{0.5cm}|}
+\caption{Verification tests for landing pad sizing tool}
+\label{tab:unitverifpad}\\
+\hline
+\textbf{TAG} & \textbf{Output to test} & \textbf{Input to vary} & \textbf{Test}                                                                                  & \textbf{Outcome}                                                                                                                                 & \textbf{V?}                 \\ \hline
+\endfirsthead
+%
+\endhead
+%
+VT-OP-U.8    & $m_{steel}$     & $l_{pad}$      & Double the size of the landing pad, expect mass of steel surface to increase by 4.             & For $l_{pad}$ = 0.856m, $m_{steel}$ = 6.515kg, for $l_{pad}$ = 1.712kg, $m_{steel}$ = 26.062kg which is times 4. & \cellcolor[HTML]{C1FFC1}yes \\ \hline
+VT-OP-U.9    & $\sigma$                & $t_{PP}$               & Double the thickness of plastic sides landing pad, expect normal stress per plate to halve.    & For $t_{PP}$ = 2.4 mm, $\sigma$ = 0.0235MPa, for $t_{PP}$ = 4.8 mm, $\sigma$ = 0.0117MPa, which is halved.                                       & \cellcolor[HTML]{C1FFC1}yes \\ \hline
+VT-OP-U.10   & $l_{pad}$       & Landing precision      & Set landing precision to 0, landing pad size should be equal to maximum distance between legs. & For landing precision = 0m and distance between legs = 0.3561m, $l_{pad}$ =  0.3561m, which is indeed equal.                             & \cellcolor[HTML]{C1FFC1}yes \\ \hline
+
+VT-OP-U.11   & \# of tiles next to each other       & Min. $d_{legs}$     &  Halve minimum distance by two, expect \# of tiles next to each other to double. & For $d_{legs}$ = 0.22m, \# of tiles = 4 and for $d_{legs}$ = 0.11m, \# of tiles = 8.                           & \cellcolor[HTML]{C1FFC1}yes \\ \hline
+
+
+VT-OP-S.5 & $m_{pad}$ & Max. $d_{legs}$ & Double max. distance between legs, expect mass of pad to increase with less than double. & For $d_{legs}$ = 0.3561m, $m_{pad}$ = 13.5293kg. For $d_{legs}$ = 0.7122m, $m_{pad}$ = 21.8252kg, which is an increase with factor 1.6132. & yes\cellcolor[HTML]{C1FFC1} \\ \hline
+\end{longtable}
+
+
+\textbf{Calculation Verification of Tools}
+
+Once the implementation of the model was verified, the numerical results also need to be verified. This means that the outcome was compared to an external verified source. In order to do so, a margin must be set for the relative error between the model solution and the external solution. If the model's outcome lies within this margin, then the results are considered to be verified.
+
+Note that not all outcomes of the models can be verified due to the really specific scenario. Therefore, the calculation verification has been focused on cross-sectional properties of the landing leg and masses of the leg and the craters. In particular, an external online calculator was used to verify the moment of inertia of the leg \cite{Ixxcalc}, and CATIA was used to model the landing gear and craters and compute their mass based on the given density. Note that this only applies to the masses of the PP parts and not extra components like the pins.
+%https://www.calcresource.com/moment-of-inertia-ctube.html
+For the computation of the moment of inertia a margin of $\pm$ 2\% was chosen, since it is a closed formula that depends on a small number of variables, however machine error was expected. For the masses of the parts, a higher margin of $\pm$ 10\% was chosen. This is due to the approximations of the model for certain geometries, for instance the trimming of the edges or small holes that the model neglects.
+
+The calculation verification process is presented on \autoref{tab:calcverifops}, where it can be seen that the tool was verified.
+
+\begin{table}[h]
+\centering
+\caption{Calculation verification of masses and moment of inertia}
+\label{tab:calcverifops}
+% \resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+\textbf{Output to verify} & \textbf{Value} & \textbf{External value} & \textbf{Error} & \textbf{Margin accepted} & \textbf{V?} \\ \hline
+$I_{xx}$ & 1.150E-09 & 1.154E-09 & 0.07 & $\pm$2\% & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+$m_{Short-tube}$ & 0.0125 & 0.0130 & 3.83\% & $\pm$10\% & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+$m_{Long-tube}$ & 0.0182 & 0.0180 & -1.11\% & $\pm$10\% & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+$m_{crater}$ & 0.00182 & 0.0020 & 8.78\% & $\pm$10\% & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+$m_{attach}$ & 0.00295 & 0.0030 & 1.79\% & $\pm$10\% & \cellcolor[HTML]{C1FFC1}Yes \\ \hline
+\end{tabular}%
+% }
+\end{table}
+
+
+\textbf{Validation of Tools}
+
+Due to how specific the model is to the design it is not possible to validate it yet with resources available to the design team. Since the landing gear is a relatively cheap part, it is suggested that validation is done by means of testing a prototype, which for example can be 3D printed, under different loads in compression to validate the model output.
+
+In addition, it is important to validate the attachment method of the landing leg to the arm through the spring loaded pins as well as the resistance of the joint between the Pogo pin and the leg. These are also recommendations for a more detailed design phase mentioned in \autoref{ch:postdseactivities}.
+
+
+% \begin{table}[h]
+% \centering
+% \caption{Validation of landing gear sizing}
+% \label{tab:validLG}
+% \resizebox{\textwidth}{!}{%
+% \begin{tabular}{|l|l|l|l|l|l|}
+% \hline
+% \textbf{Output to validate} & \textbf{Value} & \textbf{External value} & \textbf{Error} & \textbf{Margin accepted} & \textbf{Val?} \\ \hline
+% $I_{xx}$ & 1 & 2 & 50\% & 1\% & No \\ \hline
+% $m_{PP-tube}$ & xx & xx & xx & 20\% & Yes\cellcolor[HTML]{C1FFC1} \\ \hline
+% $m_{crater}$ & xx & xx & xx & 20\% & Yes\cellcolor[HTML]{C1FFC1} \\ \hline
+% \end{tabular}%
+% }
+% \end{table}
+
+
+\section{Compliance Matrix Operations} \label{sec:opscompliancematrix}
+
+Finally, \autoref{tab:complianceops} presents the compliance matrix for the operations related requirements that were used to design the landing gear, landing pad and stackability. The table is similar to \autoref{tab:opsrequirements} with an additional column on the right stating whether it has been verified or not. The reasoning behind this has been presented thought the method in 
+\autoref{sec:landingpad} and \autoref{sec:stackability}. Note that there are some system requirements that will be presented and verified in \autoref{ch:systemverificationandvalidation}. In particular, requirement OP-AP-6 states that the take-off zone shall be at most 1$m^2$, this is partially fulfilled by the landing bad being 0.7631$m^2$, however this is not the entirety of the take-off zone and it will therefore be verified in \autoref{tab:complianceintegration}. Similarly OP-AP-2.3 which requires the total volume of the drone will also be verified in \autoref{ch:finaldesign}.
+
+\begin{longtable}[c]{|p{2cm}|p{2.2cm}|p{8.2cm}|p{2cm}|}
+\caption{Compliance matrix for operations subsystem requirements}
+\label{tab:complianceops}\\
+\hline
+\textbf{Department} & \textbf{Tag} & \textbf{Requirement} & \textbf{Verified?} \\ \hline
+\endfirsthead
+%
+\endhead
+%
+ & CCE-AP-3 & The drones shall be recharged wirelessly through their landing pads & \cellcolor[HTML]{C1FFC1}Yes, charging pins \\ \cline{2-4} 
+ & CCE-SYS-3.1 & The drone shall be able to charge during rain & \cellcolor[HTML]{C1FFC1}Yes \\ \cline{2-4} 
+ & CCE-SYS-3.2 & The drone shall be able to recharge autonomously on the landing pad between preparation and show & \cellcolor[HTML]{C1FFC1}Yes \\ \cline{2-4} 
+%  & OP-AP-6 & The area of the take-off zone shall be at most 1$m^2$ per drone & \cellcolor[HTML]{C1FFC1}Yes, landing pad is 0.7613m$^2$ \\ \cline{2-4} 
+\multirow{-5}{*}{Landing pad} & POP-SYS-3.7 & \begin{tabular}[c]{@{}l@{}}The energy storage should be fully \\    charged within 60min.\end{tabular} & \cellcolor[HTML]{DDEBF7}Post DSE\footnote{Fully charging the battery within 60 minutes could not be verified for wireless charging as the landing pad specifications have not been defined. Charging by cable within 60 minutes has been verified in \autoref{ch:power}.} \\ \hline
+ & OP-AP-2 & The drones shall be suitable for mass transport & \cellcolor[HTML]{C1FFC1}Yes, stacks of 6 drones carried by one worker \\ \cline{2-4} 
+ & OP-AP-2.1 & The drones shall safely be stacked on each other & \cellcolor[HTML]{C1FFC1}Yes, stacks of 6 drones \\ \cline{2-4} 
+%  & OP-AP-2.2 & The volume of the drones shall not exceed 0.5m\textasciicircum{}3 & \cellcolor[HTML]{C1FFC1}Yes, it is 0.1134$m^3$ \\ \cline{2-4} 
+ & OP-AP-2.3 & The drone shall be stored rigidly in a shock-free container & \cellcolor[HTML]{C1FFC1}Yes \\ \cline{2-4} 
+\multirow{-5}{*}{Stackability} & SP-AP 1.4.3 & Future innovations shall have specifications up to dimensions of 20cm x 20cm x 20cm & \cellcolor[HTML]{C1FFC1}Yes, long landing gear set \footnote{Note that this is only a verification of the height of the payload, however the width and length will be verified in \autoref{tab:complianceintegration}} \\ \hline
+\end{longtable}
+
+
+
+
+
+
+% \section{Logistics and Operations and Safety procedures (this should have a chapter on its own after the integration)}
+
+% \begin{table}[H]
+% \centering
+% \caption{Requirements related to operations subsystem.}
+% \label{tab:opsrequirements}
+% \resizebox{\textwidth}{!}{%
+% \begin{tabular}{|p{2cm}|p{2cm}|p{10cm}|}
+% \hline
+% \textbf{Sub-department} & \textbf{TAG} & \textbf{Requirement} \\ \hline
+% \multirow{4}{*}{Logistics} & OP-AP-4 & The drones shall be operated from a central location. \\ \cline{2-3} 
+%  & OP-AP-5 & The drones shall be controlled by a ground station. \\ \cline{2-3} 
+%  & OP-AP-7 & The minimum amount of drones in one show shall be 300 for outdoor shows. \\ \cline{2-3} 
+%  & OP-AP-8 & The minimum amount of drones in one show shall be 20 for indoor  shows, where ’indoors’ means venues such as concert halls or stadiums. \\ \hline
+%  \end{tabular}
+%  }
+% \end{table}
+
+% To estimate the logistics, the time required to deploy the drones on a field has been estimated. This time is dependent on many factors, such as the amount of drones, the number of drones per stack, the amount of workers that can deploy the drones simultaneously  and the distance between the drones in the field. The following assumptions have been made to give an idea of a 'mock drone show event':
+
+% \begin{itemize} [noitemsep, nolistsep]
+%     \item Drones are placed in a rectangular grid with a spacing of 2m.
+%     \item The stacks of drones transported to the event are located in one of the angles of the rectangular grid.
+%     \item The workers can walk at a constant 5km/h.
+%     \item On average, for each stack, the worker will walk to the middle of the field and come come back.
+%     \item The location of the deployment of the first and last drone of a stack are the same. 
+%     \item It takes 3min to set up a drone on its pad and 1min to walk to the next landing pad.
+    
+% \end{itemize}
+
+
+
+% The most efficient grid layouts have been found to be...
+
+
+
+
+
+% \section{Safety Regulations}
+
+% Operations
+% \begin{itemize}
+%     \item Safety Shoes
+%     \item 2 people for 
+% \end{itemize}
+

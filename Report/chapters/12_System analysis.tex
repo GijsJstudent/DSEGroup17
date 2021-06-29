@@ -1,0 +1,311 @@
+\chapter{System Analysis}
+\label{ch:systemanalysis}
+%     -Summary of Trade-off and Detailed Design??
+% Deliverables:
+% Technical Risk Assessment
+% Sustainability
+% Communication Flow Diagram
+% H/W, S/W block diagrams (interactions, flows)
+% Data Handling Block Diagram
+
+% 14 pages: NOTICE EDITORS WHEN YOU ARE GOING OVER OR UNDER THIS LIMIT!
+
+\todo{chapter intro}
+
+\section{Requirements related to system analysis} 
+\label{SA:requirements}
+
+
+
+\begin{table}[H]
+\caption{Requirements related to the design analysis.}
+\label{tab:analreq}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Requirement type} & \textbf{TAG} & \textbf{Requirement} \\ \hline
+\multirow{13}{*}{System analysis} & AD-SYS-6 & \begin{tabular}[c]{@{}l@{}}The drone shall be operable in a temperature range between \\ 3 deg and 40 deg\end{tabular} \\ \cline{2-3} 
+ & SUS-EO-3 & At least 80\% of drone mass shall be recyclable. \\ \cline{2-3} 
+ & OP-AP-3 & The drones shall be available in the year 2025 \\ \cline{2-3} 
+ & SUS-AP-2 & There shall be no radioactive parts on board of the drone. \\ \cline{2-3} 
+ & OP-AP-1 & \begin{tabular}[c]{@{}l@{}}An employee who has followed a one-day training shall be able to replace \\ parts of a drone\end{tabular} \\ \cline{2-3} 
+ & SP-EO-2 & Drones shall not sink in the water \\ \cline{2-3} 
+ & OP-GB-9 & The drones shall adhere to drone regulations \\ \cline{2-3} 
+ & SR-AP-1 & \begin{tabular}[c]{@{}l@{}}An unintentional collision with the ground shall happen atmost once every \\ 1,000,000 flight hours when flying indoors\end{tabular} \\ \cline{2-3} 
+ & SR-AP-2 & \begin{tabular}[c]{@{}l@{}}An unintentional collision with the ground shall happen atmost once every \\ 100,000 flight hours when flying outdoors\end{tabular} \\ \cline{2-3} 
+ & SR-SYS-5.1 & Emergency landing will occur autonomously. \\ \cline{2-3} 
+ & SR-AP-6 & Each drone shall have a lifetime of at least 1000 flight hours \\ \cline{2-3} 
+ & SUS-NR-6.1 & The drone shall not leave any trash on the ground. \\ \cline{2-3} 
+ & SUS-EO-7 & \begin{tabular}[c]{@{}l@{}}Power supply failure during operation of the drone shall not result in \\ release of any toxic substances outside of the system.\end{tabular} \\ \hline
+\multirow{5}{*}{Control} & SR-AP-5 & \begin{tabular}[c]{@{}l@{}}In case of emergency, the drones shall be able to land safely \\ in less than 90 seconds\end{tabular} \\ \cline{2-3} 
+ & POP-SYS-4 & \begin{tabular}[c]{@{}l@{}}Partial failure of the propulsion unit shall not prevent the drone \\ from being able to perform an emergency landing.\end{tabular} \\ \cline{2-3} 
+ & SR-AP-3 & Malfunctioning of a single drone shall not endanger the entire show \\ \cline{2-3} 
+ & SP-SYS-1.2.2 & \begin{tabular}[c]{@{}l@{}}The pyrotechnics shall not cause the drone's center of gravity to move \\ outside of the stability and controllabillity margins\end{tabular} \\ \cline{2-3} 
+ & AD-AP-1 & The drones shall be able to fly in 6BFT wind conditions. \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Drone Characteristics Overview}
+
+% Final mass, power, sizes, battery..... and nice picture
+
+% \section{CCE Diagrams (needs better name)}
+Diagrams in drone characteristics overview
+% Communication Flow Diagram
+% H/W, S/W block diagrams (interactions, flows)
+% Data Handling Block Diagram
+\autoref{AppendixB}
+\todo{refer to specs table in appendix A}
+
+\section{Performance Analysis}
+% flight profile diagrams (Menno)
+% payload-range diagrams (Vova) 
+% climb performance, (Menno)
+% positioning accuracy, (Vova)
+% disturbance resistance, (Vova)
+% coverage, (Vova)
+% mission duration, (Paul)
+% emissions, (Paul)
+
+An analysis is conducted on the performance of the final design. Specific analyses addressed are a mission flight profile, payload-flight time diagrams, climb performance, positioning accuracy, disturbance resistance, coverage, mission duration and emissions.
+
+\subsection{Flight Profile}
+\label{sub:flightprofile}
+% Flight Profile
+The trajectory of the mission flight profile consists of two main phases: the test routine and the actual mission. During the test routine the drones will do a quick test flight in which performance and safety is verified. After the test routine the batteries will be charged and then the actual mission takes place. The mission can be subdivided into five segments. First the drones take off, then they fly towards the location where the show takes place and they climb towards the desired altitude, then it is showtime, after the show the drones have to fly back to the landing area after which they actually land on the ground. The mission flight profile is presented in \autoref{fig:flight_profile}. The choreography is different for each show, which is why the showtime segment in the figure has multiple trajectories in different colours as examples.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/Performance_analysis/Flight_Profile.png}
+    \caption{Sketch of a typical flight profile}
+    \label{fig:flight_profile}
+\end{figure}
+
+% payload - flight time diagram 
+\subsection{Payload Flight Time Diagram}
+One of the main innovation of our drones is the ability to change payload. The flight time depends on the payload mass and power consumption. To show the relation between achievable flight time, mass and power \autoref{fig:flight_envelope_2D} and \autoref{fig:flight_envelope_3D} were created. In the drone industry is common to specify the maximum flight time in hover mode with no wind, so the graphs below assume no wind and fresh batteries with depth of discharge of 80\% . The range of the drone is limited by the communication link, rather than endurance. The communication system allows for a range up to 1200 m, as described in \autoref{subsec:cce_link_budget}. 
+
+\begin{figure}[H]
+     \centering
+     \begin{subfigure}{0.48\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Figures/Performance_analysis/flight_envelope.png}
+         \caption{3D payload - flight time diagram}
+         \label{fig:flight_envelope_3D}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}{0.48\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Figures/Performance_analysis/flight_envelope_2D.png}
+         \caption{2D payload - flight time diagram}
+         \label{fig:flight_envelope_2D}
+     \end{subfigure}
+     \hfill
+\end{figure}
+
+When the drone carries 0.6 kg payload, it has thrust to weight ration of 3, so the absolute maximum payload mass is 4.8 kg. While in theory the drone can lift such payload, it would leave no additional thrust for acceleration. This issue has to taken into account when planning a drone show.  
+
+\subsection{Wind resistance} \label{subsec:wind_resistance}
+Another important feature of swarm vehicles is wind resistance. Strong winds can disturb the trajectories of the drones and cause unintended collisions. In \autoref{fig:wind_responce} a strong wind gust is applied to the drone. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Figures/Performance_analysis/wind_resistance.png}
+    \caption{Responce to the wind gust}
+    \label{fig:wind_responce}
+\end{figure}
+The wind speed exceeds 6 BFt (13.8 m/s) and the drone still stays within 1.5 meters from a specified location. This satisfies AD-AP-1 requirement. This proves the ability to fly in formations 2 meters apart from other drones. This result is achieved with manually tuned gains, better PID gains will allow for less wind disturbance. 
+
+\subsection{Payload effect of controlability} \label{subsec:payload_control}
+As already discussed in \autoref{ch:cce}, the payload affects the controlability of the drone. If the drone launches fireworks, the center of gravity might shift, which will introduce additional moment to the drone. assuming a worst case scenario, 0.6 kg will be shifted by 20 cm. This creates a moment of 0.12 Nm. This results in additional load of 0.18 N per motor, which is 1.2\% of maximum thrust. This additional thrust is well within the  motor signal bounds dedicated to pitch and roll as described in  \autoref{subsec:cce}, therefore requirement SP-SYS-1.2.2 is satisfied .
+
+\subsection{Operating temperature} \label{subsec:operating_temperature}
+Requirement AD-SYS-6 sets operational limits on the temperature. During subsystem design, all components were selected with temperature requirements in mind, this way all drone subsystems can work in range of -3 to 40 deg. Maximum operating temperature of the battery is only 5 degrees higher than the requirement. Additional heat from electronic components might push the battery above acceptable temperature, so the drone will be operated without the case in hot environments to allow excess heat to escape.   
+
+\subsection{Floating on water} \label{subsec:floating_on_water}
+Many drone shows are conducted above rivers in large cities, because the skyscrapers on land interfere with the show. Requirement SP-EO-2 demands the drone to float on water, if case it is forced to land there. Assuming the top cover is not waterproof, the total water displacement is $1.19*10^-3 m^3$. To float on water, the drone needs additional $0.92*10^-3 m^3$ of volume. Additional volume will be provided by the payload. To put it in perspective, a sphere with 12 cm in diameter will be sufficient. If the customer wishes to fly above water, a payload has to have sufficient volume. Concept of such payload can be seen in \autoref{fig:exploded view}.
+
+
+\subsection{Climb performance}
+% Climb performance
+Climb performance of the drone and the ability to land quickly are useful to investigate. According to requirement SR-AP-5, the drone has to be able to land safely within 90 seconds at all times. In order to check this requirement it was calculated how long it takes for the drone to reach the ground in free fall from 1000 m altitude. This was done by computing the net force on the drone while taking into account gravity, drag, and weight \cite{climbperformance}. Drag depends on the drag coefficient, air density, velocity and surface area. The drag coefficient and surface area were taken already computed during the subsystem design. Air density was assumed a constant at sea level. Velocity depends on time and acceleration and was updated every 0.1 seconds. It turns out the drone can reach the ground in 31.8 seconds while free falling. During the fall the drone will reach a terminal velocity of 34.1 m/s. The time it takes to decelerate from the terminal velocity was computed as well by taking into account thrust at full throttle, which is 64.8 N. It takes approximately 1.5 seconds to slow down to a full stop. Using the same approach but adjusting it to acceleration instead of deceleration, the time it takes to reach 1000 m altitude starting on the ground was computed as well. It turns out the drone can get to that altitude in only 21.8 seconds, which results in an unexpected rate of climb of 45.9 m/s. This is much higher than the maximum horizontal velocity of 33.8 m/s for which the drone is designed. This might be due to the fact that during ascending the thrust vector is aligned with flight path of the drone, while during horizontal flight the thrust vector has both a horizontal and a vertical component. 
+
+
+
+% Mission Duration
+\subsection{Mission Endurance}
+Typical missions are specified by the flight profile shown in \autoref{sub:flightprofile}. For these specific missions, an estimate of the maximum showtime as a function of battery state of life can be performed, using the method described in \autoref{ch:power}. The flight envelopes, such as those shown in \autoref{fig:FLE_HEAVY_FINAL} and \autoref{fig:FLE_LIGHT_FINAL}, can be slightly modified, such that they only show what mission scenarios are feasible for a given state of life of the battery (which can be seen as an input value between 0\%, which corresponds to the beginning of life, and 100\%, which corresponds to the end of life). For a given state of life value ($\mathit{SOL}$), the maximum showtime possible under different scenarios can be studied (for each of them, the standard depth of discharge of 80\% is assumed). A compilation of the endurance observations conducted is displayed in \autoref{tab:max_end}. Let it be noted that the time values displayed only pertain to the showtime (the takeoff, travel to and from the show location, as well as landing are not incorporated in these time values).
+\todo[]{Maybe this table can be made less busy since terms repeat a lot, so for instance 'heavy' can be said once merging the four rows, same for the percentage, the '1km away' and 'right above', can merge 2 rows so maybe this way it's easier for the reader to spot the differences between the scenarios, but it's just an idea:) }
+\begin{table}[H]
+    \caption{Maximum Endurance of specific missions.}
+    \label{tab:max_end}
+    \centering
+    \begin{tabular}{p{0.10\linewidth}|p{0.05\linewidth}|p{0.50\linewidth}|p{0.18\linewidth}}
+        \textbf{Payload Type} & $\mathbf{SOL}$ & \textbf{Scenario} & \textbf{Max. Showtime} \\ \hline \hline
+        Heavy & 0\% & takeoff zone 1km away from show, 6BFT wind & 16 min 25 s \\ \hline
+        Heavy & 0\% & takeoff zone 1km away from show, no wind & 16 min 40 s \\ \hline
+        Heavy & 0\% & show right above takeoff zone, 6BFT wind & 18 min 00 s \\ \hline
+        Heavy & 0\% & show right above takeoff zone, no wind & 18 min 15 s \\ \hline \hline
+        Heavy & 50\% & takeoff zone 1km away from show, 6BFT wind & 14 min 55 s \\ \hline
+        Heavy & 50\% & takeoff zone 1km away from show, no wind & 15 min 15 s \\ \hline
+        Heavy & 50\% & show right above takeoff zone, 6BFT wind & 16 min 35 s \\ \hline
+        Heavy & 50\% & show right above takeoff zone, no wind & 16 min 45 s \\ \hline \hline
+        Heavy & 100\% & takeoff zone 1km away from show, 6BFT wind & 13 min 30 s \\ \hline
+        Heavy & 100\% & takeoff zone 1km away from show, no wind & 13 min 45 s \\ \hline
+        Heavy & 100\% & show right above takeoff zone, 6BFT wind & 15 min 05 s \\ \hline
+        Heavy & 100\% & show right above takeoff zone, no wind & 15 min 15 s \\ \hline \hline
+        Light & 0\% & takeoff zone 1km away from show, 6BFT wind & 21 min 55 s \\ \hline
+        Light & 0\% & takeoff zone 1km away from show, no wind & 22 min 20 s \\ \hline
+        Light & 0\% & show right above takeoff zone, 6BFT wind & 23 min 35 s \\ \hline
+        Light & 0\% & show right above takeoff zone, no wind & 23 min 55 s \\ \hline \hline
+        Light & 50\% & takeoff zone 1km away from show, 6BFT wind & 20 min 00 s \\ \hline
+        Light & 50\% & takeoff zone 1km away from show, no wind & 20 min 20 s \\ \hline
+        Light & 50\% & show right above takeoff zone, 6BFT wind & 21 min 40 s \\ \hline
+        Light & 50\% & show right above takeoff zone, no wind & 22 min 00 s \\ \hline \hline
+        Light & 100\% & takeoff zone 1km away from show, 6BFT wind & 18 min 05 s \\ \hline
+        Light & 100\% & takeoff zone 1km away from show, no wind & 18 min 25 s \\ \hline
+        Light & 100\% & show right above takeoff zone, 6BFT wind & 19 min 45 s \\ \hline
+        Light & 100\% & show right above takeoff zone, no wind & 20 min 05 s \\
+        
+        % & & \\ \hline
+    \end{tabular}
+\end{table}
+
+From the results displayed in \autoref{tab:max_end}, it can be concluded that the 1 km distance from show location parameter influences maximum showtime more than the 6BFT wind condition. Another observation is the fact that a battery at 50\% $\mathit{SOL}$ will be able to fulfil the 20 min showtime with light payload requirement even under the harshest conditions, and can almost fulfil the 15 min with heavy payload requirement under those same conditions. Another note to make is that the maximum flight time requirements for both heavy and light payload are possible with batteries at their end-of-life, granted that the show does not take place too far from the takeoff zone, and that the weather remains calm. The tool developed in \autoref{ch:power} could potentially be used by the drone show operators, such that they could evaluate while on site the maximum showtime they could deliver based on the state of life of their available batteries, the weather and the layout of the show.
+
+In addition to these possible mission scenarios, a computation of the maximum hovering time was made, as this is a quite common parameter in drone specification sheets, and as such, can help provide a nice comparison between Starling's endurance with its market competitors. For this, it can be assumed that the battery is at its beginning of life (drone companies select the set of conditions that will produce the most optimistic result to help them advertise their product), is kept constantly in hover position, is not being subjected to aerodynamic disturbances by wind, and only carries the light payload, which is not being activated, such that the power available from the battery is only used by the flight computer and the motors to sustain stable flight. From this set of assumptions, the obtained result is a total hovering time of 25 minutes and 35 seconds, which is a rather satisfactory result when compared with the values of 25 minutes advertised by Sparkl and UVify IFO in \autoref{sec:targetcost}.
+
+% Collision avoidance
+\subsection{Collision Avoidance}
+For autonomous swarm UAVs such as Starling,  the software part a major weak point when it comes to reliability. The software failure rate is very difficult to calculate, and it is not the part of this project, so only the hardware was analyzed. 
+Electrical motor is the most fail prone part of the drone. According to the \cite{motor_fai_rate} mean time between failure (MTBF) for the motors of selected size is about 77000 hours. To comply with requirements SR-AP-1 and SR-AP-2, which demand 1000000 and 100000 hours respectively, an additional software will be used. This software will change the controller behaviour if the motor breaks down during the show. Such advanced control algorithms already exist \cite{fail_safe_controller}, so it is reasonable to assume that it is possible to implement such controller by 2025. If engine fail is expected to occur $10^6/77000 =  13$ times in million flight hours, the landing of the damaged drone would take a few minutes, so the chance of another engine failure during this time is negligibly low. This safety feature also satisfies POP-SYS-4 requirement.
+If the drone experiences motor failure, it becomes uncontrollable manually. For this reason, when motor failure is detected, the software slowly lands the drone. Without one motor the drone spins very fast, so the gps and barometer might show the inaccurate altitude, therefore the descent is performed at a safe rate, such that if the drone miscalculates the ground position, it wont break down. This procedure satisfies SR-SYS-5.1. 
+
+Failure of electronic components and battery is also possible, however there is no research about failure rates of these components in multicopters, so this analysis is left as a post-DSE task. 
+ 
+
+If the drone (partially) fails, it can fit nearby drones, causing chain reaction. To prevent this, drones regularly send telemetry data back to the ground station, so in case of emergency , ground station can command the drones to keep a safe distance from failed unit. This way the requirement SR-AP-3 is satisfied. Also it is up for the show organizers to design collision-free trajectories for the show. 
+
+
+
+% SR-AP-1	An unintentional collision with the ground shall happen atmost once every 1,000,000 flight hours when flying indoors
+% SR-AP-2	An unintentional collision with the ground shall happen atmost once every 100,000 flight hours when flying outdoors
+
+
+
+% Emissions
+\subsection{Emissions}
+The preliminary design phase led to the conclusion that the drone will be powered by li-po batteries. Lithium-polymer batteries are very common in the multirotor drone industry. Among their attractive performance characteristics, they have the benefit of not producing any emissions during flight. As such, the operation of the drone itself will not result in any emissions of pollutants or harmful substances.
+
+\subsection{Regulations}
+% OP-GB-9	The drones shall adhere to drone regulations
+\todo{https://business.gov.nl/regulation/drones/}
+ For the last years countries in the EU started to implement drone regulations that differ per country. A need arose to have a set of regulations that can be maintained in every country part of the European Union. By the start of 2021 the first EU regulations started to take place and new drone regulations are currently being implemented. The current regulations state that the drones have to carry a licence plate and shall be operated by pilots who have a licence.
+ 
+ The communication system aboard the drone is adhering to the regulations set for Wi-Fi and radio communications, as mentioned in \autoref{ch:cce}. As our drone its hardware adheres to current drone regulations, requirement OP-GB-9 is met. However, special licenses are required to fly our drone and therefore this shall be taken into account when operating the product.
+
+
+
+\section{RAMS analysis} \label{sec:RAMS}
+
+\subsection{Reliability} % Mustafa finish this
+Requirement SR-AP-6 sets a minimum operational flight time to 1000 hours. All subsystems of the drone were designed to meet this requirement. All electronic components have lifetime measured in decades. Motors of the drone are brushless, lifetime of these parts is limited by the bearing wear. According to  \cite{brushless_motor_life} the lifespan of brushless motors exceed 1000 hours . In addition manufacturer of motors for Starling claims to use quality bearings to maximize lifespan of the part. LiPo batteries have a relatively short lifespan, so they are changed regularly as described in \autoref{ch:power}. Over the lifetime of Starling it is expected that the battery will be replaced 7  or 8 times depending of proper use of the batteries. Structure of Starling is made of non biodegradable , weather resistant material, so it should last for the required time. 
+
+
+\subsection{Availability} % Vova
+The majority of the parts in the drone are off-the-shelf components, which makes it very easy to replace or upgrade parts. For example the battery is a common 4 cell LiPo battery, available in most hobby stores. Even if the exact model goes out of stock, similar models can be used with very little effect on performance. Same is true for plastic propellers. Electrical motors, on the other hand, are quite different from manufacturer to manufacturer, so it is crucial to buy enough spare parts with the initial batch. As for the frame, injection molding is cheap for large batches, but quite expensive otherwise. It makes sense, therefore, to produce spare frames with the initial batch as well. 
+
+Concerning electronic components, drones do not use any advanced processors that are not available due to world wide chip shortages in 2021. All components are available in sufficient quantities from big electronic suppliers such as Mouser or DigiKey. UWB board is sold as a ready module, but other PCBs are custom made in China. It is much cheaper to order PCB printing and assembly for large batches, so spare electronics should be included in the initial batch. 
+
+The software for the flight computer is not readily available, because the flight computer is custom made and has non-standard peripherals such as UWB module and RTK GPS module. The flight computer is based on the top end STM 32 H7 microcontroller, which is not common yet in the drone industry, but the SP Racing H7 Extreme drone has the same microcontroller and supports open source autopilots such as Betaflight \cite{H7_flight_computer} \cite{Betaflight}. So the flight software for the drone needs to be modified, but not written from zero. 
+
+All of-the-shelf components and manufacturing techniques are readily available and proven, so requirement OP-AP-3 is satisfied. 
+
+
+
+    
+
+\subsection{Maintainability}% Menno
+\label{RAMS_maintainability}
+Maintainability is an important subject as it is desired to reduce costs related to repair and maintenance. The biggest influence on easy maintenance is the accessibility of all components. The easier components can be accessed, the less time consuming reparations will be. Besides, some components are made interchangeable instead of fixed, such that the drone can be repaired and it does not have to be thrown away completely. For example, as described in \autoref{ch:structures} the arms are fixed, but landing legs are changeable. This allows a possibility of replacing broken landing legs with 3D printed ones made in-house. The toughness of 3d printed parts is lower, but ultimate strength is very similar if the layer orientation is selected properly. 
+
+Propellers are known to be one of the most vulnerable component of the drone. They can break or get damaged easily due to small accidents, for example during transport or while stacking drones on top of each other. These little accidents are unavoidable. Fortunately, propellers can be replaced easily by new ones as they are accessible from the outside without interference with other components. Besides, propellers are quite cheap so replacing those should not form problems.
+
+The battery is one of the most critical components of the drone, so it is important to maintain it carefully. This can be done by use of a battery management system (BMS). This device keeps track of the battery's state of health. This way, the battery can be replaced at the right moment. Besides, the BMS protects the battery from over-current, over- and under-voltage. Therefore, the battery can be properly charged inside the drone. 
+
+The software updates can be done via WiFi, so drones don't need to be connected by cables to the computer. The communication and positioning modules are connected to the flight computer by wires with connectors, so if the user wishes to replace some or all of these modules, it is easy to do. Payload is connected to the flight computer via I2C cable with detachable connectors, so the payload can be easily swapped as well. It is important to note that I2C protocol may require additional electronics on the payload side to convert I2C signals to PWM signals for the lights or any other signal type for future payload.   
+
+To verify OP-AP-1\label{req:OP-AP-1} it is necessary to develop a one day training program and test whether the employee is able to maintain or replace (parts of) the drone. Since at this stage this requirement cannot be verified it will be considered a post DSE activity.
+
+
+
+\subsection{Safety} % Mustafa Finish this
+
+Several safety recommendations have been preformed in \autoref{sec:safetyregulations}. This relates to the logistics of the batteries, pyrotechnics, propellers or environmental conditions like rain or the ambient temperature.
+
+
+% at least address a list of safety critical functions, the redundancy philosophy applied, the expected reliability and availability, and, for maintainable systems, an outline of scheduled and non-scheduled maintenance activities.
+
+
+
+\section{Technical Risks Analysis}
+%recap of all risks and their mitigation
+
+Throughout the development of the project, each department's investigation of the design led to the identification of new risks, which were appended to the risk register. Each subsystem chapter provides a full overview of the risks pertaining to that particular subsystem, as well as the implementation of response strategies for those risks.
+
+The compilation of all those technical risks can be seen in \autoref{fig:old_tech_risks}, in the form of a risk map. The map divides the risks into three distinct regions:
+
+\begin{itemize}[noitemsep]
+    \item Green: The risks are low. Although still inherent to the design of the drone, they do not significantly endanger the success of the project.
+    \item Yellow: The risks are moderate. Risks in this region must be closely observed throughout the development of the project.
+    \item Red: The risks are high. The mitigation of those risks must aim at removing them from this region, so as to not endanger the progress of the project.
+\end{itemize}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/Technical_Risks/Tech_Risks_old.png}
+    \caption{All the technical risks of the project, displayed in a risk map.}
+    \label{fig:old_tech_risks}
+\end{figure}
+
+\autoref{fig:old_tech_risks} shows a significant number of risks in the yellow and red areas. This is unacceptable, and would drastically endanger the success of the design without any mitigation responses. Therefore, appropriate risk mitigation responses were implemented, in order to bring all the risks within manageable and acceptable boundaries. The result of all those strategies is \autoref{fig:new_tech_risks}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/Technical_Risks/Tech_Risks_new.png}
+    \caption{Risk map of all technical risks, after mitigation.}
+    \label{fig:new_tech_risks}
+\end{figure}
+
+
+\section{Sustainable development strategy}
+In this section sustainability requirements related to integration are verified. 
+
+Recyclability fraction is set by SUS-EO-3 requirement to at least 80\% .
+Because the payload design is not a part of this project, only the drone without the payload is analyzed. In principle, all materials can be recycled, but the cost of recycling can be higher than the profit. This is true for fiberglass in circuit boards. Recyclability of Lithium batteries heavily depends on the process. By EU directive 2006/66/EC Lithium batteries should be recycled at least 50\% by mass, however processes with 95\% efficiency exist \cite{battery_recycling_95}. Frame and propellers are made from common plastics and are 100\% recyclable. Electric motors are made of valuable metals, so they are also fully recyclable. Total mass of the drone is slightly higher than the total mass of all subsystems to account for manufacturing deviations, wires and coatings. Those are assumed to be non-recyclable. To calculate the recyclability fraction the following equation is used:
+\begin{equation}
+    R = \frac{\sum M_{res}}{M_{tot}} = \frac{0.412 + 0.58 \cdot 0.95 + 0.1319}{1.51} = 84.9\%
+    \label{eq:recyclability}
+\end{equation}
+Where $M_{res}$  are masses of all recyclable parts and $M_{tot}$ is the total mass of the drone, excluding the payload. in \autoref{eq:recyclability} the calculation was done for the case of 95 \% battery recyclability. If the battery is recycled with least efficient legal process (50\%) then total recyclability is 67.6\%. Similar analysis can be performed for the total waste during the lifetime of the drone. Batteries are replaced most often, so they degrade or improve the recyclability fraction the most. For the 95\% process R = 92.2 \% , for 50\% efficient process R = 54.7\%. 
+
+From the analysis above it can be seen that in the worst case scenario the design does not meet the requirement. In 2006/66/EC document recyclability bar for other types of batteries is set much higher, namely 65\% for led-acid and 75\% for nickel-cadmium. These batteries are not energy dense enough for UAVs.Also, reducing the battery size would fail the flight time requirement, so there is no alternative design choice to minimize battery impact on recyclability. 
+
+Recyclability requirement states that the drone should be recyclable, and because it is possible to have recyclability fraction of 84.9\%, the requirement is satisfied. However, it is up for the customer to direct the components to the right recycling facility. 
+
+Requirements SUS-AP-2 and SUS-NR-6.1 are trivial, since the drone does not use any radioactive parts and it leaves no trash on the ground. 
+
+Requirement SUS-EO-7 demands that power supply failure during operation of the drone shall not result in release of any toxic substances outside of the system. If the voltage regulator in the flight computer or the BMS board fails, \todo{finish this }
+
+
+
+
+% materials, production methods
+\section{Sensitivity Analysis of Final Design}
+
+The sensitivity analysis is done to observe how feasible the final design is. It is crucial to know how changes in parameters affect the performance of the drone, and whether it will still meet the requirements.
+
+In case the mass of the drone is significantly increased, a snow ball effect may kick in. 
+
+Changes in power
+
+changes in thrust
